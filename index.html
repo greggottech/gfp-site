@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.009 - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.010 - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -310,7 +310,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.009 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-classroom">
 <div class="wrap">
@@ -397,7 +397,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.009 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-investors">
 <div class="wrap prose">
@@ -450,7 +450,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.009 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
 </div>
 <div id="deck"><div class="wrap">
@@ -681,23 +681,34 @@ WIND | SI 414 | field priced
         c = cs[i];
         var rx = M + 1 + (c[0] - x0) * s, rw = c[2] * s;
         var rh = c[3] * s, ry = 1 + (z1 - (c[1] + c[3])) * s;
-        var inset = Math.min(rw, rh) * 0.16;
-        if (inset > 2) inset = 2;
-        out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
-                 '" width="' + rw.toFixed(1) + '" height="' + rh.toFixed(1) +
-                 '" fill="#23252a"/>');
-        var iw = rw - inset * 2, ih = rh - inset * 2;
-        if (iw > 0.4 && ih > 0.4)
-          out.push('<rect x="' + (rx + inset).toFixed(1) + '" y="' +
-                   (ry + inset).toFixed(1) + '" width="' + iw.toFixed(1) +
-                   '" height="' + ih.toFixed(1) + '" fill="' +
-                   fillOf(pal, c[4]) + '"/>');
+        if (Math.min(rw, rh) < 9){
+          /* the fine line (p1.010): a small cell is one sheet with a thin
+             ink stroke - the app's manner, no fat black grid */
+          out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
+                   '" width="' + Math.max(0.6, rw).toFixed(1) +
+                   '" height="' + Math.max(0.6, rh).toFixed(1) +
+                   '" fill="' + fillOf(pal, c[4]) +
+                   '" stroke="#23252a" stroke-width="0.6"/>');
+        } else {
+          var inset = Math.min(1.4, Math.min(rw, rh) * 0.12);
+          out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
+                   '" width="' + rw.toFixed(1) + '" height="' + rh.toFixed(1) +
+                   '" fill="#23252a"/>');
+          var iw = rw - inset * 2, ih = rh - inset * 2;
+          if (iw > 0.4 && ih > 0.4)
+            out.push('<rect x="' + (rx + inset).toFixed(1) + '" y="' +
+                     (ry + inset).toFixed(1) + '" width="' + iw.toFixed(1) +
+                     '" height="' + ih.toFixed(1) + '" fill="' +
+                     fillOf(pal, c[4]) + '"/>');
+        }
       }
       /* the slabs: floor lines dashed, outdoor and roof solid */
       var rows = slabs || [];
       for (i = 0; i < rows.length && i < 80; i++){
         var z = Number(rows[i].z);
         if (!(z >= z0 - 1 && z <= z1 + 1)) continue;
+        var lv = (rows[i].level != null) ? Number(rows[i].level)
+          : z + (/RESID/i.test(String(rows[i].function || "")) ? 200 : 90);
         var y = (1 + (z1 - z) * s).toFixed(1);
         var open_air = /OUT|ROOF|PARAP/i.test(
           String(rows[i].kind || "") + " " + String(rows[i].function || ""));
@@ -710,7 +721,7 @@ WIND | SI 414 | field priced
         out.push('<text x="' + (M - 7) + '" y="' + y +
                  '" text-anchor="end" dominant-baseline="middle"' +
                  ' font-family="Consolas,monospace" font-size="9"' +
-                 ' fill="#5a6b7d">' + (z / 1000).toFixed(2) + '</text>');
+                 ' fill="#5a6b7d">' + (lv / 1000).toFixed(2) + '</text>');
       }
       out.push('</svg>');
       return out.join("");
@@ -826,6 +837,105 @@ WIND | SI 414 | field priced
       if (LOG[i].elev) return LOG[i];
     return null;
   }
+  function dominant(cells){
+    var tally = {}, best = "", n = 0, i, m;
+    for (i = 0; i < cells.length; i++){
+      m = String(cells[i][4] || "");
+      tally[m] = (tally[m] || 0) + 1;
+      if (tally[m] > n){ n = tally[m]; best = m; }
+    }
+    return best;
+  }
+  function persSvg(elev, pal, slabs){
+    /* THE CAMERA SKETCH (p1.010): two facade planes in perspective with
+       ground, horizon, mullions and floor lines. Only the camera sees it;
+       the stage keeps the flat drawing. */
+    try{
+      var fs = (elev && elev.facades) || [];
+      if (!fs.length) return "";
+      function span(f){
+        var cs = (f && f.cells) || [], x0 = 1e12, x1 = -1e12,
+            z0 = 1e12, z1 = -1e12, xs = {}, i, c;
+        for (i = 0; i < cs.length; i++){
+          c = cs[i];
+          x0 = Math.min(x0, c[0]); x1 = Math.max(x1, c[0] + c[2]);
+          z0 = Math.min(z0, c[1]); z1 = Math.max(z1, c[1] + c[3]);
+          xs[Math.round(c[0])] = 1; xs[Math.round(c[0] + c[2])] = 1;
+        }
+        var list = []; for (var k in xs) list.push(Number(k));
+        list.sort(function(a, b){ return a - b; });
+        return { x0: x0, x1: x1, z0: z0, z1: z1, xs: list, cells: cs };
+      }
+      var F = span(fs[0]);
+      var S = fs.length > 1 ? span(fs[1]) : null;
+      if (!(F.x1 > F.x0) || !(F.z1 > F.z0)) return "";
+      var VW = 1000, VH = 640, baseY = 560, horY = 300, CX = 430;
+      var scale = Math.min(380 / (F.z1 - F.z0), 520 / (F.x1 - F.x0));
+      var WF = (F.x1 - F.x0) * scale;
+      var WS = S ? Math.min((S.x1 - S.x0) * scale * 0.8, CX - 40) : 0;
+      var kF = 0.82, kS = 0.62;
+      function fx(t){ return CX + t * WF; }
+      function fy(t, z){ return baseY - (z - F.z0) * scale * (1 - (1 - kF) * t); }
+      function sx(t){ return CX - t * WS; }
+      function sy(t, z){ return baseY - (z - F.z0) * scale * (1 - (1 - kS) * t); }
+      var glass = fillOf(pal, dominant(F.cells));
+      var out = ['<svg viewBox="0 0 ' + VW + ' ' + VH + '" width="' + VW +
+                 '" height="' + VH + '" xmlns="http://www.w3.org/2000/svg">'];
+      out.push('<rect x="0" y="0" width="' + VW + '" height="' + VH +
+               '" fill="#ffffff"/>');
+      out.push('<line x1="0" y1="' + horY + '" x2="' + VW + '" y2="' + horY +
+               '" stroke="#b9c4cd" stroke-width="1"/>');
+      out.push('<line x1="0" y1="' + baseY + '" x2="' + VW + '" y2="' + baseY +
+               '" stroke="#1d1d1f" stroke-width="1.5"/>');
+      out.push('<polygon points="' + fx(0) + ',' + fy(0, F.z1) + ' ' + fx(1) +
+               ',' + fy(1, F.z1) + ' ' + fx(1) + ',' + baseY + ' ' + fx(0) +
+               ',' + baseY + '" fill="' + glass +
+               '" stroke="#1d1d1f" stroke-width="1.2"/>');
+      if (S)
+        out.push('<polygon points="' + sx(0) + ',' + sy(0, F.z1) + ' ' + sx(1) +
+                 ',' + sy(1, F.z1) + ' ' + sx(1) + ',' + baseY + ' ' + sx(0) +
+                 ',' + baseY + '" fill="' + glass +
+                 '" opacity="0.82" stroke="#1d1d1f" stroke-width="1.2"/>');
+      var i, t;
+      var step = Math.max(1, Math.ceil(F.xs.length / 36));
+      for (i = 0; i < F.xs.length; i += step){
+        t = (F.xs[i] - F.x0) / (F.x1 - F.x0);
+        out.push('<line x1="' + fx(t).toFixed(1) + '" y1="' +
+                 fy(t, F.z1).toFixed(1) + '" x2="' + fx(t).toFixed(1) +
+                 '" y2="' + baseY + '" stroke="#23252a" stroke-width="0.7"/>');
+      }
+      if (S){
+        var st2 = Math.max(1, Math.ceil(S.xs.length / 22));
+        for (i = 0; i < S.xs.length; i += st2){
+          t = (S.xs[i] - S.x0) / (S.x1 - S.x0);
+          out.push('<line x1="' + sx(t).toFixed(1) + '" y1="' +
+                   sy(t, F.z1).toFixed(1) + '" x2="' + sx(t).toFixed(1) +
+                   '" y2="' + baseY +
+                   '" stroke="#23252a" stroke-width="0.7" opacity="0.85"/>');
+        }
+      }
+      var rows = slabs || [], z;
+      for (i = 0; i < rows.length && i < 60; i++){
+        z = Number(rows[i].z);
+        if (!(z >= F.z0 - 1 && z <= F.z1 + 1)) continue;
+        out.push('<polyline points="' + fx(0).toFixed(1) + ',' +
+                 fy(0, z).toFixed(1) + ' ' + fx(1).toFixed(1) + ',' +
+                 fy(1, z).toFixed(1) +
+                 '" fill="none" stroke="#23252a" stroke-width="0.7"/>');
+        if (S)
+          out.push('<polyline points="' + sx(1).toFixed(1) + ',' +
+                   sy(1, z).toFixed(1) + ' ' + sx(0).toFixed(1) + ',' +
+                   sy(0, z).toFixed(1) +
+                   '" fill="none" stroke="#23252a" stroke-width="0.7"' +
+                   ' opacity="0.85"/>');
+      }
+      out.push('<line x1="' + CX + '" y1="' + fy(0, F.z1).toFixed(1) +
+               '" x2="' + CX + '" y2="' + baseY +
+               '" stroke="#1d1d1f" stroke-width="1.6"/>');
+      out.push('</svg>');
+      return out.join("");
+    } catch (e){ return ""; }
+  }
   function svgToPng(svg, done){
     try{
       var img = new Image();
@@ -882,7 +992,8 @@ WIND | SI 414 | field priced
         finishEntry(entry, { a: "the engine did not answer - a prepared answer instead: " + answer(q) });
       });
       };
-      if (last) svgToPng(elevSvg(last.elev, last.pal, last.slabs), sendIt);
+      if (last) svgToPng(persSvg(last.elev, last.pal, last.slabs) ||
+                          elevSvg(last.elev, last.pal, last.slabs), sendIt);
       else sendIt("");
       return;
     }
