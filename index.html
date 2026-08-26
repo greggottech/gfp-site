@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.010 - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.011 - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -310,7 +310,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.011 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-classroom">
 <div class="wrap">
@@ -397,7 +397,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.011 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-investors">
 <div class="wrap prose">
@@ -450,7 +450,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.010 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.011 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
 </div>
 <div id="deck"><div class="wrap">
@@ -668,8 +668,20 @@ WIND | SI 414 | field priced
         z0 = Math.min(z0, c[1]); z1 = Math.max(z1, c[1] + c[3]);
       }
       var M = 48;                                   /* the level margin */
+      /* THE ROOF (p1.011): slabs up to 1.6 m above the glass - the roof
+         line and the parapet - stretch the frame upward. */
+      var zH = z1, rowsAll = slabs || [];
+      for (i = 0; i < rowsAll.length; i++){
+        var zz = Number(rowsAll[i].z);
+        if (zz > z1 && zz <= z1 + 1600 && zz > zH) zH = zz;
+      }
+      var zB = z0;                    /* the ground slab sits just below */
+      for (i = 0; i < rowsAll.length; i++){
+        var zb = Number(rowsAll[i].z);
+        if (zb < z0 && zb >= z0 - 200 && zb < zB) zB = zb;
+      }
       var W = 520, s = W / Math.max(1, x1 - x0);
-      var H = Math.max(60, (z1 - z0) * s);
+      var H = Math.max(60, (zH - zB) * s);
       if (H > 340){ s = s * 340 / H; H = 340; W = (x1 - x0) * s; }
       var vw = (M + W + 2).toFixed(0), vh = (H + 14).toFixed(0);
       var out = ['<svg viewBox="0 0 ' + vw + ' ' + vh +
@@ -680,36 +692,39 @@ WIND | SI 414 | field priced
       for (i = 0; i < n; i++){
         c = cs[i];
         var rx = M + 1 + (c[0] - x0) * s, rw = c[2] * s;
-        var rh = c[3] * s, ry = 1 + (z1 - (c[1] + c[3])) * s;
-        if (Math.min(rw, rh) < 9){
-          /* the fine line (p1.010): a small cell is one sheet with a thin
-             ink stroke - the app's manner, no fat black grid */
-          out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
-                   '" width="' + Math.max(0.6, rw).toFixed(1) +
-                   '" height="' + Math.max(0.6, rh).toFixed(1) +
-                   '" fill="' + fillOf(pal, c[4]) +
-                   '" stroke="#23252a" stroke-width="0.6"/>');
-        } else {
-          var inset = Math.min(1.4, Math.min(rw, rh) * 0.12);
-          out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
-                   '" width="' + rw.toFixed(1) + '" height="' + rh.toFixed(1) +
-                   '" fill="#23252a"/>');
-          var iw = rw - inset * 2, ih = rh - inset * 2;
-          if (iw > 0.4 && ih > 0.4)
-            out.push('<rect x="' + (rx + inset).toFixed(1) + '" y="' +
-                     (ry + inset).toFixed(1) + '" width="' + iw.toFixed(1) +
-                     '" height="' + ih.toFixed(1) + '" fill="' +
-                     fillOf(pal, c[4]) + '"/>');
+        var rh = c[3] * s, ry = 1 + (zH - (c[1] + c[3])) * s;
+        /* THE INK GRID (p1.011): one manner at every size - a sheet
+           with a thin ink stroke that scales with the cell. */
+        var sw = Math.max(0.45, Math.min(1.1, Math.min(rw, rh) * 0.06));
+        out.push('<rect x="' + rx.toFixed(1) + '" y="' + ry.toFixed(1) +
+                 '" width="' + Math.max(0.6, rw).toFixed(1) +
+                 '" height="' + Math.max(0.6, rh).toFixed(1) +
+                 '" fill="' + fillOf(pal, c[4]) +
+                 '" stroke="#23252a" stroke-width="' + sw.toFixed(2) + '"/>');
+        if (String(c[5] || "") === "WINDOW" && rw > 7 && rh > 7){
+          var win = Math.max(1.2, Math.min(rw, rh) * 0.14);
+          out.push('<rect x="' + (rx + win).toFixed(1) + '" y="' +
+                   (ry + win).toFixed(1) + '" width="' +
+                   (rw - win * 2).toFixed(1) + '" height="' +
+                   (rh - win * 2).toFixed(1) +
+                   '" fill="none" stroke="#23252a" stroke-width="' +
+                   (sw * 0.8).toFixed(2) + '"/>');
+          out.push('<line x1="' + (rx + win * 0.6).toFixed(1) + '" y1="' +
+                   (ry + rh - win * 0.7).toFixed(1) + '" x2="' +
+                   (rx + rw - win * 0.6).toFixed(1) + '" y2="' +
+                   (ry + rh - win * 0.7).toFixed(1) +
+                   '" stroke="#23252a" stroke-width="' +
+                   (sw * 0.8).toFixed(2) + '"/>');
         }
       }
       /* the slabs: floor lines dashed, outdoor and roof solid */
       var rows = slabs || [];
       for (i = 0; i < rows.length && i < 80; i++){
         var z = Number(rows[i].z);
-        if (!(z >= z0 - 1 && z <= z1 + 1)) continue;
+        if (!(z >= zB - 1 && z <= zH + 1)) continue;
         var lv = (rows[i].level != null) ? Number(rows[i].level)
           : z + (/RESID/i.test(String(rows[i].function || "")) ? 200 : 90);
-        var y = (1 + (z1 - z) * s).toFixed(1);
+        var y = (1 + (zH - z) * s).toFixed(1);
         var open_air = /OUT|ROOF|PARAP/i.test(
           String(rows[i].kind || "") + " " + String(rows[i].function || ""));
         out.push('<line x1="' + M + '" y1="' + y + '" x2="' + (M + W + 1) +
@@ -722,6 +737,14 @@ WIND | SI 414 | field priced
                  '" text-anchor="end" dominant-baseline="middle"' +
                  ' font-family="Consolas,monospace" font-size="9"' +
                  ' fill="#5a6b7d">' + (lv / 1000).toFixed(2) + '</text>');
+      }
+      if (zH > z1 + 1){
+        var ya = (1 + (zH - z1) * s).toFixed(1);
+        out.push('<line x1="' + (M + 1) + '" y1="1" x2="' + (M + 1) +
+                 '" y2="' + ya + '" stroke="#1d1d1f" stroke-width="1.2"/>');
+        out.push('<line x1="' + (M + W + 1).toFixed(1) + '" y1="1" x2="' +
+                 (M + W + 1).toFixed(1) + '" y2="' + ya +
+                 '" stroke="#1d1d1f" stroke-width="1.2"/>');
       }
       out.push('</svg>');
       return out.join("");
