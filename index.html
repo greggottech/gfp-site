@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.031 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.032 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3051,6 +3051,28 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .deckatts .att button:hover{color:var(--danger)}
 .deckatts .note{font-family:var(--font-sans);font-size:12px;color:var(--danger);padding:2px 4px}
 #deckattach{cursor:pointer}
+
+/* ================= THE PROMPT TYPES ITSELF (p1.032) ================= */
+.deckghost{display:none;min-width:0;font-family:var(--font-sans);font-size:15px;line-height:1.4;color:var(--ink);
+  padding:11px 14px;white-space:pre-wrap;word-break:break-word;text-align:left}
+.deckghost::after{content:"";display:inline-block;width:1.5px;height:1em;margin-left:2px;vertical-align:-.15em;background:var(--ink);
+  animation:gfpcaret 1s steps(2,end) infinite}
+@keyframes gfpcaret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.composer.ghosting #deckq{display:none !important}
+.composer.ghosting .deckghost{display:block}
+.composer.ghosting{align-items:end !important}
+.composer.ghosting .composer-scope,.composer.ghosting #deckattach{align-self:stretch}
+.composer.ghosting #deckgo{align-self:end;margin-bottom:5px}
+.deckghost{max-height:40vh;transition:max-height .5s ease}
+.composer.sent .deckghost{opacity:0;transform:translateY(-10px);max-height:22px;overflow:hidden;
+  transition:opacity .35s ease,transform .45s ease,max-height .5s ease .1s}
+.composer.sent .deckghost::after{display:none}
+@keyframes gfpsend{0%{transform:scale(1)}35%{transform:scale(1.28);background:var(--blue);color:#fff}100%{transform:scale(1)}}
+.composer.sent #deckgo{animation:gfpsend .7s ease 1}
+@media (max-width:700px){.deckghost{font-size:16px;padding:11px 12px}}
+@media (prefers-reduced-motion:reduce){.deckghost::after{animation:none}.composer.sent #deckgo{animation:none}}
+/* the field lets go right after the send */
+.power-reveal-stage{min-height:484svh !important}
 </style>
 
 </head>
@@ -3222,7 +3244,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3261,7 +3283,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3281,7 +3303,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -3293,6 +3315,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <button id="deckattach" type="button" aria-label="Attach file" title="Attach file"><span aria-hidden="true">+</span></button>
       <span class="composer-scope" title="Public demo · Aluminium structural-silicone stick curtain wall only"><span class="scope-wide">STICK CURTAIN WALL</span><span class="scope-short">STICK CW</span></span>
       <input id="deckq" type="text" autocomplete="off" placeholder="Describe the building or change the facade…">
+      <div id="deckghost" class="deckghost" aria-hidden="true"></div>
       <span id="trialbadge" class="b-quiet">…</span>
       <button id="deckgo" aria-label="Send"><span aria-hidden="true">↑</span></button>
     </div>
@@ -8498,8 +8521,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        while the scopes dim; only then do the words and the blue leave, and
        the runway below is long enough for all of it */
     var closeIn=smooth01((pinP-1.00)/.30);
+    /* THE PROMPT TYPES ITSELF (p1.032): after the hold the demonstration
+       prompt types into the composer, then the send */
+    var typeP=smooth01((pinP-1.70)/.50);
+    var sendP=smooth01((pinP-2.24)/.14);
+    ghostDrive(typeP, sendP);
     var textOut=smooth01((pinP-2.95)/.25);   /* p1.029: a safety only - the line scrolls away with the field at 2.20 */
-    var blueOut=smooth01((pinP-2.28)/.34);   /* the blue dissolves while the cream sheet rises over it */
+    var blueOut=smooth01((pinP-2.34)/.34);   /* the blue dissolves while the cream sheet rises over it */
     var blueP=blueIn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
@@ -8560,7 +8588,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var srBox=scr.getBoundingClientRect();
     var off=srBox.top;   /* p1.019: the scroller's own top (the fixed header above it) */
     var centreY=(window.innerHeight-h)/2;   /* p1.023: the middle of the whole screen */
-    var bottomY=off+vh-h-Math.max(12,Math.min(20,innerWidth*.014));
+    var hLive=Math.max(h, deck.getBoundingClientRect().height||h);   /* p1.032: the composer may have grown */
+    var bottomY=off+vh-hLive-Math.max(12,Math.min(20,innerWidth*.014));
     var moveP=smooth01((st-HOME_STORY.moveStart)/(HOME_STORY.moveEnd-HOME_STORY.moveStart));
     var y=centreY + (bottomY-centreY)*moveP;
     deck.style.setProperty("--deck-story-y",y.toFixed(2)+"px");
@@ -8581,7 +8610,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
          It does not dissolve away: it simply travels below the viewport. */
       var groupDelta=y-centreY;
       reveal.style.setProperty("--reveal-story-y",groupDelta.toFixed(2)+"px");
-      reveal.style.visibility=thesisP>.008?"visible":"hidden";
+      reveal.style.visibility=(thesisP>.008 && st<HOME_STORY.moveEnd)?"visible":"hidden";   /* p1.032: gone once docked */
       reveal.style.opacity="1";
 
       var thesis=reveal.querySelector(".reveal-thesis");
@@ -8728,6 +8757,54 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       updateHomeDeckStory(HOME_MOTION.value);
     }
   }
+  var DEMO_PROMPT="10 residential floors, the top two penthouses at 5 m, on three commercial floors. Ground floor 7 m high. Third floor recessed 3 m on each side. Footprint 28 \u00D7 24 m.";
+  var GHOST={ target:0, shown:0, raf:0, on:false, sent:false };
+  function ghostAllowed(){
+    var q=$("deckq");
+    if (!q) return false;
+    if (KB_DOCKED || document.activeElement === q) return false;
+    if (q.value && q.value.trim()) return false;
+    return current === "home";
+  }
+  function ghostPaint(){
+    var g=$("deckghost"), c=document.querySelector(".composer");
+    if (!g || !c) return;
+    g.textContent=DEMO_PROMPT.slice(0, GHOST.shown);
+    c.classList.toggle("ghosting", GHOST.on);
+    c.classList.toggle("sent", GHOST.sent);
+    if (GHOST.on) updateHomeDeckStory();   /* the foot follows the grown composer */
+  }
+  function ghostStep(){
+    GHOST.raf=0;
+    if (GHOST.shown < GHOST.target){ GHOST.shown=Math.min(GHOST.target, GHOST.shown+2); }
+    else if (GHOST.shown > GHOST.target){ GHOST.shown=Math.max(GHOST.target, GHOST.shown-6); }
+    ghostPaint();
+    if (GHOST.shown !== GHOST.target) GHOST.raf=requestAnimationFrame(ghostStep);
+  }
+  function ghostDrive(typeP, sendP){
+    var want=(typeP > 0 && sendP < 1) && ghostAllowed();
+    if (!want){
+      if (GHOST.on || GHOST.sent){ GHOST.on=false; GHOST.sent=false; GHOST.target=0; GHOST.shown=0; if (GHOST.raf){ cancelAnimationFrame(GHOST.raf); GHOST.raf=0; } ghostPaint(); }
+      return;
+    }
+    GHOST.on=true;
+    GHOST.sent=sendP > 0;
+    GHOST.target=Math.round(typeP*DEMO_PROMPT.length);
+    if (GHOST.sent) GHOST.target=DEMO_PROMPT.length;
+    if (!GHOST.raf) GHOST.raf=requestAnimationFrame(ghostStep);
+  }
+  function ghostCancel(){
+    if (!(GHOST.on || GHOST.sent)) return;
+    GHOST.on=false; GHOST.sent=false; GHOST.target=0; GHOST.shown=0;
+    if (GHOST.raf){ cancelAnimationFrame(GHOST.raf); GHOST.raf=0; }
+    ghostPaint();
+  }
+  (function(){
+    var q=$("deckq"), g=$("deckghost");
+    if (q) q.addEventListener("focus", ghostCancel);
+    /* a tap on the typing words is a tap into the field: the ghost yields and the field takes the focus */
+    if (g) g.addEventListener("click", function(){ ghostCancel(); try{ q.focus(); }catch(_f){} });
+  })();
   var KB_BASE_H=window.innerHeight;
   window.addEventListener("resize", function(){ if (!KB_DOCKED) KB_BASE_H=Math.max(KB_BASE_H, window.innerHeight); });
   window.addEventListener("orientationchange", function(){ setTimeout(function(){ KB_BASE_H=window.innerHeight; }, 400); });
