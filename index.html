@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.032 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.033 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3071,8 +3071,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .composer.sent #deckgo{animation:gfpsend .7s ease 1}
 @media (max-width:700px){.deckghost{font-size:16px;padding:11px 12px}}
 @media (prefers-reduced-motion:reduce){.deckghost::after{animation:none}.composer.sent #deckgo{animation:none}}
-/* the field lets go right after the send */
-.power-reveal-stage{min-height:484svh !important}
+.power-reveal-stage{min-height:452svh !important}   /* the field lets go at pinP 2.20, right after the hold */
+
+/* ================= THE PROMPT'S OWN SCENE (p1.033) ================= */
+.home-prompt-stage{min-height:calc(var(--home-composer-h) + 320svh) !important}
+@media (max-width:700px){.home-prompt-stage{min-height:calc(var(--home-composer-h) + 300svh) !important}}
 </style>
 
 </head>
@@ -3244,7 +3247,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.033</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3283,7 +3286,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.033</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3303,7 +3306,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.032</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.033</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8477,8 +8480,15 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* Hold the completed thought, then give the whole group a long, calm docking run.
        The content spacer below is intentionally longer than this movement so the
        pipeline cannot enter until the composer has fully settled at the bottom. */
-    HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*1.10;
-    HOME_STORY.moveEnd    =HOME_STORY.pinStart + vh*2.12;
+    /* THE PROMPT TYPES ITSELF (p1.033): once the three lines have been
+       read, the prompt types into the pinned composer, the send blinks,
+       then the descent */
+    HOME_STORY.typeStart  =HOME_STORY.pinStart + vh*0.86;
+    HOME_STORY.typeEnd    =HOME_STORY.pinStart + vh*1.42;
+    HOME_STORY.sendStart  =HOME_STORY.pinStart + vh*1.42;
+    HOME_STORY.sendEnd    =HOME_STORY.pinStart + vh*1.58;
+    HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*1.66;
+    HOME_STORY.moveEnd    =HOME_STORY.pinStart + vh*2.68;
     HOME_STORY.ready=true;
   }
   function clamp01(v){ return Math.max(0,Math.min(1,v)); }
@@ -8521,13 +8531,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        while the scopes dim; only then do the words and the blue leave, and
        the runway below is long enough for all of it */
     var closeIn=smooth01((pinP-1.00)/.30);
-    /* THE PROMPT TYPES ITSELF (p1.032): after the hold the demonstration
-       prompt types into the composer, then the send */
-    var typeP=smooth01((pinP-1.70)/.50);
-    var sendP=smooth01((pinP-2.24)/.14);
-    ghostDrive(typeP, sendP);
     var textOut=smooth01((pinP-2.95)/.25);   /* p1.029: a safety only - the line scrolls away with the field at 2.20 */
-    var blueOut=smooth01((pinP-2.34)/.34);   /* the blue dissolves while the cream sheet rises over it */
+    var blueOut=smooth01((pinP-2.28)/.34);   /* the blue dissolves while the cream sheet rises over it */
     var blueP=blueIn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
@@ -8587,7 +8592,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     deck.classList.add("deck-story-fixed");
     var srBox=scr.getBoundingClientRect();
     var off=srBox.top;   /* p1.019: the scroller's own top (the fixed header above it) */
-    var centreY=(window.innerHeight-h)/2;   /* p1.023: the middle of the whole screen */
+    var hNow=Math.max(h, deck.getBoundingClientRect().height||h);   /* p1.033: the composer may have grown for the typing */
+    var centreY=(window.innerHeight-hNow)/2;   /* p1.023: the middle of the whole screen */
+    var typeP=smooth01((st-HOME_STORY.typeStart)/(HOME_STORY.typeEnd-HOME_STORY.typeStart));
+    var sendP=smooth01((st-HOME_STORY.sendStart)/(HOME_STORY.sendEnd-HOME_STORY.sendStart));
+    ghostDrive(typeP, sendP);
     var hLive=Math.max(h, deck.getBoundingClientRect().height||h);   /* p1.032: the composer may have grown */
     var bottomY=off+vh-hLive-Math.max(12,Math.min(20,innerWidth*.014));
     var moveP=smooth01((st-HOME_STORY.moveStart)/(HOME_STORY.moveEnd-HOME_STORY.moveStart));
@@ -8611,7 +8620,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var groupDelta=y-centreY;
       reveal.style.setProperty("--reveal-story-y",groupDelta.toFixed(2)+"px");
       reveal.style.visibility=(thesisP>.008 && st<HOME_STORY.moveEnd)?"visible":"hidden";   /* p1.032: gone once docked */
-      reveal.style.opacity="1";
+      reveal.style.opacity=String(1-smooth01((st-HOME_STORY.typeStart)/(vh*.12)));   /* p1.033: the three lines yield to the typing */
 
       var thesis=reveal.querySelector(".reveal-thesis");
       var build=reveal.querySelector(".reveal-build");
