@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.015 - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.016 - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -336,7 +336,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.015 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.016 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-classroom">
 <div class="wrap">
@@ -424,7 +424,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.015 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.016 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
   <div class="screen" id="scr-investors">
 <div class="wrap prose">
@@ -477,7 +477,7 @@ WIND | SI 414 | field priced
   <a data-go="about">About</a>
   <a data-go="investors">For investors</a>
   <a href="#" class="js-signin">Sign in</a>
-  <span class="machineline">site p1.015 &middot; &copy; 2026 Global Facade Project</span>
+  <span class="machineline">site p1.016 &middot; &copy; 2026 Global Facade Project</span>
 </div></div>
 </div>
 <div id="deck"><div class="wrap">
@@ -5983,6 +5983,40 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   if (af) af.addEventListener("click", function(){ $("deckq").focus(); });
   drawLog();
   trialStatus();
+  /* THE LIVE PICTURE (p1.016). [stated] "kartinka ne sync avtomaticheski":
+     the last drawing on the floor follows the site. Every few seconds the
+     guest's pulse is read; when the solve counter has moved and the site
+     is quiet (nothing queued, nothing applying, no solve due, generations
+     equal - the app's own quiet signals), the model is re-read through the
+     open door and the last row is redrawn. Nothing is read while a question
+     or a photograph of this page is in flight. */
+  var FOLLOW_SOLVE = -1, FOLLOWING = false;
+  function followSite(){
+    if (!LIVE_LINE || !TRIAL_STATE.open || FOLLOWING) return;
+    if (screenOf(location.hash) !== "classroom") return;
+    if (GFPAPP.brain.isBusy()) return;
+    var last = lastDrawing();
+    if (!last) return;
+    FOLLOWING = true;
+    fetch(TRIALB + "/ping").then(function(r){ return r.json(); }).then(function(p){
+      var sv = Number(p && p.solve);
+      var quiet = !Number((p || {}).queued || 0) && !(p || {}).applying && !(p || {}).due &&
+                  Number((p || {}).gen_done || 0) === Number((p || {}).gen_target || 0);
+      if (!isFinite(sv) || FOLLOW_SOLVE === -1 || sv === FOLLOW_SOLVE || !quiet){
+        if (isFinite(sv) && (FOLLOW_SOLVE === -1 || quiet)) FOLLOW_SOLVE = sv;
+        FOLLOWING = false; return;
+      }
+      FOLLOW_SOLVE = sv;
+      return fetch(TRIALB + "/model").then(function(r){ return r.json(); }).then(function(m){
+        if (m && m.elevation && m.elevation.facades && m.elevation.facades.length){
+          last.elev = m.elevation; last.pal = m.palette || null; last.slabs = null;
+          saveLog(); drawLog();
+        }
+        FOLLOWING = false;
+      });
+    }).catch(function(){ FOLLOWING = false; });
+  }
+  setInterval(followSite, 3000);
 })();
 </script>
 </body>

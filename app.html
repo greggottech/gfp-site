@@ -1102,7 +1102,7 @@ body.locked #lock{display:flex}
       <button id="classsign" style="display:none" onclick="toggleClass()"
               title="The public trial sign">CLASS &middot; &hellip;</button>
       <button id="signout" style="display:none" onclick="signOut()">Sign out</button>
-      <span id="ver">site s1.006</span>
+      <span id="ver">site s1.007</span>
     </div>
   </div>
 
@@ -1169,7 +1169,7 @@ window.addEventListener("appinstalled", function(){
   $("installhint").textContent = "Installed";
 });
 var solveSeen = -1;
-var SITE_V = "s1.006";
+var SITE_V = "s1.007";
 var SITE_NOTE = null;
 var pingFails = 0;
 var probing = false;
@@ -4277,7 +4277,12 @@ function poll(){
       band("verband", null);
       stamp("site " + SITE_V + " \u00B7 engine v" + p.version, false);
     }
-    if (p.solve !== solveSeen){ solveSeen = p.solve; refreshReport(); }
+    if (p.solve !== solveSeen){
+      var moved = (solveSeen !== -1);
+      solveSeen = p.solve; refreshReport();
+      if (moved) FOLLOW_DUE = true;      /* THE LIVE PICTURE (s1.007) */
+    }
+    if (FOLLOW_DUE) followTheSite();
   }).catch(function(){
     pingFails += 1;
     $("dot").className = "";
@@ -4286,6 +4291,29 @@ function poll(){
     stamp("site " + SITE_V + " \u00B7 offline", true);
     if (pingFails >= 3) probeOtherPorts();
   });
+}
+/* THE LIVE PICTURE (s1.007). [stated] "v samoi aplikacii kartinka ne sync
+   avtomaticheski" - the stage follows the site. The poll already sees
+   every solve; when the counter moves and THIS page is not the one moving
+   it (no exchange running, no open in progress, the stage not already
+   busy), the drawing is re-read and repainted through the same settle
+   watcher every order uses: the curtain, the quiet signals, the final
+   frame. A guest's order in the classroom lands on the keeper's stage by
+   itself; the keeper's own orders are untouched - they already draw. */
+var FOLLOWING = false, FOLLOW_DUE = false;
+function followTheSite(){
+  /* a move seen while the page was busy is not forgotten: FOLLOW_DUE
+     stays raised until the stage is free to take it */
+  if (FOLLOWING || busy || !LIVE) return;
+  if (onScreens()){ FOLLOW_DUE = false; return; }   /* no stage here; the next open draws anyway */
+  if (!facadeState.elev){ FOLLOW_DUE = false; return; }
+  var f = $("facade");
+  if (f && /\bbusy\b/.test(f.className)) return;   /* an open or an order owns the stage */
+  if (OPEN_TICK) return;
+  FOLLOW_DUE = false;
+  FOLLOWING = true;
+  var done = function(){ FOLLOWING = false; };
+  try{ showFacadeSettled("").then(done, done); }catch(_f){ done(); }
 }
 setInterval(poll, 1500); poll();
 
