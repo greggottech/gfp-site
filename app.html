@@ -978,6 +978,22 @@ body.locked #lock{display:flex}
   #coatsay{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); padding:2px 20px 2px 0;}
   #coatsay b{font-weight:600; color:var(--ink);}
   #coatsay a{color:var(--brand-blue); cursor:pointer; text-decoration:underline; margin-left:6px;}
+  /* THE FLOOR (s1.005). [stated] "v trial dolzhen ostatsia postrochnii chat
+     format, mne on nravilsia" - the showcase's line-by-line log, its classes
+     copied from index.html p1.011 and scoped to the guest's answer slot. */
+  #coatlog .coathead{display:flex; align-items:center; gap:10px; font-family:var(--mono);
+    font-size:var(--t-meta); color:var(--slate); padding:10px 0 4px;}
+  #coatclear{margin-left:auto; font-family:var(--mono); font-size:var(--t-meta); color:var(--slate);
+    background:none; border:0; cursor:pointer; padding:2px 6px;}
+  #coatclear:hover{color:var(--terra);}
+  #coatlog .coatempty{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); margin:8px 0;}
+  #coatlog .qline{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); margin:10px 0 4px;}
+  #coatlog .aline{font-family:var(--serif); font-size:var(--t-lead); line-height:1.55;
+    margin:0 0 6px; max-width:44em;}
+  #coatlog .errline{color:var(--terra);}
+  #coatlog .mline{font-family:var(--mono); font-size:var(--t-meta); color:var(--slate);
+    margin:0 0 6px; white-space:pre-wrap;}
+  #coatlog .photo{display:block; max-width:640px; width:100%; border-radius:10px; margin:4px 0 12px;}
 </style>
 </head>
 <body>
@@ -1119,7 +1135,7 @@ body.locked #lock{display:flex}
       <button id="signin" style="display:none" onclick="coatSignIn()"
               title="Sign in to the workshop">Sign in</button>
       <button id="signout" style="display:none" onclick="signOut()">Sign out</button>
-      <span id="ver">site s1.004</span>
+      <span id="ver">site s1.005</span>
     </div>
   </div>
 
@@ -1186,7 +1202,7 @@ window.addEventListener("appinstalled", function(){
   $("installhint").textContent = "Installed";
 });
 var solveSeen = -1;
-var SITE_V = "s1.004";
+var SITE_V = "s1.005";
 var SITE_NOTE = null;
 var pingFails = 0;
 var probing = false;
@@ -4583,27 +4599,102 @@ function coatEnter(){
   showFacadeSettled("").then(landed, landed);
   if (!COAT_TICK) COAT_TICK = setInterval(function(){ if (!COAT_JOB) coatProbe(); }, 30000);
 }
+/* THE FLOOR (s1.005): the showcase's log (index.html p1.011 loadLog / saveLog
+   / drawLog), copied. The words are kept across a reload - twelve rows, as
+   there; photographs live with the page. */
+var COAT_LOG_KEY = "gfp_coatlog";
+var COAT_LOG = [];
+function coatLogLoad(){
+  try{
+    var doc = JSON.parse(localStorage.getItem(COAT_LOG_KEY) || "[]");
+    return doc instanceof Array ? doc : [];
+  } catch (e){ return []; }
+}
+function coatLogSave(){
+  try{
+    var out = [];
+    for (var i = 0; i < COAT_LOG.length; i++){
+      var r = { q: COAT_LOG[i].q, a: COAT_LOG[i].a };
+      if (COAT_LOG[i].machine) r.machine = COAT_LOG[i].machine;
+      if (COAT_LOG[i].err) r.err = true;
+      out.push(r);
+    }
+    localStorage.setItem(COAT_LOG_KEY, JSON.stringify(out.slice(-12)));
+  } catch (e){}
+}
+function coatLogDraw(){
+  var a = $("answer");
+  if (!a) return;
+  var box = $("coatlog");
+  if (!box){
+    a.innerHTML = '<div id="coatlog"><div class="coathead">the floor'
+      + '<button id="coatclear" title="Clear this conversation">clear \u00D7</button></div>'
+      + '<p class="coatempty"></p><div id="coatrows"></div></div>';
+    box = $("coatlog");
+    $("coatclear").onclick = function(){ COAT_LOG = []; coatLogSave(); coatLogDraw(); };
+  }
+  var empty = box.querySelector(".coatempty");
+  if (empty){
+    empty.textContent = COAT_STATE.open
+      ? "The floor is yours \u2014 ask in your own words below. "
+        + COAT_STATE.per + " prompts a day on this line."
+      : coatCap(coatWords(COAT_STATE.why)) + ".";
+    empty.style.display = COAT_LOG.length ? "none" : "";
+  }
+  var rows = $("coatrows");
+  rows.innerHTML = "";
+  for (var i = 0; i < COAT_LOG.length; i++){
+    var r = COAT_LOG[i];
+    var q = document.createElement("p");
+    q.className = "qline"; q.textContent = r.q; rows.appendChild(q);
+    var an = document.createElement("p");
+    an.className = "aline" + (r.err ? " errline" : "");
+    an.textContent = r.a; rows.appendChild(an);
+    if (r.machine){
+      var m = document.createElement("p");
+      m.className = "mline"; m.textContent = r.machine; rows.appendChild(m);
+    }
+    if (r.photo){
+      var ph = document.createElement("img");
+      ph.className = "photo";
+      ph.src = "data:image/png;base64," + r.photo;
+      ph.alt = "The photographed building";
+      rows.appendChild(ph);
+    }
+  }
+  a.style.display = "block";
+  try{ $("welcome").style.display = "none"; }catch(_w){}
+  fitBottom();
+  if (rows.lastChild && rows.lastChild.scrollIntoView)
+    rows.lastChild.scrollIntoView({ block: "nearest" });
+}
 function coatGreet(){
-  var st = COAT_STATE;
-  var line = "This is the classroom \u2014 the real workshop on a teaching building. "
-    + (st.open ? "Ask it anything below: " + st.per + " prompts a day on this line."
-               : coatCap(coatWords(st.why)) + ".");
-  showAnswer("<pre>" + esc(line) + "</pre>");
+  /* the floor, with the words it kept - or the invitation when it is bare */
+  COAT_LOG = coatLogLoad();
+  coatLogDraw();
 }
 function coatAsk(q, opts){
   opts = opts || {};
   if (busy) return;
   if (!COAT_STATE.stands || !COAT_STATE.open){
-    /* the line is shut - the classroom's words, nothing spent */
+    /* the line is shut - the classroom's words on the floor, nothing spent */
     coatProbe(function(st){
       if (st.stands && st.open){ coatAsk(q, opts); return; }
-      showAnswer("<pre>" + esc(coatCap(coatWords(st.why)) + ".") + "</pre>");
+      COAT_LOG.push({ q: q, a: coatCap(coatWords(st.why)) + ".", err: true });
+      COAT_LOG = COAT_LOG.slice(-12);
+      coatLogSave(); coatLogDraw();
+      try{ $("ask").value = ""; }catch(_a){}
     });
     return;
   }
   var run = ++COAT_RUN;
   setBusy(q);
-  setQline(q);
+  /* the question takes its row on the floor at once, the answer follows
+     in place (the showcase's way) */
+  var entry = { q: q, a: "the engine is thinking\u2026" };
+  COAT_LOG.push(entry); COAT_LOG = COAT_LOG.slice(-12);
+  coatLogDraw();
+  var job = { id: null, run: run, q: q, t0: Date.now(), entry: entry };
   try{ $("qanswer").style.display = "none"; }catch(_q){}
   siteState("work", "asking the classroom");
   var wantsPhoto = !!opts.photo ||
@@ -4639,18 +4730,19 @@ function coatAsk(q, opts){
     if (d && d.ok && d.job){
       if (typeof d.left === "number") COAT_STATE.left = d.left;
       coatBadge();
-      COAT_JOB = { id: d.job, run: run, q: q, t0: Date.now() };
-      coatPoll(COAT_JOB, 0);
+      job.id = d.job;
+      COAT_JOB = job;
+      coatPoll(job, 0);
     } else {
       if (d && d.state){
         COAT_STATE.open = false; COAT_STATE.why = d.state;
         COAT_STATE.stands = coatRoomStands(COAT_STATE);
       }
-      coatDone(run, null, (d && d.error) || "the classroom refused", true);
+      coatDone(job, null, (d && d.error) || "the classroom refused", true);
     }
   }).catch(function(){
     if (COAT_RUN !== run) return;
-    coatDone(run, null, "the engine did not answer - your try may still land", true);
+    coatDone(job, null, "the engine did not answer - your try may still land", true);
   });
 }
 function coatPoll(job, tries){
@@ -4658,32 +4750,55 @@ function coatPoll(job, tries){
   fetch("/trial?job=" + encodeURIComponent(job.id))
     .then(function(r){ return r.json(); }).then(function(rec){
       if (rec.state === "working"){
-        if (tries === 10) siteState("work", "the classroom is thinking");
-        if (tries === 40) siteState("work", "still working \u00B7 a photograph takes about a minute");
+        /* the showcase's waiting words, in the row and on the pill */
+        if (tries === 10){
+          siteState("work", "the classroom is thinking");
+          job.entry.a = "the engine is thinking\u2026 a real model takes a moment";
+          coatLogDraw();
+        }
+        if (tries === 40){
+          siteState("work", "still working \u00B7 a photograph takes about a minute");
+          job.entry.a = "still working\u2026 a photograph takes about a minute";
+          coatLogDraw();
+        }
+        if (stopped && !job.stopSaid){
+          job.stopSaid = true;
+          job.entry.a = "you stopped the wait \u2014 the answer still lands here";
+          coatLogDraw();
+        }
         if (tries > 120){
-          coatDone(job.run, null, "the engine is taking long - ask again in a minute", true);
+          coatDone(job, null, "the engine is taking long - ask again in a minute", true);
           return;
         }
         setTimeout(function(){ coatPoll(job, tries + 1); }, 1000);
         return;
       }
       if (typeof rec.left === "number") COAT_STATE.left = rec.left;
-      if (rec.state === "done"){ coatDone(job.run, rec, null, false); return; }
-      coatDone(job.run, rec, rec.error || "the classroom stumbled", true);
+      if (rec.state === "done"){ coatDone(job, rec, null, false); return; }
+      coatDone(job, rec, rec.error || "the classroom stumbled", true);
     }).catch(function(){
-      coatDone(job.run, null, "the engine did not answer - your try may still land", true);
+      coatDone(job, null, "the engine did not answer - your try may still land", true);
     });
 }
-function coatDone(run, rec, errText, isErr){
+function coatDone(job, rec, errText, isErr){
+  var run = job.run, entry = job.entry;
   var current = (run === COAT_RUN);         /* the latest ask, job or refusal */
   if (COAT_JOB && COAT_JOB.run === run) COAT_JOB = null;
   coatBadge();
-  var text = isErr ? String(errText || "") : String((rec && rec.answer) || "done");
-  if (!isErr && rec && rec.machine) text += "\n\n" + String(rec.machine);
   var photo = (!isErr && rec && rec.photo) ? String(rec.photo) : "";
   var changed = !photo && (!(rec && rec.elevation) || facadeSig(rec.elevation) !== FACADE_SIG);
+  function land(){
+    /* the row gets its answer: words, the machine line, the photograph */
+    entry.a = isErr ? String(errText || "") : String((rec && rec.answer) || "done");
+    entry.err = !!isErr;
+    entry.machine = (!isErr && rec && rec.machine) ? String(rec.machine) : "";
+    if (photo) entry.photo = photo;
+    coatLogSave(); coatLogDraw();
+  }
   if (!current){
-    /* a job he stopped waiting for still lands - the stage refreshes quietly */
+    /* a job he stopped waiting for still lands - its row fills, the stage
+       refreshes quietly */
+    land();
     if (!isErr && changed){
       STOP_WAIT = false;
       showFacadeSettled("").then(function(){ try{ refreshReport(); }catch(_r){} }, function(){});
@@ -4698,7 +4813,7 @@ function coatDone(run, rec, errText, isErr){
       try{ $("facadebox").style.display = "block"; }catch(_p){}
       paintFacade();
     }
-    showAnswer("<pre>" + esc(text) + "</pre>");
+    land();
     siteState(isErr ? "warn" : "done", isErr ? "the classroom refused" : "up to date");
     try{ refreshReport(); }catch(_r2){}
     clearBusy();
