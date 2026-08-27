@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.029 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.031 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3039,6 +3039,18 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   .details .details-copy h2,.details .details-copy .sub,.details .details-prompt,.details .details-facts,
   .details .details-model,.details .details-points,.details .details-cta{opacity:1;transform:none;filter:none;transition:none}
 }
+
+/* ================= THE ATTACHMENT (p1.030) ================= */
+.deckatts{display:none;flex-wrap:wrap;gap:6px;padding:0 2px 8px}
+.deckatts.on{display:flex}
+.deckatts .att{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:4px 6px 4px 10px;
+  border:1px solid var(--line);border-radius:8px;background:#fff;font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.04em;color:var(--ink)}
+.deckatts .att span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46vw}
+.deckatts .att button{border:0;background:transparent;color:var(--muted);font-size:14px;line-height:1;padding:0 2px;cursor:pointer}
+.deckatts .att button:hover{color:var(--danger)}
+.deckatts .note{font-family:var(--font-sans);font-size:12px;color:var(--danger);padding:2px 4px}
+#deckattach{cursor:pointer}
 </style>
 
 </head>
@@ -3210,7 +3222,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3249,7 +3261,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3269,12 +3281,14 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.031</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
 <div id="deck"><div class="wrap">
   <div id="deckin">
+    <div id="deckatts" class="deckatts" aria-live="polite"></div>
+    <input id="deckfile" type="file" accept="image/*,application/pdf" multiple hidden>
     <div class="composer">
       <button id="deckattach" type="button" aria-label="Attach file" title="Attach file"><span aria-hidden="true">+</span></button>
       <span class="composer-scope" title="Public demo · Aluminium structural-silicone stick curtain wall only"><span class="scope-wide">STICK CURTAIN WALL</span><span class="scope-short">STICK CW</span></span>
@@ -8306,7 +8320,11 @@ function streetShot(elevIn, pal, slabs, done){
 }
 return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
          streetShot: streetShot, HANDHELD: HANDHELD,
-         brain: { ask: brainAsk, photo: brainPhoto, isBusy: function(){ return busy || PHOTO.busy; } } };
+         brain: { ask: brainAsk, photo: brainPhoto, isBusy: function(){ return busy || PHOTO.busy; },
+                  atts: { list: function(){ return ATTS.slice(); },
+                          add: function(a){ ATTS.push(a); },
+                          remove: function(i){ ATTS.splice(i, 1); },
+                          clear: function(){ ATTS.length = 0; } } } };
 })();
 </script>
 <script>
@@ -8500,7 +8518,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   function updateHomeDeckStory(storyScroll){
     if (current !== "home") return;
-    if (KB_DOCKED) return;   /* THE KEYBOARD (p1.029): frozen while the field is focused */
+    if (KB_DOCKED){
+      /* THE KEYBOARD (p1.031): only the composer is frozen - the blue field
+         keeps its scroll story */
+      var scrK=$("scr-home");
+      if (scrK) updatePowerReveal((typeof storyScroll === "number") ? storyScroll : scrK.scrollTop);
+      return;
+    }
     var scr=$("scr-home"), deck=$("deck"), reveal=$("home-prompt-reveal");
     if (!scr || !deck || !deck.classList.contains("deck-home")) return;
     if (!HOME_STORY.ready) prepareHomeDeckStory();
@@ -8704,11 +8728,33 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       updateHomeDeckStory(HOME_MOTION.value);
     }
   }
+  var KB_BASE_H=window.innerHeight;
+  window.addEventListener("resize", function(){ if (!KB_DOCKED) KB_BASE_H=Math.max(KB_BASE_H, window.innerHeight); });
+  window.addEventListener("orientationchange", function(){ setTimeout(function(){ KB_BASE_H=window.innerHeight; }, 400); });
+  function kbUp(){
+    /* the keyboard is up when the visual viewport is clearly shorter than
+       the window (iOS) or the window itself has shrunk (Android) */
+    try{
+      if (window.visualViewport && window.visualViewport.height < window.innerHeight*.85) return true;
+      return window.innerHeight < KB_BASE_H*.85;
+    } catch (e){ return false; }
+  }
   (function(){
-    var q=$("deckq");
+    var q=$("deckq"), scr=$("scr-home");
     if (!q) return;
     q.addEventListener("focus", deckLeaveStory);
     q.addEventListener("blur", function(){ setTimeout(deckBackToStory, 260); });
+    /* THE KEYBOARD (p1.031): iOS closes the keyboard on Done without a blur
+       - so the freeze also lets go when the keyboard is plainly down */
+    if (window.visualViewport && window.visualViewport.addEventListener)
+      window.visualViewport.addEventListener("resize", function(){ if (KB_DOCKED && !kbUp()) setTimeout(function(){ if (KB_DOCKED && !kbUp()) deckBackToStory(); }, 120); });
+    if (scr) scr.addEventListener("scroll", function(){ if (KB_DOCKED && !kbUp()) deckBackToStory(); }, {passive:true});
+    document.addEventListener("touchstart", function(e){
+      if (!KB_DOCKED) return;
+      var c=document.querySelector(".composer");
+      if (c && c.contains(e.target)) return;
+      if (!kbUp()){ try{ q.blur(); }catch(_b){} deckBackToStory(); }
+    }, {passive:true});
   })();
   if (window.visualViewport && window.visualViewport.addEventListener){
     window.visualViewport.addEventListener("resize", function(){
@@ -9139,6 +9185,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var q = $("deckq").value.trim();
     if (!q) return;
     $("deckq").value = "";
+    ATT_NOTE = "";
+    setTimeout(paintDeckAtts, 400);   /* the brain empties its list when the question leaves */
     goClassroom();
     /* the sign may have flipped since the page loaded - look again first */
     if (LIVE_LINE){ trialStatus(function(){ askWith(q); }); return; }
@@ -9189,6 +9237,69 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     LOG = LOG.slice(-12);
     saveLog(); drawLog();
   }
+  /* THE ATTACHMENT (p1.030): the + opens the picker; an image is shrunk on
+     the page (the request travels through the bridge), a PDF passes as
+     it is up to 900 KB; the file lands in the workshop brain's own list
+     and rides in the next question as it does in the app */
+  var ATT_NOTE = "";
+  function paintDeckAtts(){
+    var box = $("deckatts");
+    if (!box) return;
+    var list = GFPAPP.brain.atts.list();
+    box.innerHTML = "";
+    list.forEach(function(a, i){
+      var chip = document.createElement("div"); chip.className = "att";
+      var t = document.createElement("span"); t.textContent = a.name; chip.appendChild(t);
+      var x = document.createElement("button"); x.type = "button"; x.innerHTML = "&times;"; x.title = "Remove";
+      x.addEventListener("click", function(){ GFPAPP.brain.atts.remove(i); paintDeckAtts(); });
+      chip.appendChild(x);
+      box.appendChild(chip);
+    });
+    if (ATT_NOTE){ var n = document.createElement("div"); n.className = "note"; n.textContent = ATT_NOTE; box.appendChild(n); }
+    box.className = (list.length || ATT_NOTE) ? "deckatts on" : "deckatts";
+    if (typeof placeDeck === "function" && current === "home" && !KB_DOCKED){ HOME_STORY.ready = false; requestAnimationFrame(function(){ prepareHomeDeckStory(); updateHomeDeckStory(); }); }
+  }
+  function shrinkImage(file, done){
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function(){
+      try{
+        var MAX = 1600, w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, MAX / Math.max(w, h));
+        var c = document.createElement("canvas"); c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+        var g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+        var data = c.toDataURL("image/jpeg", .82).split(",")[1];
+        URL.revokeObjectURL(url);
+        done({ name: file.name, media: "image/jpeg", data: data });
+      } catch (e){ URL.revokeObjectURL(url); done(null); }
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); done(null); };
+    img.src = url;
+  }
+  function takeFiles(files){
+    var pending = 0;
+    ATT_NOTE = "";
+    Array.prototype.forEach.call(files || [], function(f){
+      if (/^image\//.test(f.type)){
+        pending++;
+        shrinkImage(f, function(a){ pending--; if (a) GFPAPP.brain.atts.add(a); else ATT_NOTE = f.name + " could not be read"; paintDeckAtts(); });
+      } else if (f.type === "application/pdf"){
+        if (f.size > 900000){ ATT_NOTE = f.name + " is too large - 900 KB is the limit for a PDF here"; paintDeckAtts(); return; }
+        pending++;
+        var r = new FileReader();
+        r.onload = function(){ pending--; GFPAPP.brain.atts.add({ name: f.name, media: "application/pdf", data: String(r.result).split(",")[1] }); paintDeckAtts(); };
+        r.onerror = function(){ pending--; ATT_NOTE = f.name + " could not be read"; paintDeckAtts(); };
+        r.readAsDataURL(f);
+      } else {
+        ATT_NOTE = "images and PDF only";
+        paintDeckAtts();
+      }
+    });
+  }
+  (function(){
+    var plus = $("deckattach"), file = $("deckfile");
+    if (!plus || !file) return;
+    plus.addEventListener("click", function(e){ e.preventDefault(); file.click(); });
+    file.addEventListener("change", function(){ takeFiles(this.files); this.value = ""; });
+  })();
   $("deckgo").addEventListener("click", ask);
   $("deckq").addEventListener("keydown", function(e){ if (e.key === "Enter") ask(); });
   $("logclear").addEventListener("click", function(){
