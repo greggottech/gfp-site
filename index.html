@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.019 (his polished v46 + fixes + THE PHONE, story kept) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.022 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -2914,11 +2914,13 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 
   /* the composer: one plain row (in the hero, pinned, or in the dock alike) */
   #deckin{display:block !important;padding:8px 0 !important}
-  .composer{display:grid !important;grid-template-columns:auto minmax(0,1fr) auto !important;
+  .composer{display:grid !important;grid-template-columns:auto auto minmax(0,1fr) auto !important;
     grid-template-areas:none !important;gap:0 !important;align-items:center !important;
     min-height:46px !important;background:#fff !important;border:1px solid rgba(17,18,20,.14) !important;
     border-radius:12px !important}
-  #deckattach{display:none !important}
+  #deckattach{display:flex !important;width:36px !important;min-width:36px !important;height:44px !important;align-self:stretch;
+    padding:0 !important;border:0 !important;border-right:1px solid rgba(17,18,20,.08) !important;background:transparent !important;
+    font-size:19px !important;color:rgba(17,18,20,.54) !important}
   #trialbadge{display:none !important}
   .composer-scope{align-self:stretch;display:flex !important;align-items:center;padding:0 10px !important;
     border-right:1px solid rgba(17,18,20,.08) !important;font-size:9px !important;letter-spacing:.06em !important;white-space:nowrap}
@@ -2930,6 +2932,74 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   #deckgo{width:38px !important;min-width:38px !important;height:38px !important;min-height:38px !important;
     margin:0 4px 0 0 !important;padding:0 !important;border-radius:9px !important}
 }
+
+/* ================= THE DETAILS (p1.020) ================= */
+.details{padding:clamp(64px,9vh,120px) var(--page-gutter,24px) clamp(40px,6vh,72px);max-width:1240px;margin:0 auto}
+.details .eyebrow{margin-bottom:clamp(22px,3vh,34px)}
+.details-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:clamp(28px,4vw,64px);align-items:start}
+.details-copy h2{font-family:var(--font-sans);font-size:var(--fs-section);font-weight:470;line-height:.98;letter-spacing:-.04em;margin:0 0 18px;color:var(--ink)}
+.details-copy .sub{font-size:var(--fs-lead);line-height:1.4;color:var(--muted);margin:0 0 26px;max-width:34em}
+.details-prompt{background:var(--surface,#fffdfa);border:1px solid var(--line);border-radius:var(--r-card,14px);padding:18px 20px 20px;box-shadow:var(--shadow-soft)}
+.details-prompt .k{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;color:var(--muted);margin:0 0 10px}
+.details-prompt p:last-child{margin:0;font-size:17px;line-height:1.45;color:var(--ink)}
+.details-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px;margin:26px 0 0}
+.details-facts div{border-top:1px solid var(--line);padding-top:10px}
+.details-facts dt{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--muted);margin:0 0 4px}
+.details-facts dd{margin:0;font-family:var(--font-sans);font-size:22px;font-weight:500;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.details-facts dd small{font-size:12px;font-weight:400;color:var(--muted);margin-left:4px;letter-spacing:0}
+.details-model{background:#fff;border:1px solid var(--line);border-radius:var(--r-panel,16px);box-shadow:var(--shadow-soft);overflow:hidden;min-width:0}
+.details-head{display:flex;align-items:center;gap:12px;padding:12px 16px 10px;border-bottom:1px solid var(--line-soft)}
+.details-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--muted)}
+.details-tabs{margin-left:auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.details-tabs::-webkit-scrollbar{display:none}
+.details-tabs button{flex:0 0 auto;font-family:var(--font-mono);font-size:10px;letter-spacing:.09em;font-weight:600;color:var(--muted);
+  background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.details-tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.details-stage{position:relative;padding:14px 12px 6px;min-height:320px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#fff 0%,#fbfaf8 100%)}
+.details-stage svg{display:block !important;width:100% !important;height:auto !important;max-height:min(58vh,560px) !important;
+  min-height:0 !important;max-width:100% !important;margin:0 auto !important}
+.details-stage svg text,.details-stage svg tspan{font-family:var(--font-mono)}
+.details-foot{display:flex;align-items:center;gap:12px;padding:8px 16px 12px}
+.details-caption{font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.details-dots{margin-left:auto;display:flex;gap:6px}
+.details-dots i{width:6px;height:6px;border-radius:50%;background:rgba(17,18,20,.18);display:block;transition:background .2s}
+.details-dots i.on{background:var(--ink)}
+.details-points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 28px;margin:clamp(40px,6vh,64px) 0 0}
+.dp{border-top:1px solid var(--line);padding-top:14px}
+.dp b{display:block;font-family:var(--font-sans);font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin-bottom:6px}
+.dp span{display:block;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.details-cta{margin:clamp(32px,5vh,48px) 0 0}
+.details-cta a{text-decoration:none}
+@media (max-width:980px){
+  .details-grid{grid-template-columns:minmax(0,1fr)}
+  .details-points{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .details{padding-top:48px}
+  .details-copy h2{font-size:clamp(34px,9vw,44px)}
+  .details-copy .sub{font-size:17px}
+  .details-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .details-facts dd{font-size:19px}
+  .details-points{grid-template-columns:minmax(0,1fr);gap:16px}
+  .details-stage{min-height:240px;padding:10px 6px 4px}
+  .details-stage svg{max-height:52vh !important}
+}
+
+/* ================= THREE SMALL ONES (p1.022) ================= */
+/* 2. the docked composer must stand above the page surface: the prompt
+   stage is a stacking context, so its z-index - not the deck's - decides */
+#scr-home .home-prompt-stage, #home-prompt-stage{position:relative !important;z-index:60 !important}
+/* 1. a faint sheen across the closing line of the blue field */
+@keyframes gfpsheen{0%{background-position:0 0}100%{background-position:-220% 0}}
+.power-reveal-close{
+  background-image:linear-gradient(100deg,rgba(255,255,255,.90) 0%,rgba(255,255,255,.90) 40%,#ffffff 47%,
+    rgba(214,231,255,1) 51%,#ffffff 55%,rgba(255,255,255,.90) 62%,rgba(255,255,255,.90) 100%);
+  background-size:220% 100%;background-repeat:repeat-x;   /* the tile always covers the words - the sheen only passes */
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gfpsheen 4.6s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+@media (prefers-reduced-motion:reduce){.power-reveal-close{animation:none;background-position:50% 0}}
 </style>
 
 </head>
@@ -2991,6 +3061,41 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     </section>
 
     <div class="home-scroll-surface">
+    <!-- THE DETAILS (p1.020): one model, drawn by the workshop's own hand -->
+    <section class="wrap details" id="details" aria-label="One prompt, one connected model">
+      <p class="eyebrow">SEE WHAT HAPPENS AFTER YOU PRESS &uarr;</p>
+      <div class="details-grid">
+        <div class="details-copy">
+          <h2>One prompt.<br>One connected model.</h2>
+          <p class="sub">Change the building and the facade &mdash; quantities and engineering change with it. Every drawing in the model card comes from one model, drawn by the same code that runs inside the workshop.</p>
+          <div class="details-prompt">
+            <p class="k">PROMPT</p>
+            <p>10 residential floors, the top two penthouses at 5 m, on three commercial floors. Ground floor 7 m high. Third floor recessed 3 m on each side. Footprint 28 &times; 24 m.</p>
+          </div>
+          <dl class="details-facts" id="details-facts" aria-label="Counted from the model"></dl>
+        </div>
+        <div class="details-model">
+          <div class="details-head">
+            <span class="details-title">LIVE MODEL</span>
+            <span class="details-tabs" id="details-tabs" role="tablist"></span>
+          </div>
+          <div class="details-stage" id="details-stage" aria-live="polite"></div>
+          <div class="details-foot">
+            <span class="details-caption" id="details-caption"></span>
+            <span class="details-dots" id="details-dots" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+      <div class="details-points">
+        <div class="dp"><b>Levels</b><span>Every finished floor level on the ladder &mdash; 0.00, 7.00, 11.50, 16.00 &hellip; &mdash; is read off the model, not written into a caption.</span></div>
+        <div class="dp"><b>Setback</b><span>Floor 3 steps back 3 m on every side. That is a change of geometry: the facade above it stands on a smaller ring, and the drawing shows it.</span></div>
+        <div class="dp"><b>Module and corners</b><span>A 1300 mm module along every side. The corner sheets keep a full module; the two sheets next to each corner share what is left.</span></div>
+        <div class="dp"><b>Windows and sills</b><span>Openable windows on a horizontal rhythm across the residential floors, every third field, sills at 1000 mm.</span></div>
+        <div class="dp"><b>Parapet</b><span>The technical band closes the top of every building. It is part of the model, so it is never forgotten.</span></div>
+        <div class="dp"><b>Quantities</b><span>Sheets, glass area, mullion and transom length &mdash; counted from the same cells you see, never estimated.</span></div>
+      </div>
+      <p class="details-cta"><a class="primary" href="#classroom" data-go="classroom">Chat GFP &mdash; build your own</a></p>
+    </section>
     <div class="pipeline" aria-label="GFP workflow">
       <div class="pipestep"><b>01</b><span>Prompt</span><small>plain-language brief</small></div>
       <i aria-hidden="true">›</i>
@@ -3067,7 +3172,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.022</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3106,7 +3211,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.022</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3126,7 +3231,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.022</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8226,6 +8331,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (deck){
       deck.classList.remove("deck-story-fixed","deck-story-bottom");
       deck.style.removeProperty("--deck-story-y");
+      deck.style.removeProperty("left"); deck.style.removeProperty("right"); deck.style.removeProperty("width");
     }
     var blueWash=$("power-blue-wash");
     if (blueWash) blueWash.style.opacity="0";
@@ -8360,6 +8466,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (deck.classList.contains("deck-story-fixed")){
         deck.classList.remove("deck-story-fixed","deck-story-bottom");
         deck.style.removeProperty("--deck-story-y");
+        deck.style.removeProperty("left"); deck.style.removeProperty("right"); deck.style.removeProperty("width");
       }
       if (reveal){
         reveal.style.opacity="0";
@@ -8378,12 +8485,19 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* At pinStart the fixed composer lands exactly where its flowing version was,
        so there is no positional jump. */
     deck.classList.add("deck-story-fixed");
-    var off=scr.getBoundingClientRect().top;   /* p1.019: the scroller's own top (the fixed header above it) */
+    var srBox=scr.getBoundingClientRect();
+    var off=srBox.top;   /* p1.019: the scroller's own top (the fixed header above it) */
     var centreY=off+(vh-h)/2;
     var bottomY=off+vh-h-Math.max(12,Math.min(20,innerWidth*.014));
     var moveP=smooth01((st-HOME_STORY.moveStart)/(HOME_STORY.moveEnd-HOME_STORY.moveStart));
     var y=centreY + (bottomY-centreY)*moveP;
     deck.style.setProperty("--deck-story-y",y.toFixed(2)+"px");
+    /* THE GUTTER (p1.021): the fixed deck spans the scroller's content box,
+       not the viewport - a scrollbar gutter would otherwise shift it by
+       half its width the moment it pins */
+    deck.style.setProperty("left",srBox.left.toFixed(2)+"px","important");
+    deck.style.setProperty("right","auto","important");
+    deck.style.setProperty("width",scr.clientWidth+"px","important");
     deck.classList.toggle("deck-story-bottom",st>=HOME_STORY.moveEnd);
 
     if (reveal){
@@ -8995,6 +9109,121 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   if (af) af.addEventListener("click", function(){ $("deckq").focus(); });
   drawLog();
   trialStatus();
+  /* THE DETAILS (p1.020): one model, the workshop's own painter, numbers
+     counted from the cells. The model follows the prompt on the card and
+     the workshop's rules; nothing here is drawn by hand. */
+  function detailsSheets(len, module){
+    /* the module along a side; the corners keep a full sheet, the second
+       and third sheets from each corner share the remainder */
+    var n = Math.max(3, Math.floor(len / module)), rem = len - n * module, w = [], i;
+    for (i = 0; i < n; i++) w.push(module);
+    if (n >= 6){ w[1] += rem / 4; w[2] += rem / 4; w[n - 2] += rem / 4; w[n - 3] += rem / 4; }
+    else { w[Math.floor(n / 2)] += rem; }
+    return w;
+  }
+  function detailsBuilding(){
+    var MOD = 1300, RECESS = 3000, SILL = 1000;
+    var floors = [
+      { h: 7000, use: "COMMERCIAL" }, { h: 4500, use: "COMMERCIAL" }, { h: 4500, use: "COMMERCIAL", recess: RECESS },
+      { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" },
+      { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" }, { h: 3500, use: "RESIDENTIAL" },
+      { h: 5000, use: "RESIDENTIAL" }, { h: 5000, use: "RESIDENTIAL" },
+      { h: 1100, use: "TECHNICAL" }
+    ];
+    var sides = [{ side: 1, length: 28000, left: 4, right: 2 }, { side: 2, length: 24000, left: 1, right: 3 },
+                 { side: 3, length: 28000, left: 2, right: 4 }, { side: 4, length: 24000, left: 3, right: 1 }];
+    var levels = [{ z: 0, kind: "OUTDOOR" }], z = 0, f, k, total = 0;
+    var facades = sides.map(function(sd){
+      var cells = [], zz = 0;
+      for (f = 0; f < floors.length; f++){
+        var fl = floors[f], inset = fl.recess || 0, len = sd.length - 2 * inset;
+        var ws = detailsSheets(len, MOD), x = inset;
+        for (k = 0; k < ws.length; k++){
+          var win = (fl.use === "RESIDENTIAL" && k % 3 === 1);
+          if (fl.use === "TECHNICAL") cells.push([x, zz, ws[k], fl.h, "PANEL_4_50", "PANEL", 0, 0]);
+          else cells.push([x, zz, ws[k], fl.h, "GLASS_6_21_8", win ? "WINDOW" : "GLASS", win ? SILL : 0, 0]);
+          x += ws[k];
+        }
+        zz += fl.h;
+      }
+      total = zz;
+      return { side: sd.side, length: sd.length, left: sd.left, right: sd.right, cells: cells };
+    });
+    for (f = 0; f < floors.length; f++){
+      z += floors[f].h;
+      if (floors[f].use === "TECHNICAL") continue;
+      levels.push({ z: z, kind: (f === floors.length - 2) ? "ROOF" : "FLOOR" });
+    }
+    var count = 0; facades.forEach(function(fc){ count += fc.cells.length; });
+    return { joint: 10, z_min: 0, z_max: total, cells: count, facades: facades, levels: levels,
+             floors: floors.length - 1, recessFloor: 3 };
+  }
+  function detailsFacts(elev){
+    var sheets = 0, glass = 0, frame = 0, windows = 0, i, j;
+    for (i = 0; i < elev.facades.length; i++){
+      var cs = elev.facades[i].cells;
+      for (j = 0; j < cs.length; j++){
+        var c = cs[j];
+        if (c[5] === "GLASS" || c[5] === "WINDOW"){ sheets += 1; glass += c[2] * c[3] / 1e6; }
+        if (c[5] === "WINDOW") windows += 1;
+        frame += (c[2] + c[3]) / 1000;   /* one mullion and one transom per cell */
+      }
+    }
+    return [
+      ["FLOORS", String(elev.floors), "+ parapet"],
+      ["HEIGHT", (elev.z_max / 1000).toFixed(1), "m"],
+      ["GLASS SHEETS", String(sheets), ""],
+      ["GLASS", Math.round(glass).toLocaleString("en-US"), "m\u00B2"],
+      ["MULLIONS + TRANSOMS", Math.round(frame).toLocaleString("en-US"), "m"],
+      ["WINDOWS", String(windows), ""]
+    ];
+  }
+  (function detailsInit(){
+    var stage = $("details-stage"), tabs = $("details-tabs"), dots = $("details-dots"), cap = $("details-caption"), facts = $("details-facts");
+    if (!stage || !tabs || typeof GFPAPP !== "object") return;
+    var elev = detailsBuilding();
+    var views = [
+      { key: "S1", label: "S1 \u00B7 28 m", cap: "Facade S1 \u00B7 the long side \u00B7 floor 3 recessed", draw: function(){ return GFPAPP.facadeSvg(elev, {}, null, 1); } },
+      { key: "S2", label: "S2 \u00B7 24 m", cap: "Facade S2 \u00B7 the short side", draw: function(){ return GFPAPP.facadeSvg(elev, {}, null, 2); } },
+      { key: "STREET", label: "STREET", cap: "Street view \u00B7 the corner the camera photographs", draw: function(){ return GFPAPP.streetSvg(elev, {}, null, 0); } }
+    ];
+    var at = 0, timer = null, drawn = {};
+    function show(i){
+      at = i;
+      var svg = drawn[i] || (drawn[i] = views[i].draw());
+      stage.innerHTML = svg || "";
+      var b = tabs.querySelectorAll("button"), d = dots.querySelectorAll("i"), k;
+      for (k = 0; k < b.length; k++) b[k].className = (k === i) ? "on" : "";
+      for (k = 0; k < d.length; k++) d[k].className = (k === i) ? "on" : "";
+      cap.textContent = views[i].cap;
+    }
+    views.forEach(function(v, i){
+      var b = document.createElement("button"); b.type = "button"; b.textContent = v.label; b.setAttribute("role", "tab");
+      b.addEventListener("click", function(){ show(i); rest(20000); });
+      tabs.appendChild(b);
+      var dot = document.createElement("i"); dots.appendChild(dot);
+    });
+    var f = detailsFacts(elev);
+    facts.innerHTML = f.map(function(row){
+      return '<div><dt>' + row[0] + '</dt><dd>' + row[1] + (row[2] ? '<small>' + row[2] + '</small>' : '') + '</dd></div>';
+    }).join("");
+    function tick(){ show((at + 1) % views.length); }
+    function start(){ if (!timer) timer = setInterval(tick, 6000); }
+    function stop(){ if (timer){ clearInterval(timer); timer = null; } }
+    var restTimer = null;
+    function rest(ms){ stop(); if (restTimer) clearTimeout(restTimer); restTimer = setTimeout(function(){ if (seen) start(); }, ms); }
+    var seen = false;
+    try{ show(0); }catch (e){ stage.innerHTML = ""; }
+    if ("IntersectionObserver" in window){
+      new IntersectionObserver(function(entries){
+        seen = entries[0].isIntersecting;
+        if (seen) start(); else stop();
+      }, { threshold: .25 }).observe($("details"));
+    } else { seen = true; start(); }
+    stage.addEventListener("pointerenter", function(){ stop(); });
+    stage.addEventListener("pointerleave", function(){ if (seen) start(); });
+  })();
+
   /* THE LIVE PICTURE (p1.016, carried into p1.017): the last drawing on the
      floor follows the site. Every few seconds the guest's pulse is read;
      when the solve counter has moved and the site is quiet (the app's own
