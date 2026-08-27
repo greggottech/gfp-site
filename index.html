@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.026 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.029 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -2937,6 +2937,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 /* ================= THE DETAILS (p1.020) ================= */
 .details{padding:clamp(64px,9vh,120px) var(--page-gutter,24px) clamp(40px,6vh,72px);max-width:1240px;margin:0 auto}
 .details .eyebrow{margin-bottom:clamp(22px,3vh,34px)}
+.details .details-grid{padding-top:clamp(6px,1.5vh,14px)}
 .details-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr);gap:clamp(28px,4vw,64px);align-items:start}
 .details-copy h2{font-family:var(--font-sans);font-size:var(--fs-section);font-weight:470;line-height:.98;letter-spacing:-.04em;margin:0 0 18px;color:var(--ink)}
 .details-copy .sub{font-size:var(--fs-lead);line-height:1.4;color:var(--muted);margin:0 0 26px;max-width:34em}
@@ -3005,12 +3006,39 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 /* ================= THE CLOSING LINE (p1.024) ================= */
 /* the sticky field's runway covers its whole timeline (pinP up to ~2.6 on
    the 1.6-viewport scale): 1 viewport on screen + 4.2 of travel */
-.power-reveal-stage{min-height:520svh !important}
+.power-reveal-stage{min-height:452svh !important}   /* p1.029: the field lets go at pinP 2.20, right after the hold */
 /* a flick of the thumb can jump the scroll past a fade window in one frame;
    the opacity itself then travels in time, so the appearance is always seen */
 .power-reveal-close{transition:opacity .9s ease !important}
 .power-scope{transition:opacity .7s ease,filter .7s ease !important}
 @media (prefers-reduced-motion:reduce){.power-reveal-close,.power-scope{transition:none !important}}
+
+/* ================= THE DISSOLVE (p1.028) ================= */
+/* the cream surface has no edge: its top is a long dissolve out of the warm field */
+.home-scroll-surface{
+  background:
+    radial-gradient(circle at 14% 18%,rgba(246,210,181,.18),rgba(246,210,181,0) 30%),
+    linear-gradient(180deg,rgba(250,244,238,0) 0px,rgba(250,244,238,.70) min(20vh,190px),#faf4ee min(44vh,400px),#f8eee6 60%,#faf6f2 100%) !important;
+  box-shadow:none !important;
+}
+.details{padding-top:clamp(64px,10vh,120px) !important}
+/* the section's pieces rise in as they enter */
+.details .details-copy h2,.details .details-copy .sub,.details .details-prompt,.details .details-facts,
+.details .details-model,.details .details-points,.details .details-cta{
+  opacity:0;transform:translateY(22px);filter:blur(10px);
+  transition:opacity .9s cubic-bezier(.2,.6,.2,1),transform .9s cubic-bezier(.2,.6,.2,1),filter .9s cubic-bezier(.2,.6,.2,1);
+}
+.details.in .details-copy h2{opacity:1;transform:none;filter:none;transition-delay:0s}
+.details.in .details-copy .sub{opacity:1;transform:none;filter:none;transition-delay:.10s}
+.details.in .details-prompt{opacity:1;transform:none;filter:none;transition-delay:.20s}
+.details.in .details-facts{opacity:1;transform:none;filter:none;transition-delay:.30s}
+.details.in .details-model{opacity:1;transform:none;filter:none;transition-delay:.16s}
+.details.in .details-points{opacity:1;transform:none;filter:none;transition-delay:.38s}
+.details.in .details-cta{opacity:1;transform:none;filter:none;transition-delay:.46s}
+@media (prefers-reduced-motion:reduce){
+  .details .details-copy h2,.details .details-copy .sub,.details .details-prompt,.details .details-facts,
+  .details .details-model,.details .details-points,.details .details-cta{opacity:1;transform:none;filter:none;transition:none}
+}
 </style>
 
 </head>
@@ -3074,11 +3102,10 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <div class="home-scroll-surface">
     <!-- THE DETAILS (p1.020): one model, drawn by the workshop's own hand -->
     <section class="wrap details" id="details" aria-label="One prompt, one connected model">
-      <p class="eyebrow">SEE WHAT HAPPENS AFTER YOU PRESS &uarr;</p>
       <div class="details-grid">
         <div class="details-copy">
           <h2>One prompt.<br>One connected model.</h2>
-          <p class="sub">Change the building and the facade &mdash; quantities and engineering change with it. Every drawing in the model card comes from one model, drawn by the same code that runs inside the workshop.</p>
+          <p class="sub">Change the building and the facade &mdash; quantities and engineering change with it. Every drawing, quantity and engineering result comes from the same live model.</p>
           <div class="details-prompt">
             <p class="k">PROMPT</p>
             <p>10 residential floors, the top two penthouses at 5 m, on three commercial floors. Ground floor 7 m high. Third floor recessed 3 m on each side. Footprint 28 &times; 24 m.</p>
@@ -3183,7 +3210,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.026</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3222,7 +3249,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.026</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3242,7 +3269,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.026</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.029</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8439,7 +8466,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       /* THE CLOSING LINE (p1.024): once the line has arrived the six words
          step back to a third and stay there through the hold */
       var dimP=smooth01((pinP-1.30)/.25);
-      scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP));
+      var goneP=smooth01((pinP-2.95)/.25);   /* p1.029: only a safety - the words scroll away with the field */
+      scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP)*(1-goneP));
       scopes[i].style.transform="none";
       scopes[i].style.filter="blur("+(7.5*(1-scopeP)).toFixed(2)+"px)";
     }
@@ -8452,8 +8480,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        while the scopes dim; only then do the words and the blue leave, and
        the runway below is long enough for all of it */
     var closeIn=smooth01((pinP-1.00)/.30);
-    var textOut=smooth01((pinP-2.15)/.25);
-    var blueOut=smooth01((pinP-2.30)/.25);
+    var textOut=smooth01((pinP-2.95)/.25);   /* p1.029: a safety only - the line scrolls away with the field at 2.20 */
+    var blueOut=smooth01((pinP-2.28)/.34);   /* the blue dissolves while the cream sheet rises over it */
     var blueP=blueIn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
@@ -8472,6 +8500,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   function updateHomeDeckStory(storyScroll){
     if (current !== "home") return;
+    if (KB_DOCKED) return;   /* THE KEYBOARD (p1.029): frozen while the field is focused */
     var scr=$("scr-home"), deck=$("deck"), reveal=$("home-prompt-reveal");
     if (!scr || !deck || !deck.classList.contains("deck-home")) return;
     if (!HOME_STORY.ready) prepareHomeDeckStory();
@@ -8639,6 +8668,53 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
   var homeScroller=$("scr-home");
   if (homeScroller) homeScroller.addEventListener("scroll", queueHomeStoryMotion, {passive:true});
+  /* THE KEYBOARD (p1.029): while the field is focused on a phone the
+     composer is frozen exactly where it stands - a pinned or docked
+     composer becomes an ordinary element at the same spot (no fixed box
+     under a keyboard, no DOM move that would drop the focus); on blur it
+     returns to the story at the current scroll */
+  var KB_DOCKED=false;
+  function deckLeaveStory(){
+    if (!onPhone() || current !== "home" || KB_DOCKED) return;
+    var deck=$("deck"), anchor=$("deck-home-anchor");
+    if (!deck || !anchor || !deck.classList.contains("deck-home")) return;
+    KB_DOCKED=true;
+    if (deck.classList.contains("deck-story-fixed")){
+      var d=deck.getBoundingClientRect(), a=anchor.getBoundingClientRect();
+      deck.classList.remove("deck-story-fixed","deck-story-bottom");
+      deck.style.removeProperty("--deck-story-y");
+      deck.style.setProperty("position","absolute","important");
+      deck.style.setProperty("top",(d.top-a.top).toFixed(2)+"px","important");
+      deck.style.setProperty("left",(d.left-a.left).toFixed(2)+"px","important");
+      deck.style.setProperty("right","auto","important");
+      deck.style.setProperty("width",d.width.toFixed(2)+"px","important");
+    }
+  }
+  function deckBackToStory(){
+    if (!KB_DOCKED) return;
+    KB_DOCKED=false;
+    var deck=$("deck");
+    if (deck){ ["position","top","left","right","width"].forEach(function(p){ deck.style.removeProperty(p); }); }
+    if (current === "home"){
+      HOME_STORY.ready=false;
+      prepareHomeDeckStory();
+      var scr=$("scr-home");
+      HOME_MOTION.target=HOME_MOTION.value=scr?scr.scrollTop:0;
+      HOME_MOTION.initialized=true;
+      updateHomeDeckStory(HOME_MOTION.value);
+    }
+  }
+  (function(){
+    var q=$("deckq");
+    if (!q) return;
+    q.addEventListener("focus", deckLeaveStory);
+    q.addEventListener("blur", function(){ setTimeout(deckBackToStory, 260); });
+  })();
+  if (window.visualViewport && window.visualViewport.addEventListener){
+    window.visualViewport.addEventListener("resize", function(){
+      if (!KB_DOCKED) window.dispatchEvent(new Event("resize"));
+    });
+  }
   window.addEventListener("resize", function(){
     if (current === "home"){
       var deck=$("deck");
@@ -9238,7 +9314,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         seen = entries[0].isIntersecting;
         if (seen) start(); else stop();
       }, { threshold: .25 }).observe($("details"));
-    } else { seen = true; start(); }
+      /* THE DISSOLVE (p1.028): the section rises in once its top enters */
+      new IntersectionObserver(function(entries){
+        if (entries[0].isIntersecting){ $("details").classList.add("in"); }
+      }, { threshold: .06 }).observe($("details"));
+    } else { seen = true; start(); $("details").classList.add("in"); }
     stage.addEventListener("pointerenter", function(){ stop(); });
     stage.addEventListener("pointerleave", function(){ if (seen) start(); });
   })();
