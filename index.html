@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.036 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.037 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3074,8 +3074,9 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .power-reveal-stage{min-height:452svh !important}
 
 /* ================= THE PROMPT'S OWN SCENE (p1.033) ================= */
-.home-prompt-stage{min-height:calc(var(--home-composer-h) + 320svh) !important}
-@media (max-width:700px){.home-prompt-stage{min-height:calc(var(--home-composer-h) + 300svh) !important}}
+.home-prompt-stage{min-height:calc(var(--home-composer-h) + 262svh) !important}
+.hero-graphic-slot{min-height:0 !important;height:0 !important;padding:0 !important;margin:0 !important}   /* p1.037: the desktop's reserved field no longer stretches the scene */
+@media (max-width:700px){.home-prompt-stage{min-height:calc(var(--home-composer-h) + 245svh) !important}}
 
 /* ================= THE DEMO ON THE BLUE (p1.035) ================= */
 .power-reveal-inner{position:sticky;position:-webkit-sticky}
@@ -3283,7 +3284,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.036</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.037</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3322,7 +3323,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.036</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.037</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3342,7 +3343,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.036</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.037</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8524,8 +8525,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        then the descent */
     HOME_STORY.typeStart  =HOME_STORY.pinStart + vh*0.62;
     HOME_STORY.typeEnd    =HOME_STORY.pinStart + vh*1.15;
-    HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*1.74;
-    HOME_STORY.moveEnd    =HOME_STORY.pinStart + vh*2.76;
+    HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*1.57;   /* p1.037: a short hold after the thesis */
+    HOME_STORY.moveEnd    =HOME_STORY.pinStart + vh*2.07;   /* and a brisk descent */
     HOME_STORY.ready=true;
   }
   function clamp01(v){ return Math.max(0,Math.min(1,v)); }
