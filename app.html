@@ -946,54 +946,24 @@ body.locked #lock{display:flex}
   font-size:var(--t-meta);padding:6px 10px;border:1px solid rgba(29,29,31,.2);
   border-radius:8px;background:var(--paper2);color:var(--ink);cursor:pointer}
 
-  /* ---------- THE GUEST COAT (s1.004) ----------
-     A visitor with no session enters the REAL workshop on the classroom
-     project while the class sign is on. Nothing is redrawn for him - every
-     picture is the workshop's own; every write wears a lock that leads to
-     Sign in; the prompt line speaks to /trial. */
-  #classsign, #signout, #signin{margin-left:10px; padding:2px 8px 3px;
+  /* THE FOOTER TIDY (s1.006, his screenshot 2026-08-26): the class sign and
+     Sign out wear the footer's own diagnostic style, and the version stamp
+     keeps its own room - on wide screens at the right, on a narrow foot on
+     its own line above the row. Nothing else in the page changes. */
+  #classsign, #signout{margin-left:10px; padding:2px 8px 3px;
     font-family:var(--mono); font-size:var(--t-mono); letter-spacing:.06em;
     border:1px solid rgba(0,0,0,.14); border-radius:3px; background:transparent;
     cursor:pointer; color:rgba(0,0,0,.42); white-space:nowrap; line-height:1.4;}
-  #classsign:hover, #signout:hover, #signin:hover{color:var(--ink); border-color:rgba(0,0,0,.30);}
+  #classsign:hover, #signout:hover{color:var(--ink); border-color:rgba(0,0,0,.30);}
   #classsign.on{color:var(--ok); border-color:rgba(46,125,79,.35);}
   #classsign.busy{color:var(--terra); border-color:rgba(201,111,74,.35);}
   #classsign.off{color:var(--slate);}
-  /* the Sign out button used to land on the version text (his screenshot,
-     2026-08-26): the foot now keeps the version's own room on the right */
   @media (min-width:821px){ #foot{padding-right:210px;} }
-  #ver{pointer-events:none;}   /* the stamp is read, never pressed - a button under it stays clickable */
-  /* on a narrow foot the stamp sat on the small print (his phone screenshot):
-     it now takes its own line above the row, aligned right */
+  #ver{pointer-events:none;}
   @media (max-width:820px){
     #foot{padding-right:0;}
     #ver, body.touch #ver{position:static; order:-1; flex:0 0 100%; text-align:right; margin-bottom:4px;}
   }
-  body.coat #convx{display:none;}
-  body.coat #gear, body.coat #addbtn, body.coat #modelbtn{opacity:.42;}
-  body.coat #crumbproj{cursor:default !important;}
-  #lockback{display:none; margin-top:14px; padding:6px 10px; background:transparent; border:0;
-    color:var(--slate); font-family:var(--ui); font-size:var(--t-meta); cursor:pointer;}
-  #lockback:hover{color:var(--ink);}
-  #coatsay{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); padding:2px 20px 2px 0;}
-  #coatsay b{font-weight:600; color:var(--ink);}
-  #coatsay a{color:var(--brand-blue); cursor:pointer; text-decoration:underline; margin-left:6px;}
-  /* THE FLOOR (s1.005). [stated] "v trial dolzhen ostatsia postrochnii chat
-     format, mne on nravilsia" - the showcase's line-by-line log, its classes
-     copied from index.html p1.011 and scoped to the guest's answer slot. */
-  #coatlog .coathead{display:flex; align-items:center; gap:10px; font-family:var(--mono);
-    font-size:var(--t-meta); color:var(--slate); padding:10px 0 4px;}
-  #coatclear{margin-left:auto; font-family:var(--mono); font-size:var(--t-meta); color:var(--slate);
-    background:none; border:0; cursor:pointer; padding:2px 6px;}
-  #coatclear:hover{color:var(--terra);}
-  #coatlog .coatempty{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); margin:8px 0;}
-  #coatlog .qline{font-family:var(--ui); font-size:var(--t-ui); color:var(--slate); margin:10px 0 4px;}
-  #coatlog .aline{font-family:var(--serif); font-size:var(--t-lead); line-height:1.55;
-    margin:0 0 6px; max-width:44em;}
-  #coatlog .errline{color:var(--terra);}
-  #coatlog .mline{font-family:var(--mono); font-size:var(--t-meta); color:var(--slate);
-    margin:0 0 6px; white-space:pre-wrap;}
-  #coatlog .photo{display:block; max-width:640px; width:100%; border-radius:10px; margin:4px 0 12px;}
 </style>
 </head>
 <body>
@@ -1007,7 +977,6 @@ body.locked #lock{display:flex}
       <input id="lockpw" type="password" autocomplete="current-password" placeholder="Password">
       <button id="lockgo">Sign in</button>
       <div id="lockerr"></div>
-      <button id="lockback" onclick="lockBack()">&larr; back to the site</button>
     </div>
   </div>
   <button id="lockoffer" style="display:none" title="Set a password so the site can go online">&#128274; set the password</button>
@@ -1132,10 +1101,8 @@ body.locked #lock{display:flex}
       <span id="note">GFP is AI and can make mistakes. Check what matters.</span>
       <button id="classsign" style="display:none" onclick="toggleClass()"
               title="The public trial sign">CLASS &middot; &hellip;</button>
-      <button id="signin" style="display:none" onclick="coatSignIn()"
-              title="Sign in to the workshop">Sign in</button>
       <button id="signout" style="display:none" onclick="signOut()">Sign out</button>
-      <span id="ver">site s1.005</span>
+      <span id="ver">site s1.006</span>
     </div>
   </div>
 
@@ -1202,7 +1169,7 @@ window.addEventListener("appinstalled", function(){
   $("installhint").textContent = "Installed";
 });
 var solveSeen = -1;
-var SITE_V = "s1.005";
+var SITE_V = "s1.006";
 var SITE_NOTE = null;
 var pingFails = 0;
 var probing = false;
@@ -2018,12 +1985,6 @@ function streetPhoto(){
   if (PHOTO.png){                    /* the button is a toggle once one exists */
     PHOTO.show = !PHOTO.show;
     paintFacade();
-    return;
-  }
-  if (COAT){
-    /* a guest's photograph rides the class line (v1.077: photos inside the
-       same tries) - the classroom's own key, the same street shot */
-    coatAsk("Photograph this building as it would stand - a photo from the street", { photo: true });
     return;
   }
   var key = photoKey();
@@ -3443,7 +3404,7 @@ function paintFacade(){
        used to hide the whole stage - dead cream that reads as a loading
        screen that never ends. An empty site now says so, in the project
        voice, with the first order spelled out. */
-    if (fbox && (PROJ.b || COAT)){
+    if (fbox && PROJ.b){
       fbox.style.display = "block";
       try{
         $("facadetitle").textContent = "EMPTY SITE";
@@ -3981,7 +3942,6 @@ function sitePulse(){
   if (SITE_PULSE) return;
   SITE_PULSE = setInterval(function(){
     if (SITE_STATE_KIND !== "work") return;
-    if (COAT && COAT_JOB) return;   /* a guest job owns the pill while it runs (s1.004) */
     if (Date.now() - SITE_STATE_AT < 4000) return;
     fetch("/ping").then(function(r){ return r.json(); }).then(function(p){
       var q = Number((p || {}).queued || 0);
@@ -4306,19 +4266,16 @@ function poll(){
     lastLan = p.lan || []; lastPort = p.port || 8765;
     if (typeof PROJ !== "undefined" && p.project) PROJ.active = p.project.active || null;
     $("dot").className = "on";
-    /* a guest's ping carries no version (the locked minimal ping, v1.068)
-       - the keeper's words are unchanged, the guest's say classroom */
-    var engWord = p.version ? ("engine v" + p.version) : "classroom";
-    $("dot").title = "Live model" + (p.version ? " \u00B7 v" + p.version : "");
+    $("dot").title = "Live model \u00B7 v" + p.version;
     LIVE = true;
     lockAuth(p.auth || "");
     classSign(p.classroom);
     if (SITE_NOTE){
       band("verband", SITE_NOTE, "#c96f4a");
-      stamp("site " + SITE_V + " \u00B7 " + engWord, true);
+      stamp("site " + SITE_V + " \u00B7 engine v" + p.version, true);
     } else {
       band("verband", null);
-      stamp("site " + SITE_V + " \u00B7 " + engWord, false);
+      stamp("site " + SITE_V + " \u00B7 engine v" + p.version, false);
     }
     if (p.solve !== solveSeen){ solveSeen = p.solve; refreshReport(); }
   }).catch(function(){
@@ -4363,15 +4320,7 @@ function lockShow(mode){
   document.body.classList.add("locked");
   $("locksay").textContent = mode === "setup"
     ? "Choose the password this site will ask for (8+ characters). It is accepted only at the machine itself."
-    : COAT ? "Sign in to the workshop. The classroom stays open behind this door."
-    : (COAT_PROBED && !COAT_STATE.stands)
-      ? "This site is locked. " + coatCap(coatWords(COAT_STATE.why)) + "."
-      : "This site is locked.";
-  var lb = $("lockback");
-  if (lb){
-    lb.style.display = (mode === "setup") ? "none" : "inline-block";
-    lb.textContent = COAT ? "\u2190 back to the classroom" : "\u2190 back to the site";
-  }
+    : "This site is locked.";
   $("lockpw").setAttribute("autocomplete", mode === "setup" ? "new-password" : "current-password");
   $("lockgo").textContent = mode === "setup" ? "Set the password" : "Sign in";
 }
@@ -4397,16 +4346,7 @@ $("lockgo").addEventListener("click", lockSend);
 $("lockpw").addEventListener("keydown", function(e){ if (e.key === "Enter") lockSend(); });
 $("lockoffer").addEventListener("click", function(){ lockShow("setup"); $("lockpw").focus(); });
 function lockAuth(word){
-  if (word === "required"){
-    /* THE GUEST COAT (s1.004): no session is not yet a locked door - the
-       class sign decides. Inside the coat the lock is his choice (Sign in),
-       never the poll's; outside it the door is re-asked every 20 s so a
-       guest waiting at a closed class walks in when the sign turns. */
-    if (COAT){ /* the coat stands */ }
-    else if (!COAT_PROBED || (document.body.classList.contains("locked") &&
-                              Date.now() - COAT_PROBED > 20000)) coatDecide();
-    else if (!COAT_PROBING && !document.body.classList.contains("locked")) lockShow("login");
-  }
+  if (word === "required"){ if (!document.body.classList.contains("locked")) lockShow("login"); }
   else lockHide();
   $("lockoffer").style.display = (word === "open") ? "" : "none";
   var so = $("signout");
@@ -4419,7 +4359,6 @@ var CLASSROOM = null;
 function classSign(c){
   var b = $("classsign");
   if (!b) return;
-  if (COAT) return;              /* the guest's badge owns this slot */
   if (!c){ b.style.display = "none"; return; }
   CLASSROOM = c;
   b.style.display = "";
@@ -4458,370 +4397,6 @@ function toggleClass(){
 function signOut(){
   fetch("/logout", { method: "POST" }).then(function(){ location.reload(); })
     .catch(function(){ location.reload(); });
-}
-
-/* ---------- THE GUEST COAT (s1.004) ----------
-   [stated] "мне нужны все геометрические способности, перестань придумывать,
-   вся графика вся логика. защити всё замочками для trial версии. но блин,
-   копируй" - the interim classroom painter is retired. A visitor with no
-   session walks into THIS page, on the classroom project, while the class
-   sign is on (engine v1.086 opens /model, /report and /glass to him for
-   exactly that case). Nothing is rewritten: every drawing is the
-   workshop's own. Every write wears a lock that leads to Sign in. The
-   prompt line speaks to /trial - the leash, the counters and the refunds
-   live in the engine, as they do for the showcase line. A keeper sign-in
-   reloads the page without the coat; no keeper branch is touched. */
-var COAT = false;                 /* the coat is on: a guest in the workshop */
-var COAT_STATE = { open: false, why: "", left: null, per: 2, stands: false };
-var COAT_PROBED = 0, COAT_PROBING = false, COAT_RUN = 0, COAT_JOB = null;
-var COAT_TOAST = null, COAT_TICK = null;
-
-function coatRoomStands(s){
-  /* the door (v1.086) opens on ON + the room on the table; a spent day or a
-     spent IP keeps the door open and shuts only the line - the guest may
-     still look at everything */
-  if (!s) return false;
-  if (s.open) return true;
-  return s.why === "ip_limit" || s.why === "day_cap";
-}
-function coatWords(why){
-  /* copied verbatim from the showcase's trialWords (index.html p1.011) */
-  if (why === "busy") return "the workshop is busy with real work - try a little later";
-  if (why === "ip_limit") return "your trial prompts for today are spent - tomorrow the line opens again";
-  if (why === "day_cap") return "the trial is resting until tomorrow";
-  return "the classroom is closed right now";
-}
-function coatCap(t){ t = String(t || ""); return t.charAt(0).toUpperCase() + t.slice(1); }
-function coatBadgeText(s){
-  if (!s || !s.stands)
-    return { text: "CLASS \u00B7 " + (s && s.why === "busy" ? "BUSY" : "CLOSED"), cls: "busy" };
-  if (!s.open)
-    return { text: "TRIAL \u00B7 " + (s.why === "day_cap" ? "resting till tomorrow"
-                                     : "your " + s.per + " for today are spent"), cls: "busy" };
-  return { text: "TRIAL \u00B7 " + ((s.left !== null && s.left !== undefined)
-                                    ? s.left + " of " + s.per + " today"
-                                    : s.per + " a day"), cls: "on" };
-}
-function coatBadge(){
-  var b = $("classsign");
-  if (!b || !COAT) return;
-  var t = coatBadgeText(COAT_STATE);
-  b.style.display = ""; b.textContent = t.text; b.className = t.cls;
-  b.title = COAT_STATE.open
-    ? "You are in the classroom - the real workshop on a teaching building. "
-      + COAT_STATE.per + " prompts a day on this line."
-    : coatCap(coatWords(COAT_STATE.why)) + ".";
-  b.onclick = function(){
-    coatToast("The classroom gives " + COAT_STATE.per + " prompts a day \u00B7 changes and settings", "the workshop");
-  };
-}
-function coatToast(what, where){
-  /* the lock's words, on the quick sheet the app already has above the bar */
-  var qa = $("qanswer"), qt = $("qatext");
-  if (!qa || !qt) return;
-  qt.innerHTML = '<div id="coatsay">\uD83D\uDD12 <b>' + esc(what) + '</b> opens in '
-    + esc(where || "the workshop") + '. <a onclick="coatSignIn()">Sign in</a></div>';
-  qa.style.display = "block"; appear(qa); fitBottom();
-  if (COAT_TOAST) clearTimeout(COAT_TOAST);
-  COAT_TOAST = setTimeout(function(){
-    if (qa.style.display === "block" && qt.querySelector("#coatsay")) qa.style.display = "none";
-  }, 6000);
-}
-function coatSignIn(){ lockShow("login"); }
-function lockBack(){ if (COAT) lockHide(); else location.href = "/welcome"; }
-function coatProbe(done){
-  /* GET /trial is public (v1.069): open, why, prompts_per_ip - and the
-     showcase's own reading of it, copied */
-  if (COAT_PROBING) return;
-  COAT_PROBING = true;
-  fetch("/trial").then(function(r){ return r.json(); }).then(function(st){
-    COAT_PROBING = false; COAT_PROBED = Date.now();
-    COAT_STATE.open = !!st.open; COAT_STATE.why = st.why || "";
-    COAT_STATE.per = st.prompts_per_ip || COAT_STATE.per;
-    if (typeof st.left === "number") COAT_STATE.left = st.left;
-    COAT_STATE.stands = coatRoomStands(st);
-    coatBadge();
-    if (done) done(COAT_STATE);
-  }).catch(function(){
-    COAT_PROBING = false; COAT_PROBED = Date.now();
-    COAT_STATE.open = false; COAT_STATE.why = ""; COAT_STATE.stands = false;
-    coatBadge();
-    if (done) done(COAT_STATE);
-  });
-}
-function coatDecide(){
-  coatProbe(function(st){
-    if (st.stands){ if (!COAT) coatEnter(); lockHide(); return; }
-    lockShow("login");            /* the door is shut: the lock, with the words */
-  });
-}
-function coatEnter(){
-  COAT = true;
-  document.body.classList.add("coat");
-  PROJ.b = null; PROJ.name = "Classroom"; PROJ.ct = "guest"; PROJ.c = "guest";
-  chatLog = [];
-  try{
-    $("wordmark").title = "Back to the site";
-    $("signin").style.display = "";
-    $("signout").style.display = "none";
-    $("gear").title = "Settings open in the workshop \u00B7 Sign in";
-    $("addbtn").title = "Attachments open in the workshop \u00B7 Sign in";
-    $("modelbtn").title = "The classroom answers with " + $("modelbtn").textContent
-                        + " \u00B7 other models open in the workshop";
-    $("photobtn").title = "A photograph spends one trial prompt";
-    $("ask").placeholder = "Ask the classroom building \u2014 e.g. add two floors";
-  }catch(_t){}
-  coatBadge();
-  /* THE OPENING, exactly as a project opens for the keeper (v1.024): the
-     stage at once, the curtain down, the story running, then the drawing
-     read from the site in the app's own language */
-  try{ clearStage(); }catch(_c){}
-  try{ enterWork("", true); openCurtain(true); }catch(_o){}
-  facadeBusy(true, "Opening the classroom");
-  setCrumb();
-  function landed(){
-    openCurtain(false);
-    facadeBusy(false);
-    if (!facadeState.elev){
-      /* the door shut between the sign and the look - say so, no blank */
-      coatProbe(function(st){
-        if (!st.stands) lockShow("login");
-        else coatGreet();
-      });
-      return;
-    }
-    /* the drawing stands - the pill says so at once: a guest's ping is the
-       locked minimal one, so the 4 s heartbeat could only guess */
-    siteState("done", "up to date");
-    coatGreet();
-    try{ refreshReport(); }catch(_r){}
-  }
-  showFacadeSettled("").then(landed, landed);
-  if (!COAT_TICK) COAT_TICK = setInterval(function(){ if (!COAT_JOB) coatProbe(); }, 30000);
-}
-/* THE FLOOR (s1.005): the showcase's log (index.html p1.011 loadLog / saveLog
-   / drawLog), copied. The words are kept across a reload - twelve rows, as
-   there; photographs live with the page. */
-var COAT_LOG_KEY = "gfp_coatlog";
-var COAT_LOG = [];
-function coatLogLoad(){
-  try{
-    var doc = JSON.parse(localStorage.getItem(COAT_LOG_KEY) || "[]");
-    return doc instanceof Array ? doc : [];
-  } catch (e){ return []; }
-}
-function coatLogSave(){
-  try{
-    var out = [];
-    for (var i = 0; i < COAT_LOG.length; i++){
-      var r = { q: COAT_LOG[i].q, a: COAT_LOG[i].a };
-      if (COAT_LOG[i].machine) r.machine = COAT_LOG[i].machine;
-      if (COAT_LOG[i].err) r.err = true;
-      out.push(r);
-    }
-    localStorage.setItem(COAT_LOG_KEY, JSON.stringify(out.slice(-12)));
-  } catch (e){}
-}
-function coatLogDraw(){
-  var a = $("answer");
-  if (!a) return;
-  var box = $("coatlog");
-  if (!box){
-    a.innerHTML = '<div id="coatlog"><div class="coathead">the floor'
-      + '<button id="coatclear" title="Clear this conversation">clear \u00D7</button></div>'
-      + '<p class="coatempty"></p><div id="coatrows"></div></div>';
-    box = $("coatlog");
-    $("coatclear").onclick = function(){ COAT_LOG = []; coatLogSave(); coatLogDraw(); };
-  }
-  var empty = box.querySelector(".coatempty");
-  if (empty){
-    empty.textContent = COAT_STATE.open
-      ? "The floor is yours \u2014 ask in your own words below. "
-        + COAT_STATE.per + " prompts a day on this line."
-      : coatCap(coatWords(COAT_STATE.why)) + ".";
-    empty.style.display = COAT_LOG.length ? "none" : "";
-  }
-  var rows = $("coatrows");
-  rows.innerHTML = "";
-  for (var i = 0; i < COAT_LOG.length; i++){
-    var r = COAT_LOG[i];
-    var q = document.createElement("p");
-    q.className = "qline"; q.textContent = r.q; rows.appendChild(q);
-    var an = document.createElement("p");
-    an.className = "aline" + (r.err ? " errline" : "");
-    an.textContent = r.a; rows.appendChild(an);
-    if (r.machine){
-      var m = document.createElement("p");
-      m.className = "mline"; m.textContent = r.machine; rows.appendChild(m);
-    }
-    if (r.photo){
-      var ph = document.createElement("img");
-      ph.className = "photo";
-      ph.src = "data:image/png;base64," + r.photo;
-      ph.alt = "The photographed building";
-      rows.appendChild(ph);
-    }
-  }
-  a.style.display = "block";
-  try{ $("welcome").style.display = "none"; }catch(_w){}
-  fitBottom();
-  if (rows.lastChild && rows.lastChild.scrollIntoView)
-    rows.lastChild.scrollIntoView({ block: "nearest" });
-}
-function coatGreet(){
-  /* the floor, with the words it kept - or the invitation when it is bare */
-  COAT_LOG = coatLogLoad();
-  coatLogDraw();
-}
-function coatAsk(q, opts){
-  opts = opts || {};
-  if (busy) return;
-  if (!COAT_STATE.stands || !COAT_STATE.open){
-    /* the line is shut - the classroom's words on the floor, nothing spent */
-    coatProbe(function(st){
-      if (st.stands && st.open){ coatAsk(q, opts); return; }
-      COAT_LOG.push({ q: q, a: coatCap(coatWords(st.why)) + ".", err: true });
-      COAT_LOG = COAT_LOG.slice(-12);
-      coatLogSave(); coatLogDraw();
-      try{ $("ask").value = ""; }catch(_a){}
-    });
-    return;
-  }
-  var run = ++COAT_RUN;
-  setBusy(q);
-  /* the question takes its row on the floor at once, the answer follows
-     in place (the showcase's way) */
-  var entry = { q: q, a: "the engine is thinking\u2026" };
-  COAT_LOG.push(entry); COAT_LOG = COAT_LOG.slice(-12);
-  coatLogDraw();
-  var job = { id: null, run: run, q: q, t0: Date.now(), entry: entry };
-  try{ $("qanswer").style.display = "none"; }catch(_q){}
-  siteState("work", "asking the classroom");
-  var wantsPhoto = !!opts.photo ||
-    /\b(photo|render|picture|image|\u0444\u043E\u0442\u043E|\u0440\u0435\u043D\u0434\u0435\u0440|\u0441\u043D\u0438\u043C\u043E\u043A)/i.test(q);
-  var shot = Promise.resolve("");
-  if (wantsPhoto && facadeState.elev){
-    /* THE CAMERA SEES THE STREET. [stated] "the render is not taken from the
-       streetview" - the guest's photo is shot from the app's own street
-       view, exactly as the keeper's Photograph is: the stage walks to the
-       STREET tab and streetPng() takes the same picture. */
-    if (!facadeState.viewTab){
-      facadeState.viewTab = true; facadeState.planTab = false;
-      facadeState.sectionTab = false; facadeState.floorsTab = false;
-      try{
-        $("floorspanel").style.display = "none";
-        $("sectionpanel").style.display = "none";
-        $("facadebox").style.display = "block";
-      }catch(_v){}
-      facadeState.zoom = 1;
-      paintFacade();
-    }
-    shot = streetPng().then(function(sh){ return (sh && sh.png) || ""; },
-                            function(){ return ""; });
-  }
-  shot.then(function(png){
-    var body = { prompt: q };
-    if (png) body.png = png;
-    return fetch("/trial", { method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body) }).then(function(r){ return r.json(); });
-  }).then(function(d){
-    if (COAT_RUN !== run) return;
-    if (d && d.ok && d.job){
-      if (typeof d.left === "number") COAT_STATE.left = d.left;
-      coatBadge();
-      job.id = d.job;
-      COAT_JOB = job;
-      coatPoll(job, 0);
-    } else {
-      if (d && d.state){
-        COAT_STATE.open = false; COAT_STATE.why = d.state;
-        COAT_STATE.stands = coatRoomStands(COAT_STATE);
-      }
-      coatDone(job, null, (d && d.error) || "the classroom refused", true);
-    }
-  }).catch(function(){
-    if (COAT_RUN !== run) return;
-    coatDone(job, null, "the engine did not answer - your try may still land", true);
-  });
-}
-function coatPoll(job, tries){
-  /* the showcase's pollJob (index.html p1.011), with the app's own state pill */
-  fetch("/trial?job=" + encodeURIComponent(job.id))
-    .then(function(r){ return r.json(); }).then(function(rec){
-      if (rec.state === "working"){
-        /* the showcase's waiting words, in the row and on the pill */
-        if (tries === 10){
-          siteState("work", "the classroom is thinking");
-          job.entry.a = "the engine is thinking\u2026 a real model takes a moment";
-          coatLogDraw();
-        }
-        if (tries === 40){
-          siteState("work", "still working \u00B7 a photograph takes about a minute");
-          job.entry.a = "still working\u2026 a photograph takes about a minute";
-          coatLogDraw();
-        }
-        if (stopped && !job.stopSaid){
-          job.stopSaid = true;
-          job.entry.a = "you stopped the wait \u2014 the answer still lands here";
-          coatLogDraw();
-        }
-        if (tries > 120){
-          coatDone(job, null, "the engine is taking long - ask again in a minute", true);
-          return;
-        }
-        setTimeout(function(){ coatPoll(job, tries + 1); }, 1000);
-        return;
-      }
-      if (typeof rec.left === "number") COAT_STATE.left = rec.left;
-      if (rec.state === "done"){ coatDone(job, rec, null, false); return; }
-      coatDone(job, rec, rec.error || "the classroom stumbled", true);
-    }).catch(function(){
-      coatDone(job, null, "the engine did not answer - your try may still land", true);
-    });
-}
-function coatDone(job, rec, errText, isErr){
-  var run = job.run, entry = job.entry;
-  var current = (run === COAT_RUN);         /* the latest ask, job or refusal */
-  if (COAT_JOB && COAT_JOB.run === run) COAT_JOB = null;
-  coatBadge();
-  var photo = (!isErr && rec && rec.photo) ? String(rec.photo) : "";
-  var changed = !photo && (!(rec && rec.elevation) || facadeSig(rec.elevation) !== FACADE_SIG);
-  function land(){
-    /* the row gets its answer: words, the machine line, the photograph */
-    entry.a = isErr ? String(errText || "") : String((rec && rec.answer) || "done");
-    entry.err = !!isErr;
-    entry.machine = (!isErr && rec && rec.machine) ? String(rec.machine) : "";
-    if (photo) entry.photo = photo;
-    coatLogSave(); coatLogDraw();
-  }
-  if (!current){
-    /* a job he stopped waiting for still lands - its row fills, the stage
-       refreshes quietly */
-    land();
-    if (!isErr && changed){
-      STOP_WAIT = false;
-      showFacadeSettled("").then(function(){ try{ refreshReport(); }catch(_r){} }, function(){});
-    }
-    return;
-  }
-  function finish(){
-    if (photo){
-      PHOTO.png = photo; PHOTO.show = true; PHOTO.corner = facadeState.eye;
-      facadeState.viewTab = true; facadeState.planTab = false;
-      facadeState.sectionTab = false; facadeState.floorsTab = false;
-      try{ $("facadebox").style.display = "block"; }catch(_p){}
-      paintFacade();
-    }
-    land();
-    siteState(isErr ? "warn" : "done", isErr ? "the classroom refused" : "up to date");
-    try{ refreshReport(); }catch(_r2){}
-    clearBusy();
-  }
-  /* the answer arrives WITH the drawing (the cream law): re-read the truth
-     from the site in the app's own language, then speak */
-  STOP_WAIT = false;
-  if (changed) showFacadeSettled("").then(finish, finish); else finish();
 }
 
 /* the door here is dead: walk 8765..8774, jump to the first live /ping */
@@ -4926,7 +4501,6 @@ function openModelMenu(){
 }
 $("modelbtn").addEventListener("click", function(e){
   e.stopPropagation();
-  if (COAT){ coatToast("Choosing the model", "the workshop"); return; }
   if ($("modelmenu").className === "on") closeModelMenu(); else openModelMenu();
 });
 document.addEventListener("click", closeModelMenu);
@@ -4950,10 +4524,7 @@ function paintAtts(){
   }
   fitBottom();
 }
-$("addbtn").addEventListener("click", function(){
-  if (COAT){ coatToast("Attaching pictures and documents", "the workshop"); return; }
-  $("addfile").click();
-});
+$("addbtn").addEventListener("click", function(){ $("addfile").click(); });
 $("addfile").addEventListener("change", function(){
   var files = this.files || [];
   for (var i = 0; i < files.length; i++){
@@ -4987,10 +4558,7 @@ function toggleSettings(force){
   s.style.display = open ? "block" : "none";
   if (open){ $("ukey").textContent = maskKey(); refreshDisp(); }
 }
-$("gear").addEventListener("click", function(){
-  if (COAT){ coatToast("Settings", "the workshop"); return; }
-  toggleSettings();
-});
+$("gear").addEventListener("click", function(){ toggleSettings(); });
 function maskKey(){
   var k = localStorage.getItem("gfp_key") || "";
   return k ? "sk-\u2026" + k.slice(-4) : "No key on this device yet";
@@ -6571,7 +6139,6 @@ function askAI(){
   if (busy) return;
   var q = $("ask").value.trim();
   if (!q) return;
-  if (COAT){ coatAsk(q); return; }        /* THE GUEST COAT (s1.004) */
   var key = localStorage.getItem("gfp_key") || "";
   if (!key){
     showAnswer("<pre>Paste your Anthropic API key first - the gear at the left end of the prompt bar.</pre>");
@@ -7015,8 +6582,8 @@ function setCrumb(){
   var cls = document.body.className;
   var onWork = cls.indexOf("scr-") < 0;
   var onBldg = cls.indexOf("scr-bldg") >= 0;
-  var name = (PROJ.b || COAT) && (onWork || onBldg) ? (PROJ.name || "") : "";
-  var conv = (onWork && (PROJ.b || COAT)) ? (PROJ.ct || convLabel()) : "";
+  var name = PROJ.b && (onWork || onBldg) ? (PROJ.name || "") : "";
+  var conv = (onWork && PROJ.b) ? (PROJ.ct || convLabel()) : "";
   $("crumbproj").textContent = name;
   $("crumbconvlabel").textContent = conv;
   $("crumbconv").className = conv ? "" : "empty";
@@ -7115,7 +6682,6 @@ function showScreen(s){
   var cls = (document.body.className.indexOf("touch") >= 0) ? "touch" : "";
   if (s === "home") cls += " scr-home";
   else if (s === "bldg") cls += " scr-bldg";
-  if (COAT) cls += " coat";          /* the coat survives a screen change (s1.004) */
   document.body.className = cls.replace(/^\s+/, "");
   var stage = $("stage");                  /* v293: the welcome screens wear the stage */
   if (stage){
@@ -8297,7 +7863,6 @@ function abandonSession(){
   return saved;
 }
 $("wordmark").addEventListener("click", function(){
-  if (COAT){ location.href = "/welcome"; return; }   /* the guest's way back is the site */
   var back = function(){ toTop(); loadHome(); };
   abandonSession().then(back, back);
 });
