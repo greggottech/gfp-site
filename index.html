@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.017 (his polished v46 + the fixes below) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.019 (his polished v46 + fixes + THE PHONE, story kept) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -2878,6 +2878,58 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (max-width:1120px){.power-reveal-stage{min-height:410svh !important}}
 @media (max-width:760px){.power-reveal-stage{min-height:385svh !important}}
 @media (max-width:560px){.power-reveal-stage{min-height:370svh !important}}
+
+/* ================= THE PHONE (p1.018) =================
+   One last layer for narrow screens: the navigation folds into a burger,
+   the composer stays in the bottom dock (no scroll story), the hero keeps
+   its words apart, the composer grid is a plain row. */
+.navburger{display:none}
+.navsheet{display:none}
+@media (max-width:700px){
+  header .bar nav{display:none !important}
+  header .bar{gap:12px !important;padding-inline:16px !important}
+  .navburger{display:inline-flex !important;flex-direction:column;justify-content:center;gap:5px;
+    margin-left:auto;width:44px;height:44px;padding:0 10px;border:0;background:transparent;cursor:pointer}
+  .navburger span{display:block;height:1.6px;background:var(--ink,#111214);border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  header.menu-open .navburger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+  header.menu-open .navburger span:nth-child(2){opacity:0}
+  header.menu-open .navburger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+  .navsheet{position:absolute !important;left:0 !important;right:0 !important;top:100% !important;z-index:80 !important;flex-direction:column;
+    background:#f9f3ed !important;border-bottom:1px solid rgba(17,18,20,.10) !important;
+    box-shadow:0 18px 40px rgba(41,31,24,.12) !important;padding:6px 0 10px !important;opacity:1 !important}
+  header.menu-open .navsheet{display:flex !important}
+  .navsheet a{display:block;padding:14px 20px;font-family:var(--font-sans);font-size:17px;
+    color:var(--ink,#111214);text-decoration:none;border-top:1px solid rgba(17,18,20,.06)}
+  .navsheet a:first-child{border-top:0}
+  .navsheet a.here{color:var(--blue,#0a50ff)}
+  header{position:relative !important;z-index:60 !important}
+
+  /* the hero fills the first screen, so the composer parks at its foot
+     (not two thirds up); the mirrored word keeps clear of the kicker */
+  #scr-home>.hero, #scr-home>.hero.hero-minimal, #scr-home>.hero.hero-minimal.hero-editorial{
+    min-height:calc(100svh - var(--header-h,40px) - var(--home-composer-h,48px) - 14px) !important;
+    box-sizing:border-box !important}
+  #scr-home>.hero.hero-minimal h1, .hero h1{margin-bottom:clamp(30px,7vh,46px) !important}
+  .hero-reflect::after{opacity:.5 !important}
+
+  /* the composer: one plain row (in the hero, pinned, or in the dock alike) */
+  #deckin{display:block !important;padding:8px 0 !important}
+  .composer{display:grid !important;grid-template-columns:auto minmax(0,1fr) auto !important;
+    grid-template-areas:none !important;gap:0 !important;align-items:center !important;
+    min-height:46px !important;background:#fff !important;border:1px solid rgba(17,18,20,.14) !important;
+    border-radius:12px !important}
+  #deckattach{display:none !important}
+  #trialbadge{display:none !important}
+  .composer-scope{align-self:stretch;display:flex !important;align-items:center;padding:0 10px !important;
+    border-right:1px solid rgba(17,18,20,.08) !important;font-size:9px !important;letter-spacing:.06em !important;white-space:nowrap}
+  .scope-wide{display:none !important}
+  .scope-short{display:inline !important}
+  #deckq,#deckgo{grid-area:auto !important}
+  #deckq{width:100% !important;min-width:0 !important;height:44px !important;font-size:16px !important;
+    padding:0 12px !important;border:0 !important;background:transparent !important;box-shadow:none !important;outline:0 !important}
+  #deckgo{width:38px !important;min-width:38px !important;height:38px !important;min-height:38px !important;
+    margin:0 4px 0 0 !important;padding:0 !important;border-radius:9px !important}
+}
 </style>
 
 </head>
@@ -2892,6 +2944,13 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <a class="book js-contact" href="#"><span class="nav-wide">Book a demo</span><span class="nav-short">Demo</span></a>
     <a class="signin js-signin" href="#">Sign in</a>
   </nav>
+  <button id="navburger" class="navburger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div>
+<div id="navsheet" class="navsheet" aria-label="Menu">
+  <a href="#about" data-go="about">Technology</a>
+  <a href="#classroom" data-go="classroom">Chat GFP</a>
+  <a class="js-contact" href="#">Book a demo</a>
+  <a class="js-signin" href="#">Sign in</a>
 </div></header>
 <div id="rooms">
   <div class="screen" id="scr-home">
@@ -3008,7 +3067,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.017</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3047,7 +3106,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.017</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3067,7 +3126,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.017</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.019</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8125,6 +8184,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var name = (hash || "").replace("#", "");
     return ORDER.indexOf(name) >= 0 ? name : "home";
   }
+  /* THE PHONE (p1.019): the story stays on a narrow screen; what goes is
+     the inertia - on touch the pinned composer follows the real scroll
+     exactly, so the pin lands where the flowing composer was */
+  var PHONE_MQ = window.matchMedia ? window.matchMedia("(max-width:700px)") : null;
+  function onPhone(){ return !!(PHONE_MQ && PHONE_MQ.matches); }
   function placeDeck(name){
     var deck = $("deck"), home = $("deck-home-anchor"), marker = $("deck-global-anchor");
     if (!deck) return;
@@ -8288,10 +8352,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (!HOME_STORY.ready) prepareHomeDeckStory();
     if (!HOME_STORY.ready) return;
     var st=(typeof storyScroll === "number") ? storyScroll : scr.scrollTop;
+    var stReal=scr.scrollTop;   /* p1.019: the pin is decided on the real scroll */
     var vh=scr.clientHeight, h=HOME_STORY.h;
     updatePowerReveal(st);
 
-    if (st < HOME_STORY.pinStart){
+    if (stReal < HOME_STORY.pinStart){
       if (deck.classList.contains("deck-story-fixed")){
         deck.classList.remove("deck-story-fixed","deck-story-bottom");
         deck.style.removeProperty("--deck-story-y");
@@ -8313,8 +8378,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* At pinStart the fixed composer lands exactly where its flowing version was,
        so there is no positional jump. */
     deck.classList.add("deck-story-fixed");
-    var centreY=(vh-h)/2;
-    var bottomY=vh-h-Math.max(12,Math.min(20,innerWidth*.014));
+    var off=scr.getBoundingClientRect().top;   /* p1.019: the scroller's own top (the fixed header above it) */
+    var centreY=off+(vh-h)/2;
+    var bottomY=off+vh-h-Math.max(12,Math.min(20,innerWidth*.014));
     var moveP=smooth01((st-HOME_STORY.moveStart)/(HOME_STORY.moveEnd-HOME_STORY.moveStart));
     var y=centreY + (bottomY-centreY)*moveP;
     deck.style.setProperty("--deck-story-y",y.toFixed(2)+"px");
@@ -8369,6 +8435,20 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     current = name;
   }
   window.addEventListener("hashchange", function(){ show(screenOf(location.hash)); });
+  if (PHONE_MQ && PHONE_MQ.addEventListener) PHONE_MQ.addEventListener("change", function(){ if (current === "home") requestAnimationFrame(function(){ prepareHomeDeckStory(); updateHomeDeckStory(); }); });
+  /* THE PHONE (p1.018): the burger opens the sheet; any link or a screen
+     change closes it */
+  (function(){
+    var burger = $("navburger"), head = document.querySelector("header"), sheet = $("navsheet");
+    if (!burger || !head || !sheet) return;
+    function setOpen(open){
+      head.classList.toggle("menu-open", open);
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    burger.addEventListener("click", function(){ setOpen(!head.classList.contains("menu-open")); });
+    sheet.addEventListener("click", function(e){ if (e.target && e.target.tagName === "A") setOpen(false); });
+    window.addEventListener("hashchange", function(){ setOpen(false); });
+  })();
   function runHomeStoryMotion(){
     HOME_MOTION.raf=0;
     if (current !== "home") return;
@@ -8408,6 +8488,14 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var scr=$("scr-home");
     if (!scr || current !== "home") return;
     HOME_MOTION.target=scr.scrollTop;
+    if (onPhone()){
+      /* THE PHONE (p1.019): no inertia on touch - the choreography is glued
+         to the real scroll, so nothing lags, nothing jumps at the pin */
+      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+      HOME_MOTION.value=HOME_MOTION.target; HOME_MOTION.velocity=0; HOME_MOTION.initialized=true;
+      updateHomeDeckStory(HOME_MOTION.value);
+      return;
+    }
     if (!HOME_MOTION.initialized){
       HOME_MOTION.value=HOME_MOTION.target;
       HOME_MOTION.velocity=0;
