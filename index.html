@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.039 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.040 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3122,6 +3122,17 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 #deck, #deck *{touch-action:pan-y}
 #deck input:focus{touch-action:auto}
 .deckghost{-webkit-user-select:none;user-select:none}
+
+/* ================= THE PRESSOMETRE (p1.040) ================= */
+#windmeter{position:fixed;left:0;right:0;top:calc(var(--header-h,44px) + clamp(10px,2.2vh,26px));z-index:59;
+  text-align:center;pointer-events:none;opacity:0;transform:translateY(-6px);
+  transition:opacity .25s ease,transform .25s ease}
+#windmeter .wm-k{margin:0 0 2px;font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:var(--muted)}
+#windmeter .wm-v{margin:0;font-family:var(--font-sans);font-size:clamp(24px,3.2vw,34px);font-weight:500;
+  letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+#windmeter .wm-v #windval{font-variant-numeric:tabular-nums}
+#windmeter .wm-c{margin:4px 0 0;font-family:var(--font-sans);font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){#windmeter{display:none}}
 </style>
 
 </head>
@@ -3158,6 +3169,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     </div>
 
     <svg id="windlayer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="windmeter" aria-hidden="true">
+      <p class="wm-k">WIND PRESSURE</p>
+      <p class="wm-v"><span id="windval">1,000</span> Pa</p>
+      <p class="wm-c">Every panel is checked against it.</p>
+    </div>
     <div class="home-prompt-stage" id="home-prompt-stage">
       <div id="deck-home-anchor"></div>
       <div id="home-prompt-reveal" class="home-prompt-reveal" aria-hidden="true">
@@ -3301,7 +3317,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.039</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.040</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3340,7 +3356,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>A live engine that can build and change a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualizations from the same building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.039</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.040</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3360,7 +3376,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. The product direction is AI for the physical world: systems that can turn intent into engineered physical assemblies, then connect those assemblies to pricing, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.039</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.040</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8680,7 +8696,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     deck.classList.toggle("deck-story-bottom",st>=HOME_STORY.moveEnd);
     /* THE WIND (p1.038): rises as the thesis settles, presses through the
        descent, gone the moment the box docks */
-    windDrive(smooth01((st-(HOME_STORY.thesisEnd-vh*.02))/(vh*.10)) * (1-smooth01((st-(HOME_STORY.moveEnd-vh*.08))/(vh*.09))));
+    windDrive(smooth01((st-(HOME_STORY.thesisEnd-vh*.02))/(vh*.10)) * (1-smooth01((st-(HOME_STORY.moveEnd-vh*.08))/(vh*.09))),
+              (st-(HOME_STORY.thesisEnd-vh*.02))/((HOME_STORY.moveEnd-vh*.08)-(HOME_STORY.thesisEnd-vh*.02)));
 
     if (reveal){
       var thesisP=smooth01((st-HOME_STORY.thesisStart)/(HOME_STORY.thesisEnd-HOME_STORY.thesisStart));
@@ -8898,11 +8915,20 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     windDraw();
     WIND.raf=requestAnimationFrame(windTick);
   }
-  function windDrive(p){
+  function windDrive(p, prog){
     if (!windBuild()) return;
-    var l=$("windlayer");
+    var l=$("windlayer"), m=$("windmeter"), v=$("windval");
     WIND.p=p;
     l.style.opacity=String((p*.95).toFixed(3));
+    if (m){
+      m.style.opacity=String((p*.98).toFixed(3));
+      m.style.transform="translateY("+((1-p)*-6).toFixed(1)+"px)";
+    }
+    if (v && typeof prog === "number"){
+      /* THE PRESSOMETRE (p1.040): 1,000 -> 2,900 Pa across the wind's travel */
+      var pa=Math.round((1000+1900*Math.max(0,Math.min(1,prog)))/10)*10;
+      v.textContent=pa.toLocaleString("en-US");
+    }
     if (p>0 && !WIND.raf) WIND.raf=requestAnimationFrame(windTick);
   }
   var DEMO_PROMPT="10 residential floors, the top two penthouses at 5 m, on three commercial floors. Ground floor 7 m high. Third floor recessed 3 m on each side. Footprint 28 \u00D7 24 m.";
