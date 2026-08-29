@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.093 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.094 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3081,6 +3081,15 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 /* ================= THE PROMPT TYPES ITSELF (p1.032) ================= */
 .deckghost{display:none;min-width:0;font-family:var(--font-sans);font-size:15px;line-height:1.4;color:var(--ink);
   padding:11px 14px;white-space:pre-wrap;word-break:break-word;text-align:left}
+/* p1.094: the ghost writes in the field's own face, so the line does not
+   change height as it types */
+#scr-home .composer .deckghost{
+  font-size:clamp(14px,1.05vw,15.2px) !important;
+  line-height:1.55 !important;
+  padding:6px 16px !important;
+}
+#scr-home .composer .deckghost{min-height:clamp(30px,2.4vw,34px) !important;box-sizing:border-box !important}
+@media (max-width:700px){#scr-home .composer .deckghost{font-size:14px !important;padding:6px 12px !important;min-height:44px !important}}
 .deckghost::after{content:"";display:inline-block;width:1.5px;height:1em;margin-left:2px;vertical-align:-.15em;background:var(--ink);
   animation:gfpcaret 1s steps(2,end) infinite}
 @keyframes gfpcaret{0%,49%{opacity:1}50%,100%{opacity:0}}
@@ -3231,8 +3240,17 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (max-width:700px){.deck-tags{padding-left:12px}}
 /* p1.093: one row for the line, one for the labels - so the two buttons
    can span the whole box and stand in its middle */
-#scr-home .composer #deckq,
-#scr-home .composer #trialbadge{ grid-row:1 !important; }
+#scr-home .composer #deckq{ grid-row:1 !important; }
+/* p1.094: the engine's status stands under the box - nothing it says can
+   move the line any more */
+#deckin{position:relative}
+.deck-alert{position:absolute;top:100%;left:0;right:0;display:flex;justify-content:flex-end;
+  padding:6px 14px 0 16px;pointer-events:none}   /* floating under the box - it must not change the box's own height */
+.deck-alert #trialbadge{display:inline-block !important;grid-column:auto !important;grid-row:auto !important;
+  padding:0 !important;border:0 !important;background:transparent !important;
+  font-family:var(--font-sans) !important;font-size:clamp(8.5px,.52vw,9.5px) !important;
+  font-weight:420 !important;letter-spacing:0 !important;white-space:nowrap}
+@media (max-width:700px){.deck-alert{display:none}}   /* the phone never showed this status */
 #scr-home .composer #deckq{ min-height:clamp(30px,2.4vw,34px) !important; }
 #scr-home .composer .deck-tags{ grid-row:2 !important; }
 #scr-home .composer #deckattach,
@@ -3534,7 +3552,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.093</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3573,7 +3591,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.093</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3593,7 +3611,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.093</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -3605,10 +3623,10 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <button id="deckattach" type="button" aria-label="Attach file" title="Attach file"><span aria-hidden="true">+</span></button>
       <input id="deckq" type="text" autocomplete="off" placeholder="Describe a building or request a change…">
       <div id="deckghost" class="deckghost" aria-hidden="true"></div>
-      <span id="trialbadge" class="b-quiet">…</span>
       <button id="deckgo" aria-label="Send"><span aria-hidden="true">↑</span></button>
       <div class="deck-tags" id="deck-tags"><span class="composer-scope" title="Public demo · Aluminium stick curtain wall with structural silicone glazing"><svg class="scope-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect x="4.5" y="10" width="15" height="10.5" rx="2.6" fill="currentColor"/></svg><span class="scope-wide">STICK CURTAIN WALL</span><span class="scope-short">STICK CW</span></span></div>
     </div>
+    <div class="deck-alert"><span id="trialbadge" class="b-quiet">…</span></div>
   </div>
 </div></div>
 
