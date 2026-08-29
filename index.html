@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.107 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.108 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3586,7 +3586,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3625,7 +3625,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3645,7 +3645,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -9802,7 +9802,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var ps=[];
     for (i=0; i<PILLS.length; i++){
       if (i===0) ps.push(Math.max(0, Math.min(1, ((WIND.g||0)-0.60)/0.10)));   /* the gauge hands its reading over */
-      else ps.push(Math.max(0, Math.min(1, (prog-0.28-(i-1)*0.075)/0.26)));   /* unhurried, one at a time, all home before the scene ends */
+      else ps.push(Math.max(0, Math.min(1, (prog-0.26-(i-1)*0.055)/0.40)));   /* a long, unhurried fall - and they follow one another closely */
     }
     /* the slots INSIDE the box - one after another beneath the text */
     var tr=tags?tags.getBoundingClientRect():null;
@@ -9837,6 +9837,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        labels land against where it used to be */
     var tr2=tags?tags.getBoundingClientRect():null;
     var sr2=scopeEl?scopeEl.getBoundingClientRect():sr;
+    var nowP=(window.performance&&performance.now)?performance.now():Date.now();
+    var dtP=Math.min(64, nowP-(WIND.pillT||nowP)); WIND.pillT=nowP;
     var cEl=document.querySelector(".composer");
     var rc=cEl?cEl.getBoundingClientRect():null;
     for (i=0; i<PILLS.length; i++){
@@ -9873,7 +9875,26 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (p >= 0.94 && !WIND.pzap[i]){ WIND.pzap[i]=1; zapBox(); }   /* each arrival charges the box */
       if (p < 0.70) WIND.pzap[i]=0;
       el.style.opacity=String((Math.min(1, p/0.07)*slip*(1-outP)).toFixed(3));
-      el.style.transform="translate("+(x+sway).toFixed(1)+"px,"+y.toFixed(1)+"px) rotate("+rot.toFixed(2)+"deg) scale("+sc.toFixed(3)+")";
+      /* p1.108: each label carries its own weight - its place is a target it
+         eases toward, so it can never be thrown across the screen */
+      var tx=x+sway, ty=y;
+      if (i > 0){
+        if (typeof el._px !== "number" || p < 0.02){ el._px=xL; el._py=-70; }   /* it always starts its fall at the top */
+        else if (p >= 0.93){ el._px=tx; el._py=ty; }   /* in its slot it is exactly in place - the bloom does the rest */
+        else {
+          var kP=1-Math.exp(-dtP/470);   /* p1.108: the weight of honey */
+          var cap=dtP*0.42;              /* and a speed it cannot exceed */
+          var dX=(tx-el._px)*kP, dY=(ty-el._py)*kP;
+          if (dX >  cap) dX= cap; else if (dX < -cap) dX=-cap;
+          if (dY >  cap) dY= cap; else if (dY < -cap) dY=-cap;
+          el._px+=dX;
+          el._py+=dY;
+          if (Math.abs(tx-el._px) < 0.4) el._px=tx;
+          if (Math.abs(ty-el._py) < 0.4) el._py=ty;
+        }
+        tx=el._px; ty=el._py;
+      }
+      el.style.transform="translate("+tx.toFixed(1)+"px,"+ty.toFixed(1)+"px) rotate("+rot.toFixed(2)+"deg) scale("+sc.toFixed(3)+")";
     }
   }
   function windDrive(p, prog, dockP){
