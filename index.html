@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.087 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.088 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3197,13 +3197,26 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   .pd-facts dd{font-size:15px}
 }
 @media (max-height:640px){.pd-card .facadebox svg{max-height:26vh !important}}
-/* THE HERO'S HALF (p1.087): on the desktop the headline sits in the middle
-   of the left half instead of hugging its edge */
+/* THE HERO'S HALVES (p1.087/88): on the desktop the headline sits in the
+   middle of the left half, and the paragraph keeps the same band from the
+   right edge that the headline leaves on the left */
 @media (min-width:901px){
-  .hero-editorial .hero-statement{
-    width:min(100%,clamp(360px,27vw,470px)) !important;
+  #scr-home>.hero.hero-minimal.hero-editorial{
+    --hero-measure:clamp(360px,27vw,470px);
+    grid-template-columns:1fr 1fr !important;
+    column-gap:0 !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  #scr-home>.hero.hero-editorial .hero-statement{
+    width:min(100%,var(--hero-measure)) !important;
     justify-self:center !important;
-    margin-inline:auto !important;
+    margin-inline:0 !important;
+  }
+  #scr-home>.hero.hero-editorial .hero-context{
+    width:min(40rem,34vw) !important;
+    justify-self:end !important;
+    margin-inline:0 calc((100% - var(--hero-measure)) / 2) !important;   /* the column IS the half */
   }
 }
 .power-reveal-stage{min-height:930svh !important}   /* the runway: send, three turns, the six words, the closing line, the hold */
@@ -3467,7 +3480,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.087</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.088</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3506,7 +3519,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.087</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.088</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3526,7 +3539,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.087</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.088</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
