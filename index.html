@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.094 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.107 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3118,11 +3118,15 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .power-demo{position:absolute;left:0;right:0;top:clamp(56px,9vh,84px);bottom:clamp(76px,12vh,110px);
   display:block;overflow:hidden;
   padding:0 var(--page-gutter,18px);pointer-events:none}
-.pd-stack{display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;
-  will-change:transform}
+.pd-stack{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;
+  padding-top:clamp(10px,1.6vh,20px);will-change:transform}
+.pd-stack .pd-q{margin-top:clamp(8px,1.4vh,18px)}   /* a new turn gets more air than a new line */
+.pd-stack .pd-day + .pd-q{margin-top:0}
 .pd-stack>*,.pd-abub>*{opacity:0;transform:translateY(12px);filter:blur(8px);will-change:opacity,transform,filter}
-.pd-draw{background:#fff;border:1px solid rgba(30,20,10,.09);border-radius:9px;padding:8px;width:auto}
-.pd-draw svg{display:block;width:100%;height:auto;max-height:min(34vh,360px)}
+.pd-draw{background:transparent;border:0;border-radius:9px;padding:0;width:auto}
+.pd-draw svg{display:block !important;width:auto !important;height:min(26svh,250px) !important;
+  max-width:100% !important;min-height:0 !important;margin:0 auto !important}
+@media (max-width:700px){.pd-draw svg{height:min(22svh,170px) !important}}
 .pd-file{display:flex;align-items:center;gap:9px;margin:1px 3px 2px}
 .pd-file-i{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
   border-radius:8px;background:rgba(10,80,255,.10);color:var(--blue,#0a50ff);
@@ -3138,7 +3142,9 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   max-height:min(44vh,480px);filter:saturate(.98) contrast(1.015)}
 .pd-render::after{content:"";position:absolute;inset:0;pointer-events:none;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
-.pd-cap{margin:0 3px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;color:var(--muted)}
+.pd-cap{margin:0 3px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:700px){.pd-cap{font-size:8.5px;letter-spacing:.04em}}
 .pd-abub{width:min(720px,100%);background:#fff;border:1px solid rgba(30,20,10,.12);
   border-radius:6px 14px 14px 14px;box-shadow:0 16px 44px rgba(44,34,26,.15);
   padding:9px;display:flex;flex-direction:column;gap:7px;transform-origin:0 0}
@@ -3148,6 +3154,16 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   font-family:var(--font-sans);font-size:clamp(14px,1.1vw,16px);line-height:1.45;text-align:left;
   border-radius:16px 16px 6px 16px;padding:11px 15px;
   box-shadow:0 6px 22px rgba(10,80,255,.28)}
+.pd-head{width:min(720px,100%);display:flex;flex-direction:column;align-items:center;gap:7px;
+  margin-bottom:10px;text-align:center}
+.pd-head-a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
+  border-radius:12px;background:var(--blue,#0a50ff);color:#fff;
+  font-family:var(--font-sans);font-weight:700;font-size:19px;letter-spacing:0;
+  box-shadow:0 6px 18px rgba(10,80,255,.24)}
+.pd-head-n{font-family:var(--font-sans);font-size:clamp(15px,1.15vw,17px);font-weight:520;
+  letter-spacing:-.01em;color:var(--ink)}
+.pd-head-s{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted);
+  text-transform:uppercase;margin-top:-3px}
 .pd-day{width:min(720px,100%);display:flex;justify-content:center;margin-bottom:2px}
 .pd-day span{font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;color:var(--muted);
   background:rgba(17,18,20,.05);border-radius:999px;padding:4px 10px}
@@ -3183,6 +3199,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .pd-card button{pointer-events:none}
 .pd-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;width:auto;margin:0 3px}
 .pd-typing{width:min(720px,100%);display:flex;justify-content:flex-start;height:0;overflow:visible;align-items:flex-start}
+#pd-typing2,#pd-typing3{display:none !important}   /* p1.103: nothing to wait for - the chat is already there */
 .pd-tb{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid rgba(30,20,10,.12);
   border-radius:6px 14px 14px 14px;padding:11px 15px;box-shadow:0 8px 22px rgba(44,34,26,.12)}
 .pd-tb i{width:6px;height:6px;border-radius:50%;background:rgba(17,18,20,.34);animation:pdDot 1.05s infinite ease-in-out}
@@ -3191,9 +3208,10 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @keyframes pdDot{0%,62%,100%{transform:translateY(0);opacity:.42}30%{transform:translateY(-4px);opacity:1}}
 @media (prefers-reduced-motion:reduce){.pd-tb i{animation:none}}
 .pd-cta{width:auto;display:flex;justify-content:flex-start;margin:1px 3px 2px}
-.pd-cta-b{pointer-events:auto;display:inline-block;background:var(--blue,#0a50ff);color:#fff;text-decoration:none;
-  font-family:var(--font-sans);font-size:12.5px;font-weight:530;letter-spacing:.01em;
-  border-radius:999px;padding:8px 15px;box-shadow:0 6px 20px rgba(10,80,255,.26)}
+.pd-cta-b{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;
+  background:var(--blue,#0a50ff);color:#fff;text-decoration:none;
+  font-family:var(--font-sans);font-size:12.5px;font-weight:540;letter-spacing:.01em;
+  border-radius:999px;padding:9px 16px;box-shadow:0 8px 22px rgba(10,80,255,.30)}
 .pd-cta-b:active{transform:translateY(1px)}
 .pd-facts div{border-top:1px solid rgba(30,20,10,.14);padding-top:3px}
 .pd-facts dt{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.1em;color:var(--muted);margin:0 0 1px}
@@ -3229,7 +3247,18 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     margin-inline:0 calc((100% - var(--hero-measure)) / 2) !important;   /* the column IS the half */
   }
 }
-.power-reveal-stage{min-height:930svh !important}   /* the runway: send, three turns, the six words, the closing line, the hold */
+/* THE HEADING PLAYS ITSELF (p1.105): the scroll gives the cue, the
+   animation does the rest - one movement, on its own clock */
+.reveal-thesis.thesis-in{animation:thesisIn 1.05s cubic-bezier(.16,.84,.28,1) both}
+@keyframes thesisIn{
+  from{opacity:0;transform:translateY(20px);filter:blur(4px)}
+  60%{opacity:1;filter:blur(0)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal-thesis.thesis-in{animation:none;opacity:1;transform:none;filter:none}
+}
+.power-reveal-stage{min-height:900svh !important}   /* the runway: send, three turns, the six words, the closing line, the hold */
 
 /* ================= THE WIND (p1.038) ================= */
 #windlayer{position:fixed;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;opacity:0;
@@ -3337,7 +3366,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (prefers-reduced-motion:reduce){#windmeter{display:none}}
 
 /* ================= THE REAL WORLD (p1.044) ================= */
-.meets{min-height:96svh;display:grid;align-content:center;justify-items:center;position:relative;z-index:59;
+.meets{min-height:230svh;display:grid;align-content:center;justify-items:center;position:relative;z-index:59;
   padding:clamp(56px,10vh,120px) var(--page-gutter,18px) clamp(160px,28vh,260px);text-align:center}
 @media (max-width:700px){.meets{padding-bottom:clamp(320px,56svh,450px)}}   /* the docked full line is tall on a phone - by the section's end the words stand clear above it */
 .meets h2{margin:0 0 clamp(22px,4vh,44px);font-family:var(--font-sans);
@@ -3472,6 +3501,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
              building as the trial draws it, the counted values -->
         <div class="power-demo" id="power-demo" aria-hidden="true">
           <div class="pd-stack" id="pd-stack">
+          <div class="pd-head" id="pd-head">
+            <span class="pd-head-a">G</span>
+            <span class="pd-head-n">Global Facade Project</span>
+            <span class="pd-head-s">AI for the physical world</span>
+          </div>
           <div class="pd-day" id="pd-day"><span>TODAY</span></div>
 
           <p class="pd-q" id="pd-q"></p>
@@ -3552,7 +3586,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3591,7 +3625,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3611,7 +3645,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.094</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.107</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8793,9 +8827,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     HOME_STORY.imageStart =HOME_STORY.pinStart + vh*.28;
     HOME_STORY.imageEnd   =HOME_STORY.pinStart + vh*.55;
     HOME_STORY.gptStart   =HOME_STORY.pinStart + vh*.54;   /* p1.043: "Like using ChatGPT." */
-    HOME_STORY.gptEnd     =HOME_STORY.pinStart + vh*.81;
-    HOME_STORY.thesisStart=HOME_STORY.pinStart + vh*1.41;
-    HOME_STORY.thesisEnd  =HOME_STORY.pinStart + vh*1.66;
+    HOME_STORY.gptEnd     =HOME_STORY.pinStart + vh*.86;
+    /* p1.104: the heading follows its own lines at once and takes its time -
+       one movement, no gap, no half-states */
+    HOME_STORY.thesisStart=HOME_STORY.pinStart + vh*1.40;
+    HOME_STORY.thesisEnd  =HOME_STORY.pinStart + vh*1.90;
     /* Hold the completed thought, then give the whole group a long, calm docking run.
        The content spacer below is intentionally longer than this movement so the
        pipeline cannot enter until the composer has fully settled at the bottom. */
@@ -8806,7 +8842,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     HOME_STORY.typeEnd    =HOME_STORY.pinStart + vh*1.36;
     /* THE ORDER (p1.048): after the thesis the text below dissolves over a
        few scrolls, then the wind comes, then the press and the descent */
-    HOME_STORY.windStart  =HOME_STORY.thesisEnd + vh*.34;
+    HOME_STORY.windStart  =HOME_STORY.thesisEnd + vh*.10;   /* p1.104: the heading is longer now */
     HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*2.10;
     HOME_STORY.fadeStart  =HOME_STORY.moveStart - vh*.02;   /* p1.073: the words leave WITH the push */
     HOME_STORY.fadeEnd    =HOME_STORY.moveStart + vh*.45;
@@ -8841,15 +8877,15 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var scopesOut=0;   /* p1.036: the words stay until the field lets go */
     /* Longer, overlapping dissolves. Nothing travels into frame: each scope
        condenses gently from soft focus while the previous words remain. */
-    var scopeStarts=[3.06,3.19,3.32,3.45,3.58,3.71];   /* the six words come after the three turns */
-    var fadeSpan=.205;
+    var scopeStarts=[2.76,2.88,3.00,3.12,3.24,3.36];   /* the six words come after the three turns */
+    var fadeSpan=.175;
     for (var i=0;i<scopes.length;i++){
       var startP=scopeStarts[i] !== undefined ? scopeStarts[i] : (.025+i*.13);
       var scopeP=smooth01((pinP-startP)/fadeSpan);
       /* THE CLOSING LINE (p1.024): once the line has arrived the six words
          step back to a third and stay there through the hold */
-      var goneP=smooth01((pinP-5.74)/.25);   /* a safety only - the field lets go first */
-      var dimP=smooth01((pinP-4.34)/.25);    /* the words step back to a third under the closing line */
+      var goneP=smooth01((pinP-5.10)/.25);   /* a safety only - the field lets go first */
+      var dimP=smooth01((pinP-3.94)/.22);    /* the words step back to a third under the closing line */
       scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP)*(1-scopesOut)*(1-goneP));
       scopes[i].style.transform="none";
       scopes[i].style.filter="blur("+(7.5*(1-scopeP)).toFixed(2)+"px)";
@@ -8868,40 +8904,42 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* THE DEMO ON THE BLUE (p1.035): the six words step aside; the sent
        prompt stands as a chat row, the building card and the values follow;
        then all of it yields to the closing line */
+    WIND.pinP=pinP;   /* the chat's scroll reads it */
     /* p1.084: three turns, one after another, then the whole chat yields */
-    var demoOut=smooth01((pinP-2.86)/.20);
-    var T=[{q:0.30,a:0.42,t:0.48,c:0.64,x:0.86},
-           {q:1.16,a:1.28,t:1.34,c:1.50,x:1.66},
-           {q:2.00,a:2.12,t:2.18,c:2.34,x:2.52}];
-    /* p1.085: the two later prompts are written into the line and sent from
-       it, exactly as the first one was */
-    var typed=null;
-    if (pinP > 0.86 && pinP < 1.24){
-      typed={ t:smooth01((pinP-0.90)/.22), s:smooth01((pinP-1.13)/.05), x:DEMO_PROMPT_2 };
-    } else if (pinP > 1.70 && pinP < 2.08){
-      typed={ t:smooth01((pinP-1.74)/.22), s:smooth01((pinP-1.97)/.05), x:DEMO_PROMPT_3 };
-    }
-    PD_TYPED=typed;
-    if (typed) ghostDrive(typed.t, typed.s, typed.x);
-    var pQ=[], pC=[];
-    for (var ti2=0; ti2<3; ti2++){
-      var d=T[ti2], out=(1-demoOut);
-      var qk=smooth01((pinP-d.q)/.13)*out;
-      var ak=smooth01((pinP-d.a)/.10)*out;
-      var tk2=smooth01((pinP-d.t)/.08)*(1-smooth01((pinP-d.c)/.08))*out;
-      var ck=smooth01((pinP-d.c)/.16)*out;
-      var xk=smooth01((pinP-d.x)/.20)*out;
-      pdTurn(ti2+1, qk, ak, tk2, ck, xk);
-      pQ.push(qk); pC.push(ck);
-    }
-    powerDemoPaint(pQ[0], pC[0], pC[0], pQ[0], pC[0], 0);
+    var demoOut=smooth01((pinP-2.66)/.20);
+    var T=[{q:0.33,a:0.53,t:0.59,c:0.79,x:1.00},
+           {q:1.22,a:1.34,t:1.40,c:1.54,x:1.72},
+           {q:1.94,a:2.06,t:2.12,c:2.26,x:2.44}];
+    /* p1.100: during the chat the line stands quiet - a real chat does not
+       type into its own box while the conversation runs */
+    PD_TYPED=null;
+    var out=(1-demoOut);
+    /* the opening keeps its beats */
+    var d0=T[0];
+    var q0=smooth01((pinP-d0.q)/.13)*out;
+    var a0=smooth01((pinP-d0.a)/.09)*out;
+    var t0=smooth01((pinP-d0.t)/.07)*(1-smooth01((pinP-d0.c)/.07))*out;
+    var c0=smooth01((pinP-d0.c)/.15)*out;
+    var x0=smooth01((pinP-d0.x)/.18)*out;
+    pdTurn(1, q0, a0, t0, c0, x0);
+    /* p1.103: from here the rest of the chat is simply there - it is
+       scrolled, not revealed */
+    var restP=smooth01((pinP-1.02)/.14)*out;
+    pdTurn(2, restP, restP, 0, restP, restP);
+    pdTurn(3, restP, restP, 0, restP, restP);
+    var pQ=[q0, restP, restP], pC=[c0, restP, restP];
+    /* p1.101: the name, the day and the first message are one moment - they
+       arrive as the line empties, not one screen apart */
+    var headP=smooth01((pinP-0.24)/.10)*(1-demoOut);
+    var dayP=smooth01((pinP-0.29)/.09)*(1-demoOut);
+    powerDemoPaint(dayP, headP, 0, 0, 0, 0);
     pdStackRide(pC[0], pC[1], pC[2]);
-    var closeIn=smooth01((pinP-4.04)/.30);
-    var textOut=smooth01((pinP-5.74)/.25);   /* a safety only - the line scrolls away with the field at 3.75 */
+    var closeIn=smooth01((pinP-3.64)/.26);
+    var textOut=smooth01((pinP-5.10)/.25);   /* a safety only - the line scrolls away with the field at 3.75 */
     /* p1.077: the blue is ONE slide - it rises for the closing line and
        leaves with it; the wind ride and the chat stay on cream */
-    var blueOn=smooth01((pinP-2.86)/.20);   /* it rises as the chat clears, before the six words */
-    var blueOut=smooth01((pinP-5.06)/.34);
+    var blueOn=smooth01((pinP-2.72)/.22);   /* it rises WITH the first word, never ahead of it */
+    var blueOut=smooth01((pinP-4.52)/.30);
     var blueP=blueIn*blueOn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
@@ -8971,10 +9009,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         reveal.style.removeProperty("--reveal-story-y");
         var before=reveal.querySelectorAll(".reveal-thesis,.reveal-build,.reveal-image");
         for (var bi=0; bi<before.length; bi++){
+          before[bi].classList.remove("thesis-in");
           before[bi].style.opacity="0";
           before[bi].style.transform="translateY(16px)";
-          before[bi].style.filter="blur(12px)";
+          before[bi].style.filter="blur(4px)";
         }
+        HOME_STORY.thesisCue=false;   /* above the pin the cue is re-armed */
       }
       HOME_STORY.pinY0=undefined;
       HOME_STORY.hSm=undefined;
@@ -9052,25 +9092,38 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var build=reveal.querySelector(".reveal-build");
       var image=reveal.querySelector(".reveal-image");
       if (thesis){
-        thesis.style.opacity=String(thesisP);
-        thesis.style.transform="translateY("+(16*(1-thesisP))+"px)";
-        thesis.style.filter="blur("+(12*(1-thesisP))+"px)";
+        /* p1.105: the scroll only cues it - the animation plays itself */
+        var cue=(st >= HOME_STORY.thesisStart);
+        if (cue !== !!HOME_STORY.thesisCue){
+          HOME_STORY.thesisCue=cue;
+          if (cue){
+            thesis.style.opacity=""; thesis.style.transform=""; thesis.style.filter="";
+            thesis.classList.remove("thesis-in");
+            void thesis.offsetWidth;
+            thesis.classList.add("thesis-in");
+          } else {
+            thesis.classList.remove("thesis-in");
+            thesis.style.opacity="0";
+            thesis.style.transform="translateY(20px)";
+            thesis.style.filter="blur(4px)";
+          }
+        }
       }
       if (build){
         build.style.opacity=String(buildP);
         build.style.transform="translateY("+(14*(1-buildP))+"px)";
-        build.style.filter="blur("+(10*(1-buildP))+"px)";
+        build.style.filter="blur("+(3*(1-buildP)).toFixed(2)+"px)";
       }
       if (image){
         image.style.opacity=String(imageP);
         image.style.transform="translateY("+(14*(1-imageP))+"px)";
-        image.style.filter="blur("+(10*(1-imageP))+"px)";
+        image.style.filter="blur("+(3*(1-imageP)).toFixed(2)+"px)";
       }
       var gpt=reveal.querySelector(".reveal-gpt");
       if (gpt){
         gpt.style.opacity=String(gptP);
         gpt.style.transform="translateY("+(14*(1-gptP))+"px)";
-        gpt.style.filter="blur("+(10*(1-gptP))+"px)";
+        gpt.style.filter="blur("+(3*(1-gptP)).toFixed(2)+"px)";
       }
     }
   }
@@ -9722,8 +9775,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     WIND.raf=0;
     if (WIND.p<=0) return;
     WIND.off+=2.6;
-    windDraw();
-    WIND.raf=requestAnimationFrame(windTick);
+    /* p1.106: every frame the scene creeps toward the scroll's target */
+    if (WIND.dArgs) windDrive(WIND.dArgs[0], WIND.dArgs[1], WIND.dArgs[2]);
+    else windDraw();
+    if (!WIND.raf) WIND.raf=requestAnimationFrame(windTick);
   }
   var PILLS=null, PILL_LANES=[0.22,0.78,0.40,0.64,0.30];
   function zapBox(){
@@ -9776,9 +9831,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var want=slots[i].row*stepY*a;   /* the first line is the pill's own - only the rows under it cost height */
       if (want > need) need=want;
     }
-    need*=(1-outP);
+    need*=(1-smooth01((outP-0.80)/0.20));   /* p1.096: the room outlives the fade */
     if (tags) tags.style.paddingBottom=(7+need).toFixed(1)+"px";
+    /* p1.095: the room has just been opened - measure the row again, or the
+       labels land against where it used to be */
     var tr2=tags?tags.getBoundingClientRect():null;
+    var sr2=scopeEl?scopeEl.getBoundingClientRect():sr;
     var cEl=document.querySelector(".composer");
     var rc=cEl?cEl.getBoundingClientRect():null;
     for (i=0; i<PILLS.length; i++){
@@ -9788,20 +9846,33 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var xL=PILL_LANES[i%PILL_LANES.length]*W - w2/2;   /* the lane holds the label's centre */
       xL=Math.max(10, Math.min(W-w2-10, xL));
       var sx=tr2?(tr2.left+padL+slots[i].x):xL;
-      var sy=(tr2 && sr)?(sr.top+slots[i].row*stepY):(tr2?(tr2.top+slots[i].row*stepY):(window.innerHeight-60));
-      var fall=smooth01(Math.min(1, p/0.86));
-      var y=-70+(sy+70)*fall;
-      var x=xL+(sx-xL)*fall*fall;   /* spread while falling, tucked in on arrival */
+      if (i===0 && sr2) sx=sr2.right+gap;   /* the gauge's label keeps to the pill it follows */
+      var sy=(tr2 && sr2)?(sr2.top+slots[i].row*stepY):(tr2?(tr2.top+slots[i].row*stepY):(window.innerHeight-60));
+      /* p1.096: the flight ends ABOVE the box with the column already
+         final; only then does the label drop straight into its slot, so it
+         is never seen inside the box out of place */
+      var PIN=0.72;
+      var hover=(rc?rc.top:sy)-slots[i].h-7;
+      if (hover > sy) hover=sy;   /* a slot on the first line is close to the edge */
+      var fall=smooth01(Math.min(1, p/PIN));
+      var y=-70+(hover+70)*fall;
+      var x=xL+(sx-xL)*fall*fall;   /* spread while falling, its column found by the time it arrives */
       var sway=Math.sin(p*6.2+i*2.3)*10*(1-fall);
       var rot=Math.sin(p*4.6+i*1.7)*4.5*(1-fall);
       var sc=1;
+      var slip=1;   /* p1.096: it never crosses the box's field in view */
+      if (p > PIN){
+        x=sx; sway=0; rot=0;
+        if (p < 0.93){ y=hover; slip=1-smooth01((p-0.86)/0.07); }   /* waits above, then dims out */
+        else { y=sy; slip=smooth01((p-0.93)/0.07); sc=0.9+0.1*slip; }   /* and blooms in its slot */
+      }
       if (i===0){ y=sy; x=sx; sway=0; rot=0; sc=0.86+0.14*smooth01(p); }   /* the gauge's reading does not fly - it settles where it died */
-      if (p >= 0.86){ y=sy; x=sx; sway=0; rot=0; }
+      if (p >= 0.999){ y=sy; x=sx; sway=0; rot=0; slip=1; sc=1; }
       if (rc && i>0) y=Math.min(y, rc.bottom-slots[i].h-2);   /* nothing ever falls through the box */
       if (!WIND.pzap) WIND.pzap=[];
-      if (p >= 0.84 && !WIND.pzap[i]){ WIND.pzap[i]=1; zapBox(); }   /* each arrival charges the box */
+      if (p >= 0.94 && !WIND.pzap[i]){ WIND.pzap[i]=1; zapBox(); }   /* each arrival charges the box */
       if (p < 0.70) WIND.pzap[i]=0;
-      el.style.opacity=String((Math.min(1, p/0.07)*(1-outP)).toFixed(3));
+      el.style.opacity=String((Math.min(1, p/0.07)*slip*(1-outP)).toFixed(3));
       el.style.transform="translate("+(x+sway).toFixed(1)+"px,"+y.toFixed(1)+"px) rotate("+rot.toFixed(2)+"deg) scale("+sc.toFixed(3)+")";
     }
   }
@@ -9817,6 +9888,17 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var meR=meEl.getBoundingClientRect(), Hh=window.innerHeight;
       prM=Math.max(0, Math.min(1, (Hh*.9-meR.top)/(meR.height+Hh*.55)));
     }
+    /* THE HONEY (p1.106): the scroll only feeds a target; the scene follows
+       it every frame through a viscous lag, so nothing ever steps */
+    WIND.dArgs=[p, prog, dockP];
+    var nowW=(window.performance&&performance.now)?performance.now():Date.now();
+    var dtW=Math.min(64, nowW-(WIND.prTime||nowW)); WIND.prTime=nowW;
+    if (typeof WIND.prS !== "number") WIND.prS=prM;
+    else {
+      WIND.prS+=(prM-WIND.prS)*(1-Math.exp(-dtW/430));   /* p1.107: thicker */
+      if (Math.abs(prM-WIND.prS) < 0.0004) WIND.prS=prM;
+    }
+    prM=WIND.prS;
     var pEff=Math.max(p, smooth01(prM/0.05)*smooth01((1-prM)/0.06));
     if (pEff > WIND.p) WIND.p=pEff;
     var dim=1-0.55*smooth01((prM-0.30)/0.22);   /* less shiny, still curvy */
@@ -10698,10 +10780,30 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var e=ends[i];
       anch[i]=e?Math.max(0, (e.offsetTop+e.offsetHeight)-H):0;
     }
-    var f=p1+p2+p3, off=0;
-    if (f <= 1){ off=anch[0]*f; }                                  /* the first answer rides itself into view */
-    else if (f <= 2){ off=anch[0]+(anch[1]-anch[0])*(f-1); }
-    else { off=anch[1]+(anch[2]-anch[1])*Math.min(1, f-2); }
+    var off=0;
+    var pin=(WIND.pinP||0);
+    if (pin < 1.02){ off=anch[0]*Math.min(1, p1); }   /* the opening rides itself into view */
+    else {
+      /* p1.103: a plain, steady scroll of the whole conversation - the chat
+         moves with the finger, near enough one to one */
+      var maxOff=Math.max(0, stack.scrollHeight-H);
+      var sp=Math.max(0, Math.min(1, (pin-1.02)/1.02));
+      off=anch[0]+(maxOff-anch[0])*sp;
+    }
+    /* p1.099: while the conversation is only its opening, the whole piece
+       stands in the middle of the window instead of hanging from its top */
+    var kids=stack.children, last=null;
+    for (var ki=0; ki<kids.length; ki++){
+      var kv=+(kids[ki].style.opacity||0);
+      if (kv > 0.02) last=kids[ki];
+    }
+    if (last){
+      var visB=last.offsetTop+last.offsetHeight;
+      if (visB < H){
+        var mid=-(H-visB)/2;
+        off=off+(mid-off)*Math.max(0, Math.min(1, 1-p1));   /* it leaves the middle as the answer comes */
+      }
+    }
     stack.style.transform="translateY("+(-off).toFixed(1)+"px)";
   }
   function powerDemoPaint(qP, cardP, factsP, aP, ctaP, typP){
@@ -10712,7 +10814,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       el.style.transform="translateY("+(12*(1-p)).toFixed(1)+"px)";
       el.style.filter="blur("+(8*(1-p)).toFixed(2)+"px)";
     };
-    set("pd-day", qP);   /* p1.084: the turns paint themselves - only the day is left here */
+    /* p1.097: the chat opens with its name, then the day, then the messages */
+    set("pd-head", (typeof cardP === "number")?cardP:qP);
+    set("pd-day", qP);
   }
   function detailsFacts(elev){
     var sheets = 0, glass = 0, frame = 0, windows = 0, i, j;
