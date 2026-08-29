@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.089 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.091 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -1614,7 +1614,7 @@ header .word .word-full.wordmark-stack span{
 }
 #scr-home{
   /* p1.083: the box plus real air - the footer's last line must clear it */
-  padding-bottom:calc(var(--home-composer-h) + clamp(46px,7vh,78px)) !important;
+  padding-bottom:calc(var(--home-composer-h) + var(--composer-tags-h,27px) + clamp(46px,7vh,78px)) !important;
 }
 .home-prompt-stage{
   min-height:calc(var(--home-composer-h) + 112svh) !important;
@@ -2424,7 +2424,7 @@ h3,
    collides with the box's edge */
 #home-foot-veil{
   position:fixed;left:0;right:0;bottom:0;
-  height:calc(var(--home-composer-h) + clamp(30px,5vh,54px));
+  height:calc(var(--home-composer-h) + var(--composer-tags-h,27px) + clamp(30px,5vh,54px));
   z-index:8;pointer-events:none;
   background:linear-gradient(to bottom,rgba(250,246,242,0) 0%,rgba(250,246,242,.72) 42%,rgba(250,246,242,.94) 100%);
   opacity:0;transition:opacity .22s ease
@@ -3152,9 +3152,10 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .pd-tags{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:4px;margin:9px 0 1px}
 .pd-tags span{display:inline-block;background:rgba(255,255,255,.20);color:#fff;
   border:1px solid rgba(255,255,255,.34);
-  font-family:var(--font-sans);font-weight:520;font-size:10.5px;letter-spacing:.02em;line-height:1;
-  padding:5px 9px;border-radius:999px;white-space:nowrap}
-@media (max-width:700px){.pd-tags span{font-size:10px;padding:5px 8px}}
+  font-family:var(--font-sans);font-weight:540;font-size:clamp(9px,.62vw,10.5px);
+  letter-spacing:.045em;line-height:1;
+  padding:5px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:700px){.pd-tags span{font-size:9.5px;padding:5px 9px}}
 .pd-a{width:min(720px,100%);display:flex;align-items:center;gap:7px;margin-bottom:-4px;
   font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted)}
 .pd-al{display:inline-flex;width:18px;height:18px;border-radius:6px;background:var(--blue,#0a50ff);
@@ -3225,7 +3226,38 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 #windlayer{position:fixed;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;opacity:0;
   transition:opacity .25s ease}
 #pilllayer{position:fixed;inset:0;z-index:74;pointer-events:none}
-.deck-tags{grid-column:1/-1;height:0;min-height:0}
+.deck-tags{grid-column:1/-1;display:flex;align-items:center;gap:6px;
+  height:auto;min-height:0;padding:0 12px 7px;margin-top:-2px}
+/* with the scope out of the line, the input takes the column it left */
+#scr-home .composer #deckattach{grid-column:1 !important}
+#scr-home .composer #deckq{grid-column:2 / 4 !important}
+#scr-home .composer #trialbadge{grid-column:4 !important}
+#scr-home .composer #deckgo{grid-column:5 !important}
+/* THE LOCKED SCOPE (p1.090): the same object as the blue labels - pill,
+   white type, one weight - but grey, and locked */
+#scr-home .composer .composer-scope,
+.composer .composer-scope{
+  align-self:center !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:5px !important;
+  margin:0 !important;
+  padding:5px 10px 5px 8px !important;
+  border:0 !important;
+  border-right:0 !important;
+  border-radius:999px !important;
+  background:rgba(17,18,20,.34) !important;
+  color:#fff !important;
+  font-family:var(--font-sans) !important;
+  font-size:clamp(9px,.62vw,10.5px) !important;
+  font-weight:540 !important;
+  letter-spacing:.045em !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+.composer .composer-scope .scope-lock{
+  width:9.5px;height:9.5px;flex:0 0 auto;color:#fff;opacity:.95;
+}
 /* p1.089: with the labels' spacer row present the grid no longer filled the
    box, so the whole line rode a few pixels high - the row group centres now */
 .composer{align-content:center}
@@ -3238,10 +3270,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 }
 @media (prefers-reduced-motion:reduce){.composer.zap{animation:none}}
 .wind-pill{position:fixed;left:0;top:0;background:var(--blue,#0a50ff);color:#fff;
-  font-family:var(--font-sans);font-weight:540;font-size:14px;letter-spacing:.02em;line-height:1;
-  padding:10px 16px;border-radius:999px;white-space:nowrap;opacity:0;
-  will-change:transform,opacity;box-shadow:0 5px 18px rgba(10,80,255,.30)}
-@media (max-width:700px){.wind-pill{font-size:12.5px;padding:9px 14px}}
+  font-family:var(--font-sans);font-weight:540;font-size:clamp(9px,.62vw,10.5px);
+  letter-spacing:.045em;line-height:1;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;opacity:0;
+  will-change:transform,opacity;box-shadow:0 3px 12px rgba(10,80,255,.24)}
+@media (max-width:700px){.wind-pill{font-size:9.5px;padding:5px 9px}}
 #windlayer .wl-base{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.16;stroke-width:.8;stroke-linecap:round}
 #windlayer .wl-run{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.46;stroke-width:1;stroke-linecap:round;
   stroke-dasharray:14 110}
@@ -3483,7 +3516,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.089</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.091</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3522,7 +3555,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.089</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.091</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3542,7 +3575,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.089</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.091</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -3552,12 +3585,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <input id="deckfile" type="file" accept="image/*,application/pdf" multiple hidden>
     <div class="composer">
       <button id="deckattach" type="button" aria-label="Attach file" title="Attach file"><span aria-hidden="true">+</span></button>
-      <span class="composer-scope" title="Public demo · Aluminium stick curtain wall with structural silicone glazing"><span class="scope-wide">STICK CURTAIN WALL</span><span class="scope-short">STICK CW</span></span>
       <input id="deckq" type="text" autocomplete="off" placeholder="Describe a building or request a change…">
       <div id="deckghost" class="deckghost" aria-hidden="true"></div>
       <span id="trialbadge" class="b-quiet">…</span>
       <button id="deckgo" aria-label="Send"><span aria-hidden="true">↑</span></button>
-      <div class="deck-tags" id="deck-tags" aria-hidden="true"></div>
+      <div class="deck-tags" id="deck-tags"><span class="composer-scope" title="Public demo · Aluminium stick curtain wall with structural silicone glazing"><svg class="scope-lock" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect x="4.5" y="10" width="15" height="10.5" rx="2.6" fill="currentColor"/></svg><span class="scope-wide">STICK CURTAIN WALL</span><span class="scope-short">STICK CW</span></span></div>
     </div>
   </div>
 </div></div>
@@ -9672,7 +9704,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var tags=$("deck-tags");
     if (prog < 0){
       for (i=0; i<PILLS.length; i++) PILLS[i].style.opacity="0";
-      if (tags) tags.style.height="0px";
+      if (tags) tags.style.paddingBottom="7px";
       WIND.pzap=[];
       return;
     }
@@ -9683,9 +9715,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     /* the slots INSIDE the box - one after another beneath the text */
     var tr=tags?tags.getBoundingClientRect():null;
-    var padL=13, gap=6;
+    var padL=12, gap=6;
+    var scopeEl=document.querySelector(".composer .composer-scope");
+    var sr=scopeEl?scopeEl.getBoundingClientRect():null;
+    /* the labels start beside the locked pill, on its own line */
+    var x0=(sr && tr)?Math.max(0, sr.right+gap-tr.left-padL):0;   /* slot space starts after the row's own padding */
     var innerW=tr?Math.max(80, tr.width-padL*2):(W-40);
-    var slots=[], cx=0, row=0, rowH=0;
+    var slots=[], cx=x0, row=0, rowH=0;
     for (i=0; i<PILLS.length; i++){
       var w=PILLS[i].offsetWidth, hh=PILLS[i].offsetHeight;
       if (hh > rowH) rowH=hh;
@@ -9701,11 +9737,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var need=0;
     for (i=0; i<PILLS.length; i++){
       var a=Math.max(0, Math.min(1, (ps[i]-0.28)/0.42));   /* the room opens as the label approaches */
-      var want=(slots[i].row+1)*stepY*a;
+      var want=slots[i].row*stepY*a;   /* the first line is the pill's own - only the rows under it cost height */
       if (want > need) need=want;
     }
     need*=(1-outP);
-    if (tags) tags.style.height=(need>0.5?(need+gap*(1-outP)):0).toFixed(1)+"px";
+    if (tags) tags.style.paddingBottom=(7+need).toFixed(1)+"px";
     var tr2=tags?tags.getBoundingClientRect():null;
     var cEl=document.querySelector(".composer");
     var rc=cEl?cEl.getBoundingClientRect():null;
@@ -9716,7 +9752,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var xL=PILL_LANES[i%PILL_LANES.length]*W - w2/2;   /* the lane holds the label's centre */
       xL=Math.max(10, Math.min(W-w2-10, xL));
       var sx=tr2?(tr2.left+padL+slots[i].x):xL;
-      var sy=tr2?(tr2.top+gap*.5+slots[i].row*stepY):(window.innerHeight-60);
+      var sy=(tr2 && sr)?(sr.top+slots[i].row*stepY):(tr2?(tr2.top+slots[i].row*stepY):(window.innerHeight-60));
       var fall=smooth01(Math.min(1, p/0.86));
       var y=-70+(sy+70)*fall;
       var x=xL+(sx-xL)*fall*fall;   /* spread while falling, tucked in on arrival */
