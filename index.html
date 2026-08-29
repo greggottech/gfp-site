@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.108 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.109 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3039,6 +3039,34 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .power-scope{transition:opacity .7s ease,filter .7s ease !important}
 @media (prefers-reduced-motion:reduce){.power-reveal-close,.power-scope{transition:none !important}}
 
+/* Closing hierarchy: thesis first, quiet explanation second, capability
+   values last. CSS order preserves the existing reveal choreography. */
+.power-reveal-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.power-reveal-close{
+  order:1;
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  margin:0 !important;
+}
+.power-reveal-signature{order:1}
+.power-reveal-logic{
+  order:2;
+  margin:clamp(18px,2.6vh,30px) auto 0 !important;
+}
+.power-reveal-main.power-reveal-scopes{
+  order:2;
+  margin:clamp(42px,6.5vh,72px) auto 0 !important;
+}
+@media (max-width:560px){
+  .power-reveal-main.power-reveal-scopes{margin-top:clamp(30px,5vh,44px) !important}
+  .power-reveal-logic{margin-top:16px !important}
+}
+
 /* ================= THE DISSOLVE (p1.028) ================= */
 /* the cream surface has no edge: its top is a long dissolve out of the warm field */
 .home-scroll-surface{
@@ -3102,8 +3130,13 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .composer.sent .deckghost{opacity:0;transform:translateY(-10px);max-height:22px;overflow:hidden;
   transition:opacity .35s ease,transform .45s ease,max-height .5s ease .1s}
 .composer.sent .deckghost::after{display:none}
-@keyframes gfpsend{0%{transform:scale(1)}35%{transform:scale(1.28);background:var(--blue);color:#fff}100%{transform:scale(1)}}
-.composer.sent #deckgo{animation:gfpsend .7s ease 1}
+@keyframes gfpsend{
+  0%{transform:scale(1);scale:1;filter:none;opacity:.92}
+  32%{transform:scale(.86);scale:.86;filter:drop-shadow(0 0 0 rgba(10,80,255,0));opacity:.72}
+  58%{transform:scale(1.24);scale:1.24;filter:drop-shadow(0 0 8px rgba(10,80,255,.48));opacity:1}
+  100%{transform:scale(1);scale:1;filter:none;opacity:.92}
+}
+.composer.sent #deckgo{animation:gfpsend .56s cubic-bezier(.2,.78,.25,1) 1 !important}
 @media (max-width:700px){.deckghost{font-size:16px;padding:11px 12px}}
 @media (prefers-reduced-motion:reduce){.deckghost::after{animation:none}.composer.sent #deckgo{animation:none}}
 .power-reveal-stage{min-height:452svh !important}
@@ -3333,13 +3366,14 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   100%{box-shadow:0 8px 28px rgba(44,34,26,.055)}
 }
 @media (prefers-reduced-motion:reduce){.composer.zap{animation:none}}
-.wind-pill{position:fixed;left:0;top:0;background:var(--blue,#0a50ff);color:#fff;
+.wind-pill,#windmeter .wm-k{background:var(--blue,#0a50ff);color:#fff;
   font-family:var(--font-sans);font-weight:540;font-size:clamp(9px,.62vw,10.5px);
   letter-spacing:.045em;line-height:1;
-  padding:5px 10px;border-radius:999px;white-space:nowrap;opacity:0;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;
   text-transform:uppercase;
-  will-change:transform,opacity;box-shadow:0 3px 12px rgba(10,80,255,.24)}
-@media (max-width:700px){.wind-pill{font-size:9.5px;padding:5px 9px}}
+  box-shadow:0 3px 12px rgba(10,80,255,.24)}
+.wind-pill{position:fixed;left:0;top:0;opacity:0;will-change:transform,opacity}
+@media (max-width:700px){.wind-pill,#windmeter .wm-k{font-size:9.5px;padding:5px 9px}}
 #windlayer .wl-base{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.16;stroke-width:.8;stroke-linecap:round}
 #windlayer .wl-run{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.46;stroke-width:1;stroke-linecap:round;
   stroke-dasharray:14 110}
@@ -3354,15 +3388,29 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .deckghost{-webkit-user-select:none;user-select:none}
 
 /* ================= THE PRESSOMETRE (p1.040) ================= */
-#windmeter{position:fixed;left:0;right:0;top:calc(var(--header-h,44px) + clamp(10px,2.2vh,26px) + 15svh);z-index:59;
+#windmeter{--wm-level:0;position:fixed;left:0;right:0;top:calc(var(--header-h,44px) + clamp(10px,2.2vh,26px) + 15svh);z-index:59;
   text-align:center;pointer-events:none;opacity:0;transform:translateY(-6px)}
-#windmeter .wm-i{display:inline-block;background:var(--blue,#0a50ff);color:#fff;border-radius:12px;
-  padding:8px 13px 9px;box-shadow:0 3px 14px rgba(10,80,255,.22)}
-#windmeter .wm-k{margin:0 0 3px;font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:rgba(255,255,255,.85)}
-#windmeter .wm-v{margin:0;font-family:var(--font-sans);font-size:clamp(16px,1.9vw,19px);font-weight:540;
-  letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
-#windmeter .wm-v #windval{font-variant-numeric:tabular-nums}
-#windmeter .wm-c{margin:4px 0 0;font-family:var(--font-sans);font-size:12.5px;color:var(--muted)}
+#windmeter .wm-i{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  gap:9px;overflow:visible;background:transparent;border:0;padding:0;box-shadow:none}
+#windmeter .wm-k{position:static;display:inline-block;margin:0;opacity:1}
+#windmeter .wm-readout{display:flex;flex-direction:column;align-items:stretch;justify-content:center;
+  gap:3px;min-width:76px;padding-left:9px;border-left:1px solid rgba(10,80,255,.22)}
+#windmeter .wm-v{margin:0;display:flex;align-items:baseline;justify-content:flex-end;gap:4px;
+  color:var(--blue,#0a50ff);font-family:var(--font-sans);font-size:13px;font-weight:540;line-height:1;
+  letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+#windmeter .wm-v #windval{display:inline-block;min-width:5ch;text-align:right;font-variant-numeric:tabular-nums}
+#windmeter .wm-unit{font-family:inherit;font-size:10px;font-style:normal;font-weight:540;letter-spacing:0;
+  color:rgba(10,80,255,.90)}
+#windmeter .wm-track{position:relative;display:block;width:100%;height:1px;overflow:hidden;
+  background:repeating-linear-gradient(90deg,rgba(10,80,255,.22) 0 1px,transparent 1px 7px)}
+#windmeter .wm-track i{display:block;width:100%;height:1px;transform-origin:0 50%;
+  transform:scaleX(var(--wm-level));background:var(--blue,#0a50ff);box-shadow:0 0 4px rgba(10,80,255,.45)}
+@media (max-width:700px){
+  #windmeter .wm-i{gap:7px}
+  #windmeter .wm-readout{min-width:70px;padding-left:7px}
+  #windmeter .wm-v{font-size:12px}
+  #windmeter .wm-unit{font-size:9.5px}
+}
 @media (prefers-reduced-motion:reduce){#windmeter{display:none}}
 
 /* ================= THE REAL WORLD (p1.044) ================= */
@@ -3414,6 +3462,76 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     padding:14px 0 10px;
   }
 }
+
+/* ===== The second scene speaks in the hero's two type voices =====
+   The supporting copy uses the hero paragraph's exact neutral sans scale;
+   the thesis alone carries the brand serif. */
+.home-prompt-reveal{
+  --second-scene-gap:clamp(38px,4.5vh,52px);
+  --second-title-clear:clamp(44px,5.2vh,62px);
+  --second-scene-lift:-3vh;
+  top:calc(50% + var(--home-composer-h)/2 + var(--second-scene-gap) + var(--second-scene-lift)) !important;
+}
+.home-prompt-reveal p{
+  position:relative;
+  width:min(90vw,880px) !important;
+  max-width:min(90vw,880px) !important;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.reveal-thesis{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:calc(100% + var(--home-composer-h) + var(--second-scene-gap) + var(--second-title-clear));
+  overflow:visible;
+  white-space:nowrap;
+  margin:0 !important;
+  text-align:center;
+  font-family:var(--font-serif) !important;
+  font-weight:400 !important;
+  line-height:.98 !important;
+  letter-spacing:-.039em !important;
+}
+.reveal-input,
+.reveal-build,
+.reveal-image,
+.reveal-gpt{
+  font-family:var(--font-sans) !important;
+  font-size:var(--gfp-lead) !important;
+  font-weight:390 !important;
+  line-height:1.50 !important;
+  letter-spacing:-.012em !important;
+  color:var(--gfp-ink-soft) !important;
+}
+.reveal-build{margin-top:0 !important}
+.reveal-image{margin-top:0 !important}
+.reveal-gpt{margin-top:0 !important}
+@media (min-width:901px){
+  /* On desktop these two beats read as one sentence; they remain separate
+     spans so the existing sequential reveal animation is preserved. */
+  .reveal-build,.reveal-image{display:inline-block !important}
+  .reveal-image{margin-left:.22em !important}
+}
+@media (max-width:560px){
+  .reveal-thesis{
+    font-size:clamp(32px,10vw,42px) !important;
+    margin:0 !important;
+  }
+}
+
+/* An invisible curtain-wall field for the first two scenes. It is painted
+   only around live mouse or finger movement; the hero copy stays above it. */
+#cw-interaction-grid{
+  position:fixed;
+  inset:0;
+  z-index:8;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+}
+.hero-statement,.hero-context{position:relative;z-index:9}
 </style>
 
 </head>
@@ -3439,6 +3557,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 <div id="rooms">
   <div class="screen" id="scr-home">
     <div class="power-blue-wash" id="power-blue-wash" aria-hidden="true"></div>
+    <canvas id="cw-interaction-grid" aria-hidden="true"></canvas>
     <div class="wrap hero hero-minimal hero-editorial">
       <div class="hero-statement">
         <h1><span class="hero-first">Describe the building.</span><span class="hero-second hero-serif">Get the <span class="hero-reflect" data-reflect="facade.">facade.</span></span></h1>
@@ -3462,7 +3581,10 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <div id="windmeter" aria-hidden="true">
       <div class="wm-i">
         <p class="wm-k">WIND PRESSURE</p>
-        <p class="wm-v"><span id="windval">1,000</span> Pa</p>
+        <div class="wm-readout">
+          <p class="wm-v"><span id="windval">1,000</span><em class="wm-unit">Pa</em></p>
+          <span class="wm-track" aria-hidden="true"><i></i></span>
+        </div>
       </div>
     </div>
     <!-- THE TICKET (p1.081): it stands above the whole run - nothing
@@ -3586,7 +3708,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3625,7 +3747,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3645,7 +3767,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.108</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -8739,6 +8861,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
   var HOME_STORY = {
     ready:false, naturalTop:0, powerTop:0, h:0, pinStart:0,
+    sceneLift:0,
     thesisStart:0, thesisEnd:0,
     buildStart:0, buildEnd:0,
     imageStart:0, imageEnd:0,
@@ -8753,6 +8876,21 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   };
   function resetHomeDeckStory(){
     var deck=$("deck"), reveal=$("home-prompt-reveal");
+    if (typeof CHAT_HANDOFF === "object"){
+      CHAT_HANDOFF.active=false;
+      CHAT_HANDOFF.phase=0;
+      CHAT_HANDOFF.start=0;
+      if (CHAT_HANDOFF.raf){ cancelAnimationFrame(CHAT_HANDOFF.raf); CHAT_HANDOFF.raf=0; }
+    }
+    if (typeof CHAT_RECEIVE === "object"){
+      CHAT_RECEIVE.active=false;
+      CHAT_RECEIVE.done=false;
+      CHAT_RECEIVE.phase=0;
+      CHAT_RECEIVE.start=0;
+      CHAT_RECEIVE.holdY=null;
+      CHAT_RECEIVE.holdUntil=0;
+      if (CHAT_RECEIVE.raf){ cancelAnimationFrame(CHAT_RECEIVE.raf); CHAT_RECEIVE.raf=0; }
+    }
     HOME_STORY.ready=false;
     HOME_MOTION.initialized=false;
     HOME_MOTION.velocity=0;
@@ -8762,7 +8900,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       deck.style.removeProperty("--deck-story-y");
       deck.style.removeProperty("left"); deck.style.removeProperty("right"); deck.style.removeProperty("width");
     }
-    if (typeof windDrive === "function") windDrive(0);
+    if (typeof resetWindToHero === "function") resetWindToHero();
+    else if (typeof windDrive === "function") windDrive(0);
     var blueWash=$("power-blue-wash");
     if (blueWash) blueWash.style.opacity="0";
     var powerStage=$("power-reveal-stage");
@@ -8804,6 +8943,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     deck.style.removeProperty("--deck-story-y");
     var sr=scr.getBoundingClientRect(), dr=deck.getBoundingClientRect();
     HOME_STORY.h=Math.max(1,dr.height);
+    HOME_STORY.sceneLift=window.innerHeight*.03;
     HOME_STORY.naturalTop=scr.scrollTop + (dr.top-sr.top);
     var powerStage=$("power-reveal-stage");
     if (powerStage){
@@ -8814,7 +8954,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        whole screen; the pin moment is the scroll at which its flowing copy
        reaches that same point (naturalTop is relative to the scroller,
        sr.top is the scroller's own offset in the screen) */
-    HOME_STORY.pinStart=HOME_STORY.naturalTop + sr.top + HOME_STORY.h/2 - window.innerHeight/2;
+    HOME_STORY.pinStart=HOME_STORY.naturalTop + sr.top + HOME_STORY.h/2 - (window.innerHeight/2-HOME_STORY.sceneLift);
     var vh=scr.clientHeight;
 
     /* A deliberately long rhythm: thesis first, then prompt, then image.
@@ -8900,11 +9040,40 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        the runway below is long enough for all of it */
     /* THE SEQUENCE (p1.034): on the blue, the filled line sends - the arrow
        blinks blue, the words lift, the box shrinks empty */
-    BLUE_SEND_P=smooth01((pinP-0.20)/.14);   /* p1.036: the send as the blue settles */
+    /* The scroll position describes the established conversation. The first
+       entrance is overridden by CHAT_HANDOFF so the chrome appears, the
+       existing composer sends, and only then does its message appear. */
+    var chatOpen=smooth01((pinP-0.025)/.075);
+    var handoff=(typeof CHAT_HANDOFF === "object" && CHAT_HANDOFF.active);
+    var handP=handoff?CHAT_HANDOFF.phase:0;
+    var uiOpen=handoff?smooth01((handP-.02)/.16):chatOpen;
+    /* Keep the sent class on the composer long enough for a visible press.
+       It reaches 98% early, then releases immediately before the message. */
+    var sendOpen=chatOpen;
+    if (handoff){
+      if (handP < .20) sendOpen=0;
+      else if (handP < .70) sendOpen=smooth01((handP-.20)/.24)*.98;
+      else sendOpen=1;
+    }
+    var messageOpen=handoff?smooth01((handP-.72)/.18):chatOpen;
+    /* A real reply is temporal, not a second scroll pose. The first time the
+       visitor reaches the response cue, hold that point and let the typing
+       bubble resolve into the received card on its own clock. */
+    if (!handoff && typeof CHAT_RECEIVE === "object"){
+      if (!CHAT_RECEIVE.active && !CHAT_RECEIVE.done && CHAT_HANDOFF.phase>=1 && pinP>=.77){
+        startChatReceive(st,pinP,vh);
+      } else if (!CHAT_RECEIVE.active && CHAT_RECEIVE.done && pinP<.56){
+        CHAT_RECEIVE.done=false;
+        CHAT_RECEIVE.phase=0;
+      }
+    }
+    var receiving=(typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.active);
+    var receiveP=receiving?CHAT_RECEIVE.phase:0;
+    BLUE_SEND_P=sendOpen;
     /* THE DEMO ON THE BLUE (p1.035): the six words step aside; the sent
        prompt stands as a chat row, the building card and the values follow;
        then all of it yields to the closing line */
-    WIND.pinP=pinP;   /* the chat's scroll reads it */
+    WIND.pinP=receiving?Math.min(pinP,.98):pinP;   /* the chat's scroll reads it */
     /* p1.084: three turns, one after another, then the whole chat yields */
     var demoOut=smooth01((pinP-2.66)/.20);
     var T=[{q:0.33,a:0.53,t:0.59,c:0.79,x:1.00},
@@ -8916,22 +9085,28 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var out=(1-demoOut);
     /* the opening keeps its beats */
     var d0=T[0];
-    var q0=smooth01((pinP-d0.q)/.13)*out;
-    var a0=smooth01((pinP-d0.a)/.09)*out;
-    var t0=smooth01((pinP-d0.t)/.07)*(1-smooth01((pinP-d0.c)/.07))*out;
-    var c0=smooth01((pinP-d0.c)/.15)*out;
-    var x0=smooth01((pinP-d0.x)/.18)*out;
+    var q0=messageOpen*out;
+    var receivedW=(!handoff && !receiving && typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.done)?
+      smooth01((pinP-.56)/.18):0;
+    var baseA=handoff?0:(receiving?1:smooth01((pinP-d0.a)/.09));
+    var baseT=handoff?0:(receiving?(1-smooth01((receiveP-.18)/.22)):
+      smooth01((pinP-d0.t)/.07)*(1-smooth01((pinP-d0.c)/.07)));
+    var baseC=handoff?0:(receiving?smooth01((receiveP-.20)/.54):smooth01((pinP-d0.c)/.15));
+    var baseX=handoff?0:(receiving?smooth01((receiveP-.66)/.24):smooth01((pinP-d0.x)/.18));
+    var a0=Math.max(baseA,receivedW)*out;
+    var t0=baseT*(1-receivedW)*out;
+    var c0=Math.max(baseC,receivedW)*out;
+    var x0=Math.max(baseX,receivedW)*out;
     pdTurn(1, q0, a0, t0, c0, x0);
     /* p1.103: from here the rest of the chat is simply there - it is
        scrolled, not revealed */
-    var restP=smooth01((pinP-1.02)/.14)*out;
+    var restP=(receiving?0:smooth01((pinP-1.18)/.14))*out;
     pdTurn(2, restP, restP, 0, restP, restP);
     pdTurn(3, restP, restP, 0, restP, restP);
     var pQ=[q0, restP, restP], pC=[c0, restP, restP];
-    /* p1.101: the name, the day and the first message are one moment - they
-       arrive as the line empties, not one screen apart */
-    var headP=smooth01((pinP-0.24)/.10)*(1-demoOut);
-    var dayP=smooth01((pinP-0.29)/.09)*(1-demoOut);
+    /* The chat header is ordinary chrome, not an introductory scene. */
+    var headP=uiOpen*(1-demoOut);
+    var dayP=uiOpen*(1-demoOut);
     powerDemoPaint(dayP, headP, 0, 0, 0, 0);
     pdStackRide(pC[0], pC[1], pC[2]);
     var closeIn=smooth01((pinP-3.64)/.26);
@@ -9041,7 +9216,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var tauH=12+138*(1-moveP);   /* soft at the centre, instant by the dock - the parked box never creeps */
     HOME_STORY.hSm+=(hRaw-HOME_STORY.hSm)*Math.min(1, dtH/tauH);
     var hNow=HOME_STORY.hSm;
-    var centreY=(window.innerHeight-hNow)/2;   /* p1.023: the middle of the whole screen */
+    var centreY=(window.innerHeight-hNow)/2-(HOME_STORY.sceneLift||window.innerHeight*.03);   /* the whole second-scene composition sits 3vh above centre */
     var typeP=smooth01((st-HOME_STORY.typeStart)/(HOME_STORY.typeEnd-HOME_STORY.typeStart));
     if (PD_TYPED) ghostDrive(PD_TYPED.t, PD_TYPED.s, PD_TYPED.x);   /* p1.085: a later prompt is being written */
     else ghostDrive(typeP, BLUE_SEND_P);   /* p1.034: the send happens on the blue field */
@@ -9274,7 +9449,57 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   /* THE WIND (p1.038): streamlines drawn by code around the composer's
      real box, pressing it down to its dock */
-  var WIND={ built:false, base:[], run:[], tips:null, seeds:[], raf:0, p:0, off:0 };
+  var WIND={ built:false, base:[], run:[], tips:null, seeds:[], raf:0, p:0, off:0,
+    allPillsHome:false, allPillsAway:true, pillsMoving:false };
+  function resetWindToHero(){
+    /* A navigation reset is not part of the wind animation. Clear both the
+       target and its eased physical state immediately, otherwise the previous
+       scene keeps drawing over the hero while it slowly returns to zero. */
+    if (WIND.raf){ cancelAnimationFrame(WIND.raf); WIND.raf=0; }
+    if (WIND.flT){ clearInterval(WIND.flT); WIND.flT=0; }
+    if (WIND.zt){ clearTimeout(WIND.zt); WIND.zt=0; }
+    WIND.p=0; WIND.prog=0; WIND.prS=0; WIND.prTime=0;
+    WIND.travelV=0; WIND.travelFactor=0.12; WIND.motionTempo=0;
+    WIND.fastReturnActive=false; WIND.lastTargetDir=0;
+    WIND.labelForce=0; WIND.widen=0; WIND.g=0; WIND.landed=false;
+    WIND.mRest=undefined; WIND.mDy=0; WIND.mVisualDy=undefined;
+    WIND.mOpacityS=0; WIND.uS=0; WIND.paBase=1000; WIND.climb=false;
+    WIND.gaugeTouched=false; WIND.gaugeP=0; WIND.gaugeTravel=0;
+    WIND.gaugeAway=true; WIND.zapped=false;
+    WIND.allPillsHome=false; WIND.allPillsAway=true;
+    WIND.allPillsReleased=true; WIND.pillsMoving=false;
+    WIND.dArgs=[0,undefined,undefined];
+
+    var layer=$("windlayer");
+    if (layer){ layer.style.opacity="0"; layer.dataset.prog="0.000"; }
+    var meter=$("windmeter");
+    if (meter){
+      meter.style.opacity="0";
+      meter.style.transform="none";
+      meter.style.setProperty("--wm-level","0");
+    }
+    var value=$("windval");
+    if (value) value.textContent="1,000";
+    var composer=document.querySelector(".composer");
+    if (composer) composer.classList.remove("zap");
+
+    if (PILLS===null){ var pillLayer=$("pilllayer"); PILLS=pillLayer?[].slice.call(pillLayer.children):[]; }
+    if (PILLS && PILLS.length){
+      for (var i=0;i<PILLS.length;i++){
+        var pill=PILLS[i];
+        pill.style.opacity="0";
+        pill.style.transform="translate(0px,-70px)";
+        pill._portal=0; pill._portalTarget=0;
+        pill._px=undefined; pill._py=undefined;
+        pill._contactZapped=false;
+      }
+    }
+    var tags=$("deck-tags");
+    if (tags) tags.style.paddingBottom="7px";
+    PILL_TEMPO.value=PILL_TEMPO.target=PILL_TEMPO.pending=1;
+    PILL_TEMPO.lastInput=PILL_TEMPO.lastSample=0;
+    PILL_TEMPO.inputDir=0;
+  }
   var SVGNS="http://www.w3.org/2000/svg";
   function windBuild(){
     if (WIND.built) return true;
@@ -9773,14 +9998,59 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   function windTick(){
     WIND.raf=0;
-    if (WIND.p<=0) return;
+    if (WIND.p<=0 && !WIND.pillsMoving && typeof PILL_GATE.progress!=="number") return;
     WIND.off+=2.6;
     /* p1.106: every frame the scene creeps toward the scroll's target */
     if (WIND.dArgs) windDrive(WIND.dArgs[0], WIND.dArgs[1], WIND.dArgs[2]);
-    else windDraw();
-    if (!WIND.raf) WIND.raf=requestAnimationFrame(windTick);
+    else { windDraw(); if (WIND.p>0 && !WIND.raf) WIND.raf=requestAnimationFrame(windTick); }
   }
   var PILLS=null, PILL_LANES=[0.22,0.78,0.40,0.64,0.30];
+  /* One clock drives the gauge and every label. Gesture strength changes its
+     cruising speed, while signed velocity supplies real braking and reversal. */
+  var PILL_PROGRESS_PER_MS=0.00005;   /* 0.05 scene progress / second */
+  var PILL_SPEED_PX_PER_MS=0.045;     /* 45 pixels / second */
+  var PILL_FORWARD_SPEED=1.30;        /* labels and gauge descend 30% faster */
+  var PILL_REVERSE_SPEED=3;           /* the complete return trip runs three times faster */
+  var GAUGE_READING_PER_MS=0.00016;    /* the digits cannot race ahead of the moving instrument */
+  var PILL_ACCEL_PER_MS2=PILL_PROGRESS_PER_MS/280; /* about 280 ms to brake from normal forward speed */
+  var PILL_TEMPO={
+    value:1, target:1, pending:1,
+    lastInput:0, lastSample:0, inputDir:0
+  };
+  function feedPillTempo(delta){
+    if (!delta) return;
+    var now=(window.performance&&performance.now)?performance.now():Date.now();
+    var dir=delta>0?1:-1;
+    var elapsed=Math.max(12,Math.min(80,now-(PILL_TEMPO.lastSample||now-16.67)));
+    /* Normalise the gesture to an approximate 60 Hz delta. Large MacBook
+       momentum saturates here, so it cannot keep adding acceleration. */
+    var frameDelta=Math.min(80,Math.abs(delta)*16.67/elapsed);
+    var strength=smooth01(frameDelta/46);
+    var requested=0.76+0.62*strength;
+    /* One light filter removes event-to-event chatter. Direction is not part
+       of this magnitude: the signed scene velocity handles it safely. */
+    PILL_TEMPO.pending=PILL_TEMPO.pending*0.18+requested*0.82;
+    PILL_TEMPO.pending=Math.max(0.76,Math.min(1.38,PILL_TEMPO.pending));
+    PILL_TEMPO.lastInput=now;
+    PILL_TEMPO.lastSample=now;
+    PILL_TEMPO.inputDir=dir;
+  }
+  function pillTempo(dt,now){
+    /* Active input selects the cruise. Releasing the surface decelerates the
+       shared system to a near-stop instead of letting it run by itself. */
+    if (now-PILL_TEMPO.lastInput<=250) PILL_TEMPO.target=PILL_TEMPO.pending;
+    else {
+      PILL_TEMPO.target=0.06;
+      if (now-PILL_TEMPO.lastInput>600) PILL_TEMPO.inputDir=0;
+    }
+    var tau=PILL_TEMPO.target>PILL_TEMPO.value?130:210;
+    PILL_TEMPO.value+=(PILL_TEMPO.target-PILL_TEMPO.value)*(1-Math.exp(-dt/tau));
+    if (Math.abs(PILL_TEMPO.target-PILL_TEMPO.value)<0.001) PILL_TEMPO.value=PILL_TEMPO.target;
+    return Math.max(0.06,Math.min(1.38,PILL_TEMPO.value));
+  }
+  var PILL_GATE={ mode:"", progress:null, start:0, end:0, zero:0, one:0,
+    lastY:0, writing:false, touchY:null, reverseHoldUntil:0, holdY:null,
+    jumpingForward:false, forwardRaf:0, finishForward:null, finishReverse:null };
   function zapBox(){
     var cz=document.querySelector(".composer");
     if (!cz) return;
@@ -9796,12 +10066,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (prog < 0){
       for (i=0; i<PILLS.length; i++) PILLS[i].style.opacity="0";
       if (tags) tags.style.paddingBottom="7px";
-      WIND.pzap=[];
       return;
     }
     var ps=[];
     for (i=0; i<PILLS.length; i++){
-      if (i===0) ps.push(Math.max(0, Math.min(1, ((WIND.g||0)-0.60)/0.10)));   /* the gauge hands its reading over */
+      if (i===0) ps.push(Math.max(0,Math.min(1,WIND.gaugeP||0)));   /* the gauge hands its reading over only after physical contact */
       else ps.push(Math.max(0, Math.min(1, (prog-0.26-(i-1)*0.055)/0.40)));   /* a long, unhurried fall - and they follow one another closely */
     }
     /* the slots INSIDE the box - one after another beneath the text */
@@ -9841,49 +10110,57 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var dtP=Math.min(64, nowP-(WIND.pillT||nowP)); WIND.pillT=nowP;
     var cEl=document.querySelector(".composer");
     var rc=cEl?cEl.getBoundingClientRect():null;
+    var allHome=true, allAway=true, allReleased=true;
     for (i=0; i<PILLS.length; i++){
       var el=PILLS[i], p=ps[i];
-      if (p<=0){ el.style.opacity="0"; continue; }
       var w2=slots[i].w;
       var xL=PILL_LANES[i%PILL_LANES.length]*W - w2/2;   /* the lane holds the label's centre */
       xL=Math.max(10, Math.min(W-w2-10, xL));
       var sx=tr2?(tr2.left+padL+slots[i].x):xL;
       if (i===0 && sr2) sx=sr2.right+gap;   /* the gauge's label keeps to the pill it follows */
       var sy=(tr2 && sr2)?(sr2.top+slots[i].row*stepY):(tr2?(tr2.top+slots[i].row*stepY):(window.innerHeight-60));
-      /* p1.096: the flight ends ABOVE the box with the column already
-         final; only then does the label drop straight into its slot, so it
-         is never seen inside the box out of place */
+      /* The flight ends at the prompt box's real top edge. From there the
+         label is transferred invisibly to its slot: it never crosses the box. */
       var PIN=0.72;
-      var hover=(rc?rc.top:sy)-slots[i].h-7;
-      if (hover > sy) hover=sy;   /* a slot on the first line is close to the edge */
-      var fall=smooth01(Math.min(1, p/PIN));
-      var y=-70+(hover+70)*fall;
-      var x=xL+(sx-xL)*fall*fall;   /* spread while falling, its column found by the time it arrives */
-      var sway=Math.sin(p*6.2+i*2.3)*10*(1-fall);
-      var rot=Math.sin(p*4.6+i*1.7)*4.5*(1-fall);
+      var touchY=(rc?rc.top:sy)-slots[i].h;
+      if (touchY > sy) touchY=sy;
+      var reversingScene=(WIND.travelV||0)<-0.0000001;
+      /* Reverse flight is deliberately shared instead of restaggered: all
+         labels leave the prompt together and read the same scene velocity. */
+      var flightP=reversingScene?Math.max(0,Math.min(1,prog)):p;
+      var fall=smooth01(Math.min(1, flightP/PIN));
+      var y=-70+(touchY+70)*fall;
+      var x=xL+(sx-xL)*fall*fall;
+      /* The labels share the air's slow pulse. The lane changes only the phase,
+         so they feel carried by one field instead of twitching independently.
+         The current fades in after entry and back out before physical contact. */
+      var visibleWind=Math.max(0,Math.min(1,WIND.labelForce||0));
+      var flowEnvelope=Math.sin(Math.PI*Math.max(0,Math.min(1,fall)))*smooth01(p/0.10)*visibleWind;
+      var flowPhase=nowP*0.00082+PILL_LANES[i%PILL_LANES.length]*1.55;
+      var sway=(Math.sin(flowPhase)*3.2+Math.sin(flowPhase*0.5+0.75)*0.6)*flowEnvelope;
+      var rot=Math.cos(flowPhase)*0.75*flowEnvelope+sway*0.03;
       var sc=1;
-      var slip=1;   /* p1.096: it never crosses the box's field in view */
-      if (p > PIN){
-        x=sx; sway=0; rot=0;
-        if (p < 0.93){ y=hover; slip=1-smooth01((p-0.86)/0.07); }   /* waits above, then dims out */
-        else { y=sy; slip=smooth01((p-0.93)/0.07); sc=0.9+0.1*slip; }   /* and blooms in its slot */
-      }
-      if (i===0){ y=sy; x=sx; sway=0; rot=0; sc=0.86+0.14*smooth01(p); }   /* the gauge's reading does not fly - it settles where it died */
-      if (p >= 0.999){ y=sy; x=sx; sway=0; rot=0; slip=1; sc=1; }
-      if (rc && i>0) y=Math.min(y, rc.bottom-slots[i].h-2);   /* nothing ever falls through the box */
-      if (!WIND.pzap) WIND.pzap=[];
-      if (p >= 0.94 && !WIND.pzap[i]){ WIND.pzap[i]=1; zapBox(); }   /* each arrival charges the box */
-      if (p < 0.70) WIND.pzap[i]=0;
-      el.style.opacity=String((Math.min(1, p/0.07)*slip*(1-outP)).toFixed(3));
-      /* p1.108: each label carries its own weight - its place is a target it
-         eases toward, so it can never be thrown across the screen */
+      var alpha=Math.min(1,p/0.07)*(1-outP);
       var tx=x+sway, ty=y;
-      if (i > 0){
-        if (typeof el._px !== "number" || p < 0.02){ el._px=xL; el._py=-70; }   /* it always starts its fall at the top */
-        else if (p >= 0.93){ el._px=tx; el._py=ty; }   /* in its slot it is exactly in place - the bloom does the rest */
-        else {
-          var kP=1-Math.exp(-dtP/470);   /* p1.108: the weight of honey */
-          var cap=dtP*0.42;              /* and a speed it cannot exceed */
+      if (i===0){
+        /* The gauge uses the same continuous portal as every other label. */
+        tx=sx; ty=sy; rot=0; sc=0.86+0.14*smooth01(p);
+        alpha=smooth01(Math.max(0,(p-0.5)/0.5))*(1-outP);
+        el.style.opacity=String(Math.max(0,Math.min(1,alpha)).toFixed(3));
+      } else {
+        if (typeof el._portal!=="number") el._portal=0;
+        if (typeof el._portalTarget!=="number") el._portalTarget=0;
+        if (typeof el._px !== "number"){ el._px=xL; el._py=-70; }
+
+        /* Hysteresis selects the side of the prompt box. The crossing is a
+           single reversible value, so changing direction cannot restart a
+           timer or flash the element. */
+        if (reversingScene || p<0.69) el._portalTarget=0;
+        if (el._portal<=0.001 && el._portalTarget===0){
+          if (p<=0){ tx=xL; ty=-70; rot=0; }
+          var physicalFactor=WIND.travelFactor||0.12;
+          var kP=1-Math.exp(-dtP*physicalFactor/470);   /* p1.108: the weight of honey */
+          var cap=dtP*PILL_SPEED_PX_PER_MS*physicalFactor;
           var dX=(tx-el._px)*kP, dY=(ty-el._py)*kP;
           if (dX >  cap) dX= cap; else if (dX < -cap) dX=-cap;
           if (dY >  cap) dY= cap; else if (dY < -cap) dY=-cap;
@@ -9891,17 +10168,74 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
           el._py+=dY;
           if (Math.abs(tx-el._px) < 0.4) el._px=tx;
           if (Math.abs(ty-el._py) < 0.4) el._py=ty;
+
+          /* Only real physical contact opens the portal. */
+          if (!reversingScene && p>=PIN && Math.abs(el._px-sx)<0.8 && Math.abs(el._py-touchY)<0.8){
+            el._px=sx; el._py=touchY;
+            el._portalTarget=1;
+            if (!el._contactZapped){ el._contactZapped=true; zapBox(); }
+          }
+          tx=el._px; ty=el._py;
+          if ((WIND.travelV||0)<0){
+            /* Reverse visibility follows the label's real height, not the
+               already-finished scroll progress. It stays visible while it
+               climbs and fades only through the last 80 px above the screen. */
+            alpha=(1-outP)*smooth01((el._py+70)/80);
+          } else alpha*=Math.min(1,p/0.07);
         }
-        tx=el._px; ty=el._py;
+
+        var portalStep=dtP/360;
+        if (el._portal<el._portalTarget) el._portal=Math.min(el._portalTarget,el._portal+portalStep);
+        else if (el._portal>el._portalTarget) el._portal=Math.max(el._portalTarget,el._portal-portalStep);
+
+        if (el._portal>0.001 || el._portalTarget===1){
+          var portalAlpha;
+          if (el._portal<0.5){
+            tx=sx; ty=touchY;
+            portalAlpha=1-smooth01(el._portal*2);
+          } else {
+            tx=sx; ty=sy;
+            portalAlpha=smooth01((el._portal-0.5)*2);
+          }
+          el._px=tx; el._py=ty; rot=0;
+          sc=0.90+0.10*portalAlpha;
+          alpha=(1-outP)*portalAlpha;
+        } else if (p<0.69){
+          el._contactZapped=false;
+        }
+        el.style.opacity=String(Math.max(0,Math.min(1,alpha)).toFixed(3));
       }
+      var isHome=(i===0)?p>=0.999:(el._portal>=0.999 && p>=0.999);
+      var isAway=(i===0)?(p<=0.001 && WIND.gaugeAway!==false):(el._portal<=0.001 && p<=0.001 && ty<=-65);
+      var isReleased=(i===0)?p<=0.001:el._portal<=0.001;
+      if (!isHome) allHome=false;
+      if (!isAway) allAway=false;
+      if (!isReleased) allReleased=false;
       el.style.transform="translate("+tx.toFixed(1)+"px,"+ty.toFixed(1)+"px) rotate("+rot.toFixed(2)+"deg) scale("+sc.toFixed(3)+")";
     }
+    WIND.allPillsHome=allHome;
+    WIND.allPillsAway=allAway;
+    WIND.allPillsReleased=allReleased;
+    WIND.pillsMoving=!allHome && !allAway;
   }
   function windDrive(p, prog, dockP){
     if (!windBuild()) return;
     var l=$("windlayer"), m=$("windmeter"), v=$("windval");
     WIND.p=p;
-    WIND.prog=(typeof prog === "number")?prog:WIND.prog;
+    if (typeof prog === "number") WIND.prog=prog;
+    else if (p<=0 && typeof PILL_GATE.progress!=="number"){
+      /* Returning above the wind sequence is a real reset. Keeping the old
+         entry value here made the gauge flash at its resting point on re-entry. */
+      WIND.prog=0;
+      WIND.mOpacityS=0;
+      WIND.uS=0;
+      WIND.mVisualDy=undefined;
+      WIND.gaugeTouched=false;
+      WIND.gaugeP=0;
+      WIND.gaugeTravel=0;
+      WIND.gaugeAway=true;
+      WIND.zapped=false;
+    }
     /* p1.065: the LONG progress - the meets section's own pass through
        the screen - gives the three beats room to breathe */
     var prM=0, meEl=$("meets");
@@ -9909,67 +10243,165 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var meR=meEl.getBoundingClientRect(), Hh=window.innerHeight;
       prM=Math.max(0, Math.min(1, (Hh*.9-meR.top)/(meR.height+Hh*.55)));
     }
+    if (typeof PILL_GATE.progress === "number") prM=PILL_GATE.progress;
     /* THE HONEY (p1.106): the scroll only feeds a target; the scene follows
        it every frame through a viscous lag, so nothing ever steps */
     WIND.dArgs=[p, prog, dockP];
     var nowW=(window.performance&&performance.now)?performance.now():Date.now();
     var dtW=Math.min(64, nowW-(WIND.prTime||nowW)); WIND.prTime=nowW;
-    if (typeof WIND.prS !== "number") WIND.prS=prM;
-    else {
-      WIND.prS+=(prM-WIND.prS)*(1-Math.exp(-dtW/430));   /* p1.107: thicker */
-      if (Math.abs(prM-WIND.prS) < 0.0004) WIND.prS=prM;
+    WIND.motionTempo=pillTempo(dtW,nowW);
+    if (typeof WIND.prS !== "number"){
+      WIND.prS=prM;
+      WIND.travelV=0;
+      WIND.fastReturnActive=false;
+      WIND.lastTargetDir=0;
+    } else {
+      /* A single signed velocity is the source of truth for every object.
+         When the target changes side, velocity must cross zero before the
+         scene can reverse; an opposite swipe can never accelerate the old
+         direction. The square-root bound eases into either destination. */
+      var diffW=prM-WIND.prS;
+      var dirW=Math.abs(diffW)<0.000001?0:(diffW>0?1:-1);
+      var forwardSpeedW=dirW>0?PILL_FORWARD_SPEED:1;
+      var accelW=PILL_ACCEL_PER_MS2*(0.88+0.18*WIND.motionTempo)*forwardSpeedW;
+      /* The 3x return is armed only on the exact direction edge where every
+         label (including the gauge) is already docked. Reversing during the
+         fall stays at normal speed. Forward motion cancels the permission. */
+      if (dirW && dirW!==WIND.lastTargetDir){
+        WIND.fastReturnActive=dirW<0 && WIND.allPillsHome===true;
+        WIND.lastTargetDir=dirW;
+      }
+      var reverseCruise=WIND.fastReturnActive?PILL_REVERSE_SPEED:Math.min(1,WIND.motionTempo);
+      var cruiseFactorW=dirW<0?reverseCruise:(WIND.motionTempo*PILL_FORWARD_SPEED);
+      var cruiseW=PILL_PROGRESS_PER_MS*cruiseFactorW;
+      var stopW=Math.sqrt(Math.max(0,2*accelW*Math.abs(diffW)));
+      var wantVW=dirW*Math.min(cruiseW,stopW);
+      if (typeof WIND.travelV!=="number") WIND.travelV=0;
+      var dvW=wantVW-WIND.travelV;
+      var dvCap=accelW*dtW;
+      if (dvW>dvCap) dvW=dvCap; else if (dvW<-dvCap) dvW=-dvCap;
+      WIND.travelV+=dvW;
+      var stepW=WIND.travelV*dtW;
+      if (!dirW){ WIND.prS=prM; WIND.travelV=0; }
+      else if (stepW*diffW>0 && Math.abs(stepW)>=Math.abs(diffW)){
+        WIND.prS=prM; WIND.travelV=0;
+      } else WIND.prS+=stepW;
+      if (WIND.prS<0){ WIND.prS=0; WIND.travelV=0; }
+      else if (WIND.prS>1){ WIND.prS=1; WIND.travelV=0; }
     }
+    /* Physical pixels read this factor directly. It decelerates to a crawl,
+       crosses zero once, and then grows in the new direction with the shared
+       timeline. A small floor lets an object finish a sub-pixel settle. */
+    /* The timeline can reach 1 before the physical labels reach the box. Keep
+       reading the live gesture tempo through the landing tail: a new swipe can
+       accelerate it, while releasing the surface can genuinely slow it. */
+    var forwardTail=WIND.prS>=0.999 && WIND.allPillsHome!==true &&
+      (PILL_GATE.progress===1 || WIND.landed===true);
+    var reverseTail=PILL_GATE.progress===0 && WIND.prS<=0.0004 && Math.abs(WIND.travelV||0)<0.0000001;
+    var settleFloor=forwardTail?Math.max(0.06,WIND.motionTempo*PILL_FORWARD_SPEED):(reverseTail?0.65:0.06);
+    WIND.travelFactor=Math.max(settleFloor,Math.min(PILL_REVERSE_SPEED,Math.abs(WIND.travelV||0)/PILL_PROGRESS_PER_MS));
     prM=WIND.prS;
-    var pEff=Math.max(p, smooth01(prM/0.05)*smooth01((1-prM)/0.06));
-    if (pEff > WIND.p) WIND.p=pEff;
+    var reverseGate=PILL_GATE.progress===0;
+    var sceneP=smooth01(prM/0.05)*smooth01((1-prM)/0.06);
+    var pEff=reverseGate?smooth01(prM/0.08):Math.max(p,sceneP);
+    if (reverseGate) WIND.p=pEff;
+    else if (pEff > WIND.p) WIND.p=pEff;
     var dim=1-0.55*smooth01((prM-0.30)/0.22);   /* less shiny, still curvy */
+    WIND.labelForce=pEff*.95*dim;   /* exactly the strength the viewer can see in the wind field */
     l.style.opacity=String((pEff*.95*dim).toFixed(3));
     l.dataset.prog=prM.toFixed(3);
     if (m){
-      var mo=pEff*.98;   /* p1.065: the gauge outlives the dock - it rides after it */
-      /* THE GAUGE (p1.066): drops in from above with a slight dissolve,
-         then glides down WHILE its number climbs - one motion */
-      var prD=(typeof WIND.prog === "number")?Math.max(0, Math.min(1, WIND.prog)):0;
-      var eP=Math.max(0, Math.min(1, Math.max(prD/0.25, prM/0.10)));
-      var ent=smooth01(eP);   /* the labels' own glide-in, scrubbed by the scroll - it begins with the descent */
+      /* THE GAUGE: it is now the first member of the same timeline. There is
+         no independent entrance progress and no second direction decision. */
+      var eP=Math.max(0,Math.min(1,prM/0.10));
+      var ent=smooth01(eP);
       var g=Math.max(0, Math.min(1, (prM-0.06)/0.44));
       WIND.widen=smooth01(g);   /* the throat opens with the same progress */
-      WIND.g=g;   /* p1.078: the gauge's own label takes over where it vanishes */
+      WIND.g=g;
       var dyM=0;
       var mi2=m.querySelector(".wm-i");
       var rr2=(mi2||m).getBoundingClientRect();
-      if (g <= 0){
-        WIND.mRest=rr2.top-(WIND.mDy||0);
-      } else {
-        var rest=(typeof WIND.mRest === "number")?WIND.mRest:(rr2.top-(WIND.mDy||0));
-        var c2=document.querySelector(".composer");
-        var topB=window.innerHeight-90;
-        if (c2){ var rc2=c2.getBoundingClientRect(); if (rc2.top > 60) topB=rc2.top; }
-        var yLandM=(topB-rr2.height-1)-rest;
-        if (g < 0.62){ dyM=yLandM*smooth01(g/0.62); }
-        else { dyM=yLandM; }   /* it goes no further - at the touch it is absorbed */
-      }
-      var gone=smooth01((g-0.66)/0.06);   /* the gauge disappears at the touch */
-      if (g >= 0.64 && !WIND.zapped){ WIND.zapped=true; zapBox(); }
-      if (g < 0.5) WIND.zapped=false;
+      if (typeof WIND.mRest!=="number") WIND.mRest=rr2.top-(WIND.mDy||0);
+      var rest=(typeof WIND.mRest === "number")?WIND.mRest:(rr2.top-(WIND.mDy||0));
+      var c2=document.querySelector(".composer");
+      var topB=window.innerHeight-90;
+      if (c2){ var rc2=c2.getBoundingClientRect(); if (rc2.top > 60) topB=rc2.top; }
+      var yLandM=(topB-rr2.height-1)-rest;
+      if (g>0 && g<0.62) dyM=yLandM*smooth01(g/0.62);
+      else if (g>=0.62) dyM=yLandM;   /* it goes no further - at the touch it is absorbed */
       m.style.zIndex="59";
       var restE=(typeof WIND.mRest === "number")?WIND.mRest:rr2.top-(WIND.mDy||0);
       var dyEnt=-(restE+74)*(1-ent);   /* from above the screen, like a label */
-      var dyT=dyEnt+dyM;
+      var dyTarget=dyEnt+dyM;
+      var offscreenDy=-(restE+74);
+
+      /* While the gauge is crossing the prompt boundary, its physical body
+         stays parked at the contact point. Reverse completes the same portal
+         backward before the external gauge is allowed to rise. */
+      if (WIND.gaugeTouched && (WIND.gaugeP||0)>0.001) dyTarget=yLandM;
+
+      /* The gauge reads the exact physical factor used by all labels. */
+      if (typeof WIND.mVisualDy!=="number") WIND.mVisualDy=offscreenDy;
+      if (pEff<=0.001 && eP<=0.001 && !reverseGate) WIND.mVisualDy=offscreenDy;
+      else {
+        var gaugeFactor=WIND.travelFactor||0.12;
+        var mStep=(dyTarget-WIND.mVisualDy)*(1-Math.exp(-dtW*gaugeFactor/520));
+        var mCap=dtW*PILL_SPEED_PX_PER_MS*gaugeFactor;
+        if (mStep>mCap) mStep=mCap; else if (mStep<-mCap) mStep=-mCap;
+        WIND.mVisualDy+=mStep;
+        if (Math.abs(dyTarget-WIND.mVisualDy)<0.4) WIND.mVisualDy=dyTarget;
+      }
+      var dyT=WIND.mVisualDy;
       WIND.mDy=dyT;
-      m.style.opacity=String((mo*Math.min(1, eP/0.35)*(1-gone)).toFixed(3));
+      var gaugeSpan=yLandM-offscreenDy;
+      WIND.gaugeTravel=Math.max(0,Math.min(1,gaugeSpan?((dyT-offscreenDy)/gaugeSpan):0));
+
+      /* The box charge and the internal pressure label now wait for the
+         instrument's real lower edge to reach the prompt box. */
+      var gaugeAtBox=(WIND.travelV||0)>=0 && g>=0.62 && Math.abs(dyT-yLandM)<0.8;
+      if (gaugeAtBox && !WIND.gaugeTouched){
+        WIND.gaugeTouched=true;
+        if (!WIND.zapped){ WIND.zapped=true; zapBox(); }
+      }
+      var gaugePTarget=(WIND.gaugeTouched && (WIND.travelV||0)>=0 && !reverseGate)?1:0;
+      if (typeof WIND.gaugeP!=="number") WIND.gaugeP=0;
+      var gaugePortalStep=dtW/360;
+      if (WIND.gaugeP<gaugePTarget) WIND.gaugeP=Math.min(gaugePTarget,WIND.gaugeP+gaugePortalStep);
+      else if (WIND.gaugeP>gaugePTarget) WIND.gaugeP=Math.max(gaugePTarget,WIND.gaugeP-gaugePortalStep);
+      if (gaugePTarget===0 && WIND.gaugeP<=0.001 && (WIND.travelV||0)<0) WIND.gaugeTouched=false;
+      if (eP<=0.001 && Math.abs(dyT-offscreenDy)<0.8){ WIND.zapped=false; WIND.gaugeTouched=false; }
+      WIND.gaugeAway=eP<=0.001 && Math.abs(dyT-offscreenDy)<5 && WIND.gaugeP<=0.001;
+
+      /* The external and internal forms meet at one invisible midpoint. */
+      var gaugeExternalPortal=WIND.gaugeP<0.5?(1-smooth01(WIND.gaugeP*2)):0;
+      var gaugePresence=Math.max(pEff*smooth01(eP/0.35),WIND.gaugeTouched?1:0);
+      var opacityTarget=.98*gaugePresence*gaugeExternalPortal;
+      if (typeof WIND.mOpacityS!=="number") WIND.mOpacityS=0;
+      WIND.mOpacityS+=(opacityTarget-WIND.mOpacityS)*(1-Math.exp(-dtW/(opacityTarget>WIND.mOpacityS?280:190)));
+      if (Math.abs(opacityTarget-WIND.mOpacityS)<0.001) WIND.mOpacityS=opacityTarget;
+      m.style.opacity=String(Math.max(0,Math.min(1,WIND.mOpacityS)).toFixed(3));
       m.style.transform="translateY("+dyT.toFixed(1)+"px)";
     }
     if (v){
-      /* p1.073: the moment the gauge lands it starts ticking - the count
-         runs from the landing, through the push, topping out at the touch */
-      var U;
-      if (prM <= 0.001){ U=Math.max(0, Math.min(1, (prD-0.25)/0.75))*0.45; }
-      else { U=0.45+Math.min(1, prM/0.333)*0.55; }
-      U=Math.max(0, Math.min(1, U));
+      /* The reading follows the gauge's real pixels. Physical arrival supplies
+         86% of the range; only completed docking unlocks the final 14%, so
+         2,900 Pa cannot appear while the capsule is still travelling. */
+      var uTarget=0.86*Math.max(0,Math.min(1,WIND.gaugeTravel||0))+
+        0.14*Math.max(0,Math.min(1,WIND.gaugeP||0));
+      uTarget=Math.max(0,Math.min(1,uTarget));
+      if (typeof WIND.uS!=="number") WIND.uS=0;
+      var readingFactor=WIND.travelFactor||0.12;
+      var uStep=(uTarget-WIND.uS)*(1-Math.exp(-dtW*readingFactor/520));
+      var uCap=dtW*GAUGE_READING_PER_MS*readingFactor;
+      if (uStep>uCap) uStep=uCap; else if (uStep<-uCap) uStep=-uCap;
+      WIND.uS+=uStep;
+      if (Math.abs(uTarget-WIND.uS)<0.0004) WIND.uS=uTarget;
+      var U=Math.max(0,Math.min(1,WIND.uS));
       var pa=Math.round((1000+1900*U)/10)*10;
+      if ((WIND.gaugeP||0)<0.995) pa=Math.min(pa,2880);
       WIND.paBase=pa;
       WIND.climb=(U > 0 && U < 1);
+      if (m) m.style.setProperty("--wm-level",U.toFixed(3));
       v.textContent=pa.toLocaleString("en-US");
       /* the needle runs rough - its own small clock, immune to frame stalls */
       if (WIND.climb && !WIND.flT){
@@ -9977,23 +10409,354 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
           var vF=$("windval");
           if (!vF || !WIND.climb){ clearInterval(WIND.flT); WIND.flT=0; return; }
           var ts=performance.now();
-          var fl=Math.round(((Math.sin(ts*.021)+Math.sin(ts*.0472))*14)/10)*10;
-          var paF=Math.max(1000, Math.min(2900, (WIND.paBase||1000)+fl));
+          var fl=Math.round(((Math.sin(ts*.016)+Math.sin(ts*.031))*10)/10)*10;
+          var paCeil=(WIND.gaugeP||0)>=0.995?2900:2880;
+          var paF=Math.max(1000, Math.min(paCeil, (WIND.paBase||1000)+fl));
           vF.textContent=paF.toLocaleString("en-US");
-        }, 90);
+        }, 130);
       }
     }
     /* p1.079: the labels belong to the prompt - they hold in the box until it is sent */
     if (prM > 0.80) WIND.landed=true; else if (prM < 0.70) WIND.landed=false;   /* the latch survives a fling */
     var holdP=(WIND.landed && BLUE_SEND_P < 0.995)?1:-1;
-    pillDraw((pEff>0.02)?prM:holdP);
-    if (pEff>0){ windDraw(); if (!WIND.raf) WIND.raf=requestAnimationFrame(windTick); }
+    var gateSettling=(typeof PILL_GATE.progress==="number") &&
+      (Math.abs(prM-PILL_GATE.progress)>0.0004 || (PILL_GATE.progress>0.5?!WIND.allPillsHome:!WIND.allPillsAway));
+    var mustSettle=WIND.pillsMoving || (!WIND.allPillsAway && prM<0.5) || gateSettling;
+    pillDraw((pEff>0.02 || mustSettle)?prM:holdP);
+    /* Once every label and the gauge are physically inside the prompt, move
+       straight into the first chat state. The long empty cream runway is not
+       a scene and should never ask for another gesture. */
+    if (PILL_GATE.mode==="down" && WIND.allPillsHome &&
+        typeof PILL_GATE.finishForward==="function"){
+      PILL_GATE.finishForward();
+      return;
+    }
+    /* Reverse completion is animation-driven. Do not leave an empty cream
+       scene waiting for the user to provide one more wheel event. */
+    if (PILL_GATE.mode==="up" && prM<=0.001 && WIND.allPillsReleased &&
+        typeof PILL_GATE.finishReverse==="function"){
+      PILL_GATE.finishReverse();
+      return;
+    }
+    gateSettling=(typeof PILL_GATE.progress==="number") &&
+      (Math.abs(prM-PILL_GATE.progress)>0.0004 || (PILL_GATE.progress>0.5?!WIND.allPillsHome:!WIND.allPillsAway));
+    if (pEff>0 || WIND.pillsMoving || gateSettling){ windDraw(); if (!WIND.raf) WIND.raf=requestAnimationFrame(windTick); }
   }
+
+  /* THE LABEL GATE: native scroll may reach either edge of this scene, but it
+     cannot cross that edge until every visible label has physically finished
+     its journey. Fast gestures change only the destination; they never skip
+     the landing. The same contract is applied in reverse. */
+  (function installPillGate(){
+    var scr=$("scr-home"), meets=$("meets"), next=$("power-reveal-stage");
+    if (!scr || !meets || !next) return;
+    function disabled(){
+      return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    }
+    function hasPills(){
+      var layer=$("pilllayer");
+      return !!(layer && layer.children && layer.children.length);
+    }
+    function measure(){
+      var sr=scr.getBoundingClientRect(), mr=meets.getBoundingClientRect(), nr=next.getBoundingClientRect();
+      PILL_GATE.start=scr.scrollTop+(mr.top-sr.top);
+      /* The following scene may not even enter the viewport while the labels
+         are unfinished. Its top waits just beyond the viewport's lower edge. */
+      PILL_GATE.end=scr.scrollTop+(nr.top-sr.top)-scr.clientHeight+1;
+      PILL_GATE.zero=PILL_GATE.start-scr.clientHeight*.9;
+      PILL_GATE.one=PILL_GATE.start+mr.height-scr.clientHeight*.35;
+    }
+    function wake(){
+      if (WIND.dArgs) windDrive(WIND.dArgs[0],WIND.dArgs[1],WIND.dArgs[2]);
+      else windDrive(0);
+      if (!WIND.raf) WIND.raf=requestAnimationFrame(windTick);
+    }
+    function setMode(mode){
+      PILL_GATE.mode=mode;
+      PILL_GATE.progress=(mode==="down" || mode==="released-down")?1:
+        ((mode==="up" || mode==="released-up")?0:null);
+      wake();
+    }
+    function pin(y){
+      if (Math.abs(scr.scrollTop-y)<0.5){ PILL_GATE.lastY=y; return; }
+      PILL_GATE.writing=true;
+      scr.scrollTop=y;
+      PILL_GATE.lastY=y;
+    }
+    function jumpForwardToChat(){
+      if (PILL_GATE.jumpingForward) return;
+      measure();
+      PILL_GATE.jumpingForward=true;
+      PILL_GATE.mode="released-down";
+      PILL_GATE.progress=null;
+      /* Change the underlying story position without animating a second
+         cream runway. The visible handoff is time-driven in this same
+         viewport: chat chrome, send press, then the first message. */
+      var target=Math.min(scr.scrollHeight-scr.clientHeight,
+        PILL_GATE.end+scr.clientHeight*1.20);
+      scr.scrollTop=target;
+      PILL_GATE.lastY=target;
+      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+      HOME_MOTION.target=HOME_MOTION.value=target;
+      HOME_MOTION.velocity=0;
+      HOME_MOTION.initialized=true;
+      CHAT_HANDOFF.active=true;
+      CHAT_HANDOFF.phase=0;
+      CHAT_HANDOFF.start=0;
+      CHAT_HANDOFF.duration=1200;
+      CHAT_RECEIVE.active=false;
+      CHAT_RECEIVE.done=false;
+      CHAT_RECEIVE.phase=0;
+      CHAT_RECEIVE.start=0;
+      CHAT_RECEIVE.holdY=null;
+      CHAT_RECEIVE.holdUntil=0;
+      if (CHAT_RECEIVE.raf){ cancelAnimationFrame(CHAT_RECEIVE.raf); CHAT_RECEIVE.raf=0; }
+      function step(ts){
+        if (!CHAT_HANDOFF.start) CHAT_HANDOFF.start=ts;
+        var u=Math.max(0,Math.min(1,(ts-CHAT_HANDOFF.start)/CHAT_HANDOFF.duration));
+        CHAT_HANDOFF.phase=u;
+        if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+        HOME_MOTION.target=HOME_MOTION.value=target;
+        HOME_MOTION.velocity=0;
+        HOME_MOTION.initialized=true;
+        updateHomeDeckStory(target);
+        if (u<1){
+          CHAT_HANDOFF.raf=PILL_GATE.forwardRaf=requestAnimationFrame(step);
+        }
+        else {
+          CHAT_HANDOFF.raf=0;
+          CHAT_HANDOFF.active=false;
+          CHAT_HANDOFF.phase=1;
+          PILL_GATE.forwardRaf=0;
+          PILL_GATE.jumpingForward=false;
+          PILL_GATE.mode="";
+          PILL_GATE.writing=false;
+          PILL_GATE.lastY=scr.scrollTop;
+          /* Normal scroll logic now paints the same completed chat frame, so
+             the timed entrance ends without a flash or state change. */
+          updateHomeDeckStory(target);
+        }
+      }
+      CHAT_HANDOFF.raf=PILL_GATE.forwardRaf=requestAnimationFrame(step);
+    }
+    PILL_GATE.finishForward=jumpForwardToChat;
+    function jumpBackToSimple(){
+      if (!HOME_STORY.ready) prepareHomeDeckStory();
+      var target=Math.max(0,HOME_STORY.thesisEnd-scr.clientHeight*.18);
+
+      if (typeof CHAT_HANDOFF === "object"){
+        CHAT_HANDOFF.active=false;
+        CHAT_HANDOFF.phase=0;
+        CHAT_HANDOFF.start=0;
+        if (CHAT_HANDOFF.raf){ cancelAnimationFrame(CHAT_HANDOFF.raf); CHAT_HANDOFF.raf=0; }
+      }
+      if (typeof CHAT_RECEIVE === "object"){
+        CHAT_RECEIVE.active=false;
+        CHAT_RECEIVE.done=false;
+        CHAT_RECEIVE.phase=0;
+        CHAT_RECEIVE.start=0;
+        CHAT_RECEIVE.holdY=null;
+        CHAT_RECEIVE.holdUntil=0;
+        if (CHAT_RECEIVE.raf){ cancelAnimationFrame(CHAT_RECEIVE.raf); CHAT_RECEIVE.raf=0; }
+      }
+
+      /* The label story has already played in reverse. Do not then replay the
+         earlier empty wind runway: hand the viewer straight to the completed
+         thought that precedes it. The short hold consumes only the momentum
+         left in the same wheel/trackpad gesture. */
+      PILL_GATE.mode="";
+      PILL_GATE.progress=null;
+      PILL_GATE.reverseHoldUntil=((window.performance&&performance.now)?performance.now():Date.now())+420;
+      PILL_GATE.holdY=target;
+      if (WIND.raf){ cancelAnimationFrame(WIND.raf); WIND.raf=0; }
+      WIND.p=0; WIND.prog=0; WIND.prS=0; WIND.labelForce=0;
+      WIND.mOpacityS=0; WIND.uS=0; WIND.g=0;
+      WIND.mVisualDy=undefined; WIND.gaugeTouched=false; WIND.gaugeP=0; WIND.gaugeTravel=0; WIND.gaugeAway=true;
+      /* This is a completed reverse, not another unfinished label crossing.
+         Leaving allPillsAway false made the next upward swipe re-arm the wind
+         gate and throw the viewer forward to the same boundary again. */
+      WIND.allPillsHome=false;
+      WIND.allPillsAway=true;
+      WIND.allPillsReleased=true;
+      WIND.pillsMoving=false;
+      WIND.landed=false;
+      WIND.travelV=0; WIND.travelFactor=0.12;
+      WIND.fastReturnActive=false; WIND.lastTargetDir=0;
+      PILL_TEMPO.value=PILL_TEMPO.target=PILL_TEMPO.pending=1;
+      PILL_TEMPO.lastInput=PILL_TEMPO.lastSample=0;
+      PILL_TEMPO.inputDir=0;
+      var wl=$("windlayer"), wm=$("windmeter");
+      if (wl) wl.style.opacity="0";
+      if (wm) wm.style.opacity="0";
+
+      pin(target);
+      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+      HOME_MOTION.target=HOME_MOTION.value=target;
+      HOME_MOTION.velocity=0;
+      HOME_MOTION.initialized=true;
+      updateHomeDeckStory(target);
+    }
+    PILL_GATE.finishReverse=jumpBackToSimple;
+    function releaseForDirection(dir){
+      if (dir<0 && (PILL_GATE.mode==="down" || PILL_GATE.mode==="released-down")){ setMode(""); return true; }
+      if (dir>0 && (PILL_GATE.mode==="up" || PILL_GATE.mode==="released-up")){ setMode(""); return true; }
+      if (dir>0 && PILL_GATE.mode==="down" && WIND.allPillsHome){ setMode("released-down"); return true; }
+      return false;
+    }
+    function blockDelta(delta, e){
+      var inputNow=(window.performance&&performance.now)?performance.now():Date.now();
+      if (typeof CHAT_RECEIVE === "object" &&
+          (CHAT_RECEIVE.active || inputNow<(CHAT_RECEIVE.holdUntil||0))){
+        if (e && e.cancelable) e.preventDefault();
+        /* Continue eating the tail of the same trackpad gesture after the
+           card has arrived; otherwise momentum immediately cuts its top. */
+        if (!CHAT_RECEIVE.active) CHAT_RECEIVE.holdUntil=inputNow+180;
+        if (typeof CHAT_RECEIVE.holdY === "number") pin(CHAT_RECEIVE.holdY);
+        return true;
+      }
+      if (!delta || disabled() || !hasPills() || current!=="home") return false;
+      if (PILL_GATE.jumpingForward){
+        if (e && e.cancelable) e.preventDefault();
+        return true;
+      }
+      var gateNow=(window.performance&&performance.now)?performance.now():Date.now();
+      if (gateNow<(PILL_GATE.reverseHoldUntil||0)){
+        if (e && e.cancelable) e.preventDefault();
+        /* Keep the quarantine alive until the inertial gesture itself goes
+           quiet; Mac trackpad momentum can outlast a fixed cooldown. */
+        PILL_GATE.reverseHoldUntil=Math.max(PILL_GATE.reverseHoldUntil,gateNow+220);
+        if (typeof PILL_GATE.holdY==="number") pin(PILL_GATE.holdY);
+        return true;
+      }
+      PILL_GATE.holdY=null;
+      feedPillTempo(delta);
+      measure();
+      var dir=delta>0?1:-1;
+      if (dir<0 && PILL_GATE.mode==="up" && WIND.allPillsAway){
+        if (e && e.cancelable) e.preventDefault();
+        jumpBackToSimple();
+        return true;
+      }
+      if (releaseForDirection(dir)) return false;
+      var y=scr.scrollTop;
+      if (dir>0 && y+Math.max(0,delta)>=PILL_GATE.end && !WIND.allPillsHome){
+        if (e && e.cancelable) e.preventDefault();
+        setMode("down"); pin(PILL_GATE.end); return true;
+      }
+      if (dir<0 && y+Math.min(0,delta)<=PILL_GATE.start && !WIND.allPillsAway){
+        if (e && e.cancelable) e.preventDefault();
+        setMode("up"); pin(PILL_GATE.start); return true;
+      }
+      return false;
+    }
+    scr.addEventListener("wheel",function(e){ blockDelta(e.deltaY,e); },{passive:false});
+    scr.addEventListener("touchstart",function(e){
+      PILL_GATE.touchY=(e.touches&&e.touches.length===1)?e.touches[0].clientY:null;
+    },{passive:true});
+    scr.addEventListener("touchmove",function(e){
+      if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
+      var y=e.touches[0].clientY, delta=PILL_GATE.touchY-y;
+      blockDelta(delta,e); PILL_GATE.touchY=y;
+    },{passive:false});
+    scr.addEventListener("touchend",function(){ PILL_GATE.touchY=null; },{passive:true});
+    scr.addEventListener("touchcancel",function(){ PILL_GATE.touchY=null; },{passive:true});
+    scr.addEventListener("scroll",function(){
+      if (disabled() || !hasPills() || current!=="home"){
+        PILL_GATE.lastY=scr.scrollTop; return;
+      }
+      var receiveNow=(window.performance&&performance.now)?performance.now():Date.now();
+      if (typeof CHAT_RECEIVE === "object" &&
+          (CHAT_RECEIVE.active || receiveNow<(CHAT_RECEIVE.holdUntil||0)) &&
+          typeof CHAT_RECEIVE.holdY === "number"){
+        if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+        HOME_MOTION.target=HOME_MOTION.value=CHAT_RECEIVE.holdY;
+        HOME_MOTION.velocity=0;
+        HOME_MOTION.initialized=true;
+        if (Math.abs(scr.scrollTop-CHAT_RECEIVE.holdY)>=0.5) pin(CHAT_RECEIVE.holdY);
+        else PILL_GATE.lastY=CHAT_RECEIVE.holdY;
+        return;
+      }
+      if (PILL_GATE.jumpingForward){ PILL_GATE.lastY=scr.scrollTop; return; }
+      var holdNow=(window.performance&&performance.now)?performance.now():Date.now();
+      if (holdNow<(PILL_GATE.reverseHoldUntil||0) && typeof PILL_GATE.holdY==="number"){
+        if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+        HOME_MOTION.target=HOME_MOTION.value=PILL_GATE.holdY;
+        HOME_MOTION.velocity=0;
+        HOME_MOTION.initialized=true;
+        PILL_GATE.writing=false;
+        if (Math.abs(scr.scrollTop-PILL_GATE.holdY)>=0.5) pin(PILL_GATE.holdY);
+        else PILL_GATE.lastY=PILL_GATE.holdY;
+        return;
+      }
+      PILL_GATE.holdY=null;
+      if (PILL_GATE.writing){ PILL_GATE.writing=false; PILL_GATE.lastY=scr.scrollTop; return; }
+      measure();
+      var y=scr.scrollTop, dir=y>PILL_GATE.lastY?1:(y<PILL_GATE.lastY?-1:0);
+      if (PILL_GATE.mode==="released-down"){
+        if (dir<0) setMode("");
+        else if (y>=PILL_GATE.one){ PILL_GATE.mode=""; PILL_GATE.progress=null; }
+      }
+      if (PILL_GATE.mode==="released-up"){
+        if (dir>0) setMode("");
+        else if (y<=PILL_GATE.zero){ PILL_GATE.mode=""; PILL_GATE.progress=null; }
+      }
+      if (dir>0 && y>PILL_GATE.end && !WIND.allPillsHome){ setMode("down"); pin(PILL_GATE.end); return; }
+      if (dir<0 && y<PILL_GATE.start && !WIND.allPillsAway){ setMode("up"); pin(PILL_GATE.start); return; }
+      if (PILL_GATE.mode==="down" && !WIND.allPillsHome && y>PILL_GATE.end){ pin(PILL_GATE.end); return; }
+      if (PILL_GATE.mode==="up" && !WIND.allPillsAway && y<PILL_GATE.start){ pin(PILL_GATE.start); return; }
+      PILL_GATE.lastY=y;
+    },{passive:true});
+    window.addEventListener("resize",measure,{passive:true});
+    PILL_GATE.lastY=scr.scrollTop;
+    measure();
+  })();
   var DEMO_PROMPT="Build 10 residential floors above 3 commercial floors. Recess floor 3 by 3 m on every side. Footprint: 28 \u00D7 24 m.";
   var DEMO_PROMPT_2="Add one residential floor and export the 3D model.";
   var DEMO_PROMPT_3="Create a photorealistic visualisation.";
   var GHOST={ target:0, shown:0, raf:0, on:false, sent:false };
+  var CHAT_HANDOFF={ active:false, phase:0, start:0, duration:1200, raf:0 };
+  var CHAT_RECEIVE={ active:false, done:false, phase:0, start:0, duration:980,
+    raf:0, storyY:0, endY:0, holdY:null, holdUntil:0 };
   var BLUE_SEND_P=0, PD_TYPED=null;
+  function startChatReceive(st,pinP,vh){
+    if (CHAT_RECEIVE.active || CHAT_RECEIVE.done) return;
+    var scr=$("scr-home");
+    if (!scr) return;
+    CHAT_RECEIVE.active=true;
+    CHAT_RECEIVE.phase=0;
+    CHAT_RECEIVE.start=0;
+    CHAT_RECEIVE.storyY=st;
+    CHAT_RECEIVE.holdY=scr.scrollTop;
+    /* Finish at the scroll coordinate whose ordinary state matches the fully
+       received card. The coordinate swap is invisible because both frames
+       paint the same result. */
+    CHAT_RECEIVE.endY=Math.min(scr.scrollHeight-scr.clientHeight,
+      st+Math.max(0,(.97-pinP)*vh*1.6));
+    function step(ts){
+      if (!CHAT_RECEIVE.start) CHAT_RECEIVE.start=ts;
+      var u=Math.max(0,Math.min(1,(ts-CHAT_RECEIVE.start)/CHAT_RECEIVE.duration));
+      CHAT_RECEIVE.phase=u;
+      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+      updateHomeDeckStory(CHAT_RECEIVE.storyY);
+      if (u<1){
+        CHAT_RECEIVE.raf=requestAnimationFrame(step);
+      } else {
+        CHAT_RECEIVE.raf=0;
+        CHAT_RECEIVE.holdY=CHAT_RECEIVE.endY;
+        CHAT_RECEIVE.holdUntil=((window.performance&&performance.now)?performance.now():Date.now())+180;
+        scr.scrollTop=CHAT_RECEIVE.endY;
+        HOME_MOTION.target=HOME_MOTION.value=CHAT_RECEIVE.endY;
+        HOME_MOTION.velocity=0;
+        HOME_MOTION.initialized=true;
+        if (typeof PILL_GATE === "object") PILL_GATE.lastY=CHAT_RECEIVE.endY;
+        CHAT_RECEIVE.active=false;
+        CHAT_RECEIVE.done=true;
+        CHAT_RECEIVE.phase=1;
+        updateHomeDeckStory(CHAT_RECEIVE.endY);
+      }
+    }
+    CHAT_RECEIVE.raf=requestAnimationFrame(step);
+  }
   function ghostAllowed(){
     var q=$("deckq");
     if (!q) return false;
@@ -10134,11 +10897,44 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       });
     }
   });
+  function logoToHero(){
+    if (current !== "home") show("home");
+    var scr=$("scr-home");
+    try{ if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(_blur){}
+    if (KB_DOCKED) deckBackToStory();
+    if (typeof PILL_GATE === "object"){
+      PILL_GATE.mode="";
+      PILL_GATE.progress=null;
+      PILL_GATE.jumpingForward=false;
+      PILL_GATE.reverseHoldUntil=0;
+      PILL_GATE.holdY=null;
+      PILL_GATE.writing=false;
+      PILL_GATE.touchY=null;
+      if (PILL_GATE.forwardRaf){ cancelAnimationFrame(PILL_GATE.forwardRaf); PILL_GATE.forwardRaf=0; }
+    }
+    resetHomeDeckStory();
+    if (scr) scr.scrollTop=0;
+    HOME_MOTION.target=HOME_MOTION.value=0;
+    HOME_MOTION.velocity=0;
+    HOME_MOTION.initialized=true;
+    if (typeof PILL_GATE === "object") PILL_GATE.lastY=0;
+    location.hash="home";
+    requestAnimationFrame(function(){
+      HOME_STORY.ready=false;
+      prepareHomeDeckStory();
+      updateHomeDeckStory(0);
+    });
+  }
   var goers = document.querySelectorAll("[data-go]");
   for (var g = 0; g < goers.length; g++)
     goers[g].addEventListener("click", function(e){
       e.preventDefault();
-      location.hash = this.getAttribute("data-go");
+      var destination=this.getAttribute("data-go");
+      if (destination === "home" && this.classList.contains("word")){
+        logoToHero();
+        return;
+      }
+      location.hash = destination;
     });
   show(screenOf(location.hash));
 
@@ -10803,6 +11599,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     var off=0;
     var pin=(WIND.pinP||0);
+    /* The opening chat belongs near the top of the viewport. It should read
+       as a regular conversation, never as a centered logo/message splash. */
+    if (pin < .79 && p1 <= .001){
+      stack.style.transform="translateY(0px)";
+      return;
+    }
     if (pin < 1.02){ off=anch[0]*Math.min(1, p1); }   /* the opening rides itself into view */
     else {
       /* p1.103: a plain, steady scroll of the whole conversation - the chat
@@ -10811,14 +11613,24 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var sp=Math.max(0, Math.min(1, (pin-1.02)/1.02));
       off=anch[0]+(maxOff-anch[0])*sp;
     }
-    /* p1.099: while the conversation is only its opening, the whole piece
-       stands in the middle of the window instead of hanging from its top */
+    /* While the first answer is arriving, never stop with the user's blue
+       message sliced by the top mask. Either it remains wholly visible or,
+       once later turns begin, it scrolls away as a complete chat row. */
+    if (pin < 1.02){
+      var firstQ=$("pd-q");
+      if (firstQ){
+        var maxOpeningOff=Math.max(0,firstQ.offsetTop-6);
+        off=Math.min(off,maxOpeningOff);
+      }
+    }
+    /* Later conversation turns may rebalance their remaining short content;
+       the opening itself stays top-anchored like an ordinary chat. */
     var kids=stack.children, last=null;
     for (var ki=0; ki<kids.length; ki++){
       var kv=+(kids[ki].style.opacity||0);
       if (kv > 0.02) last=kids[ki];
     }
-    if (last){
+    if (pin>=1.02 && last){
       var visB=last.offsetTop+last.offsetHeight;
       if (visB < H){
         var mid=-(H-visB)/2;
@@ -10976,6 +11788,137 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   if(reduce.addEventListener) reduce.addEventListener("change",queue);
   if(mobile.addEventListener) mobile.addEventListener("change",queue);
   paint();
+})();
+</script>
+
+<script>
+/* THE GHOST CURTAIN WALL: a local reveal in the opening two scenes. The
+   architectural grid remains perfectly rigid; movement changes visibility only. */
+(function(){
+  var home=document.getElementById("scr-home");
+  var hero=home&&home.querySelector(":scope > .hero");
+  var story=document.getElementById("home-prompt-stage");
+  var canvas=document.getElementById("cw-interaction-grid");
+  if(!home||!hero||!story||!canvas||!canvas.getContext) return;
+  var ctx=canvas.getContext("2d");
+  if(!ctx) return;
+
+  var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0;
+  var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,strength=0;
+  var active=false,areas=[hero,story];
+
+  function resize(){
+    W=Math.max(1,window.innerWidth); H=Math.max(1,window.innerHeight);
+    DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+    canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR);
+    canvas.style.width=W+"px"; canvas.style.height=H+"px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if(strength>.001) queue();
+  }
+  function inOpening(px,py){
+    if(!home.classList.contains("on")) return false;
+    for(var i=0;i<areas.length;i++){
+      var r=areas[i].getBoundingClientRect();
+      if(px>=Math.max(0,r.left)&&px<=Math.min(W,r.right)&&
+         py>=Math.max(0,r.top)&&py<=Math.min(H,r.bottom)) return true;
+    }
+    return false;
+  }
+  function move(px,py){
+    if(!inOpening(px,py)){ active=false; queue(); return; }
+    tx=px; ty=py;
+    if(strength<.012){ x=tx; y=ty; }
+    active=true; lastMove=performance.now(); queue();
+  }
+  function pointerMove(e){ move(e.clientX,e.clientY); }
+  function touchMove(e){
+    if(e.touches&&e.touches.length) move(e.touches[0].clientX,e.touches[0].clientY);
+  }
+  function leave(){ active=false; queue(); }
+  function queue(){ if(!raf) raf=requestAnimationFrame(frame); }
+
+  function openingClip(){
+    ctx.beginPath();
+    for(var i=0;i<areas.length;i++){
+      var r=areas[i].getBoundingClientRect();
+      var l=Math.max(0,r.left),t=Math.max(0,r.top);
+      var rr=Math.min(W,r.right),bb=Math.min(H,r.bottom);
+      if(rr>l&&bb>t) ctx.rect(l,t,rr-l,bb-t);
+    }
+    ctx.clip();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    if(strength<.001) return;
+    var radius=Math.max(150,Math.min(300,Math.min(W,H)*.31));
+    /* Larger facade modules, clearly taller than they are wide. */
+    var bay=Math.max(110,Math.min(150,W*.068));
+    var level=Math.max(158,Math.min(216,H*.175));
+    var scrollY=home.scrollTop||0;
+    var ox=((W*.5)%bay)-bay;
+    var oy=-(scrollY%level)-level;
+    var i;
+
+    ctx.save();
+    openingClip();
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+
+    /* Every mullion and transom has one quiet, even stroke. */
+    for(i=ox;i<=W+bay;i+=bay){
+      ctx.beginPath();
+      ctx.moveTo(i,-1); ctx.lineTo(i,H+1);
+      ctx.lineWidth=.62;
+      ctx.strokeStyle="rgba(10,80,255,"+(strength*.105).toFixed(3)+")";
+      ctx.stroke();
+    }
+
+    for(i=oy;i<=H+level;i+=level){
+      ctx.beginPath();
+      ctx.moveTo(-1,i); ctx.lineTo(W+1,i);
+      ctx.lineWidth=.62;
+      ctx.strokeStyle="rgba(10,80,255,"+(strength*.105).toFixed(3)+")";
+      ctx.stroke();
+    }
+
+    /* The field exists only near the gesture and dissolves at its edge. */
+    ctx.globalCompositeOperation="destination-in";
+    var glow=ctx.createRadialGradient(x,y,radius*.08,x,y,radius);
+    glow.addColorStop(0,"rgba(0,0,0,1)");
+    glow.addColorStop(.34,"rgba(0,0,0,.88)");
+    glow.addColorStop(.68,"rgba(0,0,0,.30)");
+    glow.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle=glow;
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
+  }
+  function frame(now){
+    raf=0;
+    var dt=Math.min(48,now-(lastFrame||now-16.7)); lastFrame=now;
+    var age=lastMove?now-lastMove:9999;
+    var desired=(active&&age<90)?1:Math.exp(-Math.max(0,age-90)/620);
+    if(!home.classList.contains("on")||!inOpening(tx,ty)) desired=0;
+    var tau=desired>strength?72:360;
+    strength+=(desired-strength)*(1-Math.exp(-dt/tau));
+    x+=(tx-x)*(1-Math.exp(-dt/78));
+    y+=(ty-y)*(1-Math.exp(-dt/78));
+    if(strength<.001&&desired<.001){ strength=0; ctx.clearRect(0,0,W,H); return; }
+    draw(); queue();
+  }
+
+  home.addEventListener("pointermove",pointerMove,{passive:true});
+  home.addEventListener("pointerleave",leave,{passive:true});
+  home.addEventListener("pointercancel",leave,{passive:true});
+  home.addEventListener("touchstart",touchMove,{passive:true});
+  home.addEventListener("touchmove",touchMove,{passive:true});
+  home.addEventListener("touchend",leave,{passive:true});
+  home.addEventListener("scroll",function(){
+    if(active&&!inOpening(tx,ty)) active=false;
+    if(strength>.001) queue();
+  },{passive:true});
+  window.addEventListener("resize",resize,{passive:true});
+  window.addEventListener("hashchange",queue,{passive:true});
+  resize();
 })();
 </script>
 
