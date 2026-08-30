@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.114 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.116 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -570,6 +570,8 @@ header .bar{
     top:0;
     z-index:0;
     overflow:hidden;
+    overflow:clip;   /* p1.115: clips the same, but is not a scroll container -
+                        a wheel over the prompt box reaches the page again */
     will-change:transform;
   }
   #scr-home>.hero>div:first-child{
@@ -3835,7 +3837,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3874,7 +3876,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3894,7 +3896,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -11154,11 +11156,18 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
           (CHAT_RECEIVE.active || inputNow<(CHAT_RECEIVE.holdUntil||0))){
         if (e && e.cancelable) e.preventDefault();
         /* Continue eating the tail of the same trackpad gesture after the
-           card has arrived; otherwise momentum immediately cuts its top. */
-        if (!CHAT_RECEIVE.active) CHAT_RECEIVE.holdUntil=inputNow+180;
+           card has arrived; otherwise momentum immediately cuts its top.
+           p1.116: the tail is capped when it starts. A wheel sends an event
+           every ~60ms, so renewing 180ms on each one made the hold immortal
+           and the page could not be scrolled at all while the finger moved. */
+        if (!CHAT_RECEIVE.active){
+          if (!CHAT_RECEIVE.tailCap) CHAT_RECEIVE.tailCap=inputNow+520;
+          if (inputNow < CHAT_RECEIVE.tailCap) CHAT_RECEIVE.holdUntil=inputNow+180;
+        } else CHAT_RECEIVE.tailCap=0;
         if (typeof CHAT_RECEIVE.holdY === "number") pin(CHAT_RECEIVE.holdY);
         return true;
       }
+      if (typeof CHAT_RECEIVE === "object" && !CHAT_RECEIVE.active) CHAT_RECEIVE.tailCap=0;
       if (!delta || disabled() || !hasPills() || current!=="home") return false;
       if (PILL_GATE.jumpingForward){
         if (e && e.cancelable) e.preventDefault();
@@ -12835,6 +12844,28 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   window.addEventListener("resize",resize,{passive:true});
   window.addEventListener("hashchange",queue,{passive:true});
   resize();
+})();
+</script>
+
+<script>
+/* THE DEAD BAND (p1.115). The prompt line is position:fixed. A wheel over a
+   fixed element chains to the document, not to the scroller that holds it -
+   and the document does not scroll here. So the whole middle of the screen,
+   exactly where the line stands for most of the story, ate the wheel: the
+   page stopped at 480px of 13,984 and no amount of spinning moved it.
+   This listener sits AFTER the pill gate's own, so it only ever handles what
+   the gate did not take, and only while the cursor is over the line. */
+(function(){
+  var scr=document.getElementById("scr-home");
+  if (!scr) return;
+  scr.addEventListener("wheel", function(e){
+    if (e.defaultPrevented) return;
+    var deck=document.getElementById("deck");
+    if (!deck || !e.target || !deck.contains(e.target)) return;
+    var before=scr.scrollTop;
+    scr.scrollTop=before+e.deltaY;
+    if (scr.scrollTop!==before) e.preventDefault();
+  }, {passive:false});
 })();
 </script>
 
