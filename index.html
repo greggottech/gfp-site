@@ -3514,6 +3514,13 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   .reveal-build,.reveal-image{display:inline-block !important}
   .reveal-image{margin-left:.22em !important}
 }
+@media (max-width:700px){
+  .home-prompt-reveal{
+    /* Keep the serif line visibly separate from the prompt on the shorter,
+       narrower mobile composition. */
+    --second-title-clear:clamp(64px,8svh,78px);
+  }
+}
 @media (max-width:560px){
   .reveal-thesis{
     font-size:clamp(32px,10vw,42px) !important;
@@ -8850,7 +8857,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
          Re-measure a few beats after the arrival. */
       [220, 520, 950].forEach(function(ms){
         setTimeout(function(){
-          if (current === "home" && !KB_DOCKED){ HOME_STORY.ready=false; prepareHomeDeckStory(); updateHomeDeckStory(); }
+          /* Never tear the composer out of its fixed handoff after the user
+             has already started scrolling. That one-frame return to document
+             flow was visible as a blink on fast mobile starts. */
+          if (current === "home" && !KB_DOCKED && !deck.classList.contains("deck-story-fixed")){
+            HOME_STORY.ready=false; prepareHomeDeckStory(); updateHomeDeckStory();
+          }
         }, ms);
       });
     } else if (marker && marker.parentNode){
@@ -8892,6 +8904,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (CHAT_RECEIVE.raf){ cancelAnimationFrame(CHAT_RECEIVE.raf); CHAT_RECEIVE.raf=0; }
     }
     HOME_STORY.ready=false;
+    if (HOME_STORY.pushRaf){ cancelAnimationFrame(HOME_STORY.pushRaf); HOME_STORY.pushRaf=0; }
+    HOME_STORY.pushY=undefined;
+    HOME_STORY.pushTarget=undefined;
+    HOME_STORY.pushT=0;
+    HOME_STORY.pushStorySt=0;
     HOME_MOTION.initialized=false;
     HOME_MOTION.velocity=0;
     if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
@@ -8985,7 +9002,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     HOME_STORY.windStart  =HOME_STORY.thesisEnd + vh*.10;   /* p1.104: the heading is longer now */
     HOME_STORY.moveStart  =HOME_STORY.pinStart + vh*2.10;
     HOME_STORY.fadeStart  =HOME_STORY.moveStart - vh*.02;   /* p1.073: the words leave WITH the push */
-    HOME_STORY.fadeEnd    =HOME_STORY.moveStart + vh*.45;
+    /* The supporting text clears quickly when the wind takes over. The box
+       itself has a separate physical speed limit below. */
+    HOME_STORY.fadeEnd    =HOME_STORY.moveStart + vh*.16;
     HOME_STORY.moveEnd    =HOME_STORY.pinStart + vh*2.60;
     window.GFP_STORY=HOME_STORY;   /* the bench reads the page's own timeline */
     /* THE SECTION ON THE WIND (p1.045): the air lives until the section's end */
@@ -9155,7 +9174,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (typeof HOME_STORY.prevFreeTop === "number" && tScan < HOME_STORY.prevFreeTop-2) HOME_STORY.riding=true;
       HOME_STORY.prevFreeTop=tScan;
     }
-    if (stReal < HOME_STORY.pinStart - vh*0.22 || (stReal < HOME_STORY.pinStart && !HOME_STORY.riding)){   /* p1.073: the catch takes over only once the box truly flows */
+    var beforeCatch=stReal < HOME_STORY.pinStart - vh*0.22;
+    /* Small touch increments can sit below the two-pixel riding detector.
+       On phones the scroll coordinate itself is authoritative, so begin at
+       the designed catch boundary rather than snapping late at pinStart. */
+    var waitingForRide=!onPhone() && stReal < HOME_STORY.pinStart && !HOME_STORY.riding;
+    if (beforeCatch || waitingForRide){   /* p1.073: the catch takes over only once the box truly flows */
       ghostDrive(0, 0);   /* p1.034: back above the pin, the line is the visitor's again */
       windDrive(0);
       /* THE BOX WAITS AT THE FOOT (p1.047): while its flowing spot is
@@ -9194,6 +9218,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       HOME_STORY.pinY0=undefined;
       HOME_STORY.hSm=undefined;
       HOME_STORY.catchSt=undefined;
+      if (HOME_STORY.pushRaf){ cancelAnimationFrame(HOME_STORY.pushRaf); HOME_STORY.pushRaf=0; }
+      HOME_STORY.pushY=undefined;
+      HOME_STORY.pushTarget=undefined;
+      HOME_STORY.pushT=0;
       return;
     }
 
@@ -9225,7 +9253,41 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var tC=Math.max(0, Math.min(1, (st-(HOME_STORY.pinStart-wC))/wC));
     var hC=(-tC*tC*tC)+(tC*tC)+tC;   /* slope 1 at the take-over, slope 0 at the centre - the box decelerates into the middle */
     var baseC=(typeof HOME_STORY.pinY0 === "number")?(HOME_STORY.pinY0+(centreY-HOME_STORY.pinY0)*hC):centreY;
-    var y=baseC + (bottomY-baseC)*moveP;
+    var yTarget=baseC + (bottomY-baseC)*moveP;
+
+    /* THE WIND PUSH: scroll chooses the destination, but it cannot teleport
+       the composer there. A physical pixel cap keeps the descent legible even
+       after a hard swipe. The reverse is quicker, yet still continuous. */
+    var nowPush=(window.performance&&performance.now)?performance.now():Date.now();
+    var inWindPush=st>=HOME_STORY.moveStart;
+    if (typeof HOME_STORY.pushY!=="number"){
+      /* A single large swipe may enter after moveStart without an earlier
+         centre frame. It must still begin at the wind's point of contact. */
+      HOME_STORY.pushY=inWindPush?baseC:yTarget;
+      HOME_STORY.pushT=nowPush;
+    } else if (!inWindPush){
+      HOME_STORY.pushY=yTarget;
+      HOME_STORY.pushT=nowPush;
+    } else {
+      var dtPush=Math.max(1,Math.min(50,nowPush-(HOME_STORY.pushT||nowPush-16.7)));
+      HOME_STORY.pushT=nowPush;
+      var pushDiff=yTarget-HOME_STORY.pushY;
+      var downLimit=Math.max(180,Math.min(250,vh*.27));   /* pixels per second */
+      var pushLimit=(pushDiff>=0?downLimit:downLimit*2.35)*dtPush/1000;
+      if (pushDiff>pushLimit) pushDiff=pushLimit;
+      else if (pushDiff<-pushLimit) pushDiff=-pushLimit;
+      HOME_STORY.pushY+=pushDiff;
+      if (Math.abs(yTarget-HOME_STORY.pushY)<.35) HOME_STORY.pushY=yTarget;
+    }
+    HOME_STORY.pushTarget=yTarget;
+    HOME_STORY.pushStorySt=st;
+    var y=HOME_STORY.pushY;
+    if (Math.abs(yTarget-y)>.35 && !HOME_STORY.pushRaf){
+      HOME_STORY.pushRaf=requestAnimationFrame(function(){
+        HOME_STORY.pushRaf=0;
+        if (current==="home" && !KB_DOCKED) updateHomeDeckStory(HOME_STORY.pushStorySt);
+      });
+    }
     deck.style.setProperty("--deck-story-y",y.toFixed(2)+"px");
     /* THE GUTTER (p1.021): the fixed deck spans the scroller's content box,
        not the viewport - a scrollbar gutter would otherwise shift it by
@@ -9233,15 +9295,18 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     deck.style.setProperty("left",srBox.left.toFixed(2)+"px","important");
     deck.style.setProperty("right","auto","important");
     deck.style.setProperty("width",scr.clientWidth+"px","important");
-    deck.classList.toggle("deck-story-bottom",st>=HOME_STORY.moveEnd);
+    var visuallyDocked=moveP>=.999 && Math.abs(bottomY-y)<.8;
+    deck.classList.toggle("deck-story-bottom",visuallyDocked);
     /* THE WIND (p1.038): rises as the thesis settles, presses through the
        descent, gone the moment the box docks */
     /* THE SECTION ON THE WIND (p1.045): after the dock the air eases to a
        calmer strength and blows on through the section; the pressometre
        still ends at the dock */
     var windRise=smooth01((st-HOME_STORY.windStart)/(vh*.30));   /* p1.073: gently */
-    var windDock=smooth01((st-(HOME_STORY.moveEnd-vh*.08))/(vh*.12));
-    var windGone=smooth01((st-HOME_STORY.windEnd)/(vh*.22));
+    var visualMoveP=Math.max(0,Math.min(1,(bottomY-baseC)?((y-baseC)/(bottomY-baseC)):moveP));
+    var windDock=smooth01((visualMoveP-.84)/.16);
+    var pushPending=moveP>.001 && y<bottomY-.8;
+    var windGone=pushPending?0:smooth01((st-HOME_STORY.windEnd)/(vh*.22));
     windDrive(windRise*(1-.45*windDock)*(1-windGone),
               (st-HOME_STORY.windStart)/((HOME_STORY.moveEnd-vh*.08)-HOME_STORY.windStart),
               windDock);
@@ -9368,16 +9433,29 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       updateHomeDeckStory(HOME_MOTION.value);
     }
   }
+  function runPhoneHomeStoryMotion(){
+    HOME_MOTION.raf=0;
+    var scr=$("scr-home");
+    if (!scr || current !== "home") return;
+    /* Touch and viewport events can arrive several times inside one paint.
+       Read their final position once per display frame: still zero inertia,
+       but without synchronous layout thrashing between events. */
+    HOME_MOTION.target=scr.scrollTop;
+    HOME_MOTION.value=HOME_MOTION.target;
+    HOME_MOTION.velocity=0;
+    HOME_MOTION.initialized=true;
+    updateHomeDeckStory(HOME_MOTION.value);
+  }
   function queueHomeStoryMotion(){
     var scr=$("scr-home");
     if (!scr || current !== "home") return;
     HOME_MOTION.target=scr.scrollTop;
     if (onPhone()){
-      /* THE PHONE (p1.019): no inertia on touch - the choreography is glued
-         to the real scroll, so nothing lags, nothing jumps at the pin */
-      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
-      HOME_MOTION.value=HOME_MOTION.target; HOME_MOTION.velocity=0; HOME_MOTION.initialized=true;
-      updateHomeDeckStory(HOME_MOTION.value);
+      /* No inertia on touch. Coalesce work to the display clock while using
+         the exact real scroll position. */
+      HOME_MOTION.velocity=0;
+      HOME_MOTION.initialized=true;
+      if (!HOME_MOTION.raf) HOME_MOTION.raf=requestAnimationFrame(runPhoneHomeStoryMotion);
       return;
     }
     if (!HOME_MOTION.initialized){
@@ -9409,7 +9487,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     window.visualViewport.addEventListener("scroll", queueHomeStoryMotion, {passive:true});
   }
   if (homeScroller) homeScroller.addEventListener("transitionend", function(e){
-    if (e.target === homeScroller && current === "home" && !KB_DOCKED){ HOME_STORY.ready=false; prepareHomeDeckStory(); updateHomeDeckStory(); }
+    var deck=$("deck");
+    if (e.target === homeScroller && current === "home" && !KB_DOCKED &&
+        deck && !deck.classList.contains("deck-story-fixed")){
+      HOME_STORY.ready=false; prepareHomeDeckStory(); updateHomeDeckStory();
+    }
   });
   /* THE KEYBOARD (p1.029): while the field is focused on a phone the
      composer is frozen exactly where it stands - a pinned or docked
@@ -10010,6 +10092,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var PILL_PROGRESS_PER_MS=0.00005;   /* 0.05 scene progress / second */
   var PILL_SPEED_PX_PER_MS=0.045;     /* 45 pixels / second */
   var PILL_FORWARD_SPEED=1.30;        /* labels and gauge descend 30% faster */
+  var PILL_MOBILE_FORWARD_BOOST=1.40; /* touch descent is another 40% quicker */
   var PILL_REVERSE_SPEED=3;           /* the complete return trip runs three times faster */
   var GAUGE_READING_PER_MS=0.00016;    /* the digits cannot race ahead of the moving instrument */
   var PILL_ACCEL_PER_MS2=PILL_PROGRESS_PER_MS/280; /* about 280 ms to brake from normal forward speed */
@@ -10017,6 +10100,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     value:1, target:1, pending:1,
     lastInput:0, lastSample:0, inputDir:0
   };
+  function pillForwardSpeed(){
+    return PILL_FORWARD_SPEED*(onPhone()?PILL_MOBILE_FORWARD_BOOST:1);
+  }
   function feedPillTempo(delta){
     if (!delta) return;
     var now=(window.performance&&performance.now)?performance.now():Date.now();
@@ -10262,7 +10348,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
          direction. The square-root bound eases into either destination. */
       var diffW=prM-WIND.prS;
       var dirW=Math.abs(diffW)<0.000001?0:(diffW>0?1:-1);
-      var forwardSpeedW=dirW>0?PILL_FORWARD_SPEED:1;
+      var activeForwardSpeed=pillForwardSpeed();
+      var forwardSpeedW=dirW>0?activeForwardSpeed:1;
       var accelW=PILL_ACCEL_PER_MS2*(0.88+0.18*WIND.motionTempo)*forwardSpeedW;
       /* The 3x return is armed only on the exact direction edge where every
          label (including the gauge) is already docked. Reversing during the
@@ -10272,7 +10359,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         WIND.lastTargetDir=dirW;
       }
       var reverseCruise=WIND.fastReturnActive?PILL_REVERSE_SPEED:Math.min(1,WIND.motionTempo);
-      var cruiseFactorW=dirW<0?reverseCruise:(WIND.motionTempo*PILL_FORWARD_SPEED);
+      var cruiseFactorW=dirW<0?reverseCruise:(WIND.motionTempo*activeForwardSpeed);
       var cruiseW=PILL_PROGRESS_PER_MS*cruiseFactorW;
       var stopW=Math.sqrt(Math.max(0,2*accelW*Math.abs(diffW)));
       var wantVW=dirW*Math.min(cruiseW,stopW);
@@ -10298,7 +10385,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var forwardTail=WIND.prS>=0.999 && WIND.allPillsHome!==true &&
       (PILL_GATE.progress===1 || WIND.landed===true);
     var reverseTail=PILL_GATE.progress===0 && WIND.prS<=0.0004 && Math.abs(WIND.travelV||0)<0.0000001;
-    var settleFloor=forwardTail?Math.max(0.06,WIND.motionTempo*PILL_FORWARD_SPEED):(reverseTail?0.65:0.06);
+    var settleFloor=forwardTail?Math.max(0.06,WIND.motionTempo*pillForwardSpeed()):(reverseTail?0.65:0.06);
     WIND.travelFactor=Math.max(settleFloor,Math.min(PILL_REVERSE_SPEED,Math.abs(WIND.travelV||0)/PILL_PROGRESS_PER_MS));
     prM=WIND.prS;
     var reverseGate=PILL_GATE.progress===0;
@@ -10877,12 +10964,26 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   })();
   if (window.visualViewport && window.visualViewport.addEventListener){
     window.visualViewport.addEventListener("resize", function(){
-      if (!KB_DOCKED) window.dispatchEvent(new Event("resize"));
+      /* Collapsing mobile browser chrome changes the visual viewport, not
+         the story layout. Repaint without dismantling the fixed composer. */
+      if (!KB_DOCKED) queueHomeStoryMotion();
     });
   }
+  var HOME_LAYOUT_WIDTH=window.innerWidth;
   window.addEventListener("resize", function(){
     if (current === "home"){
       var deck=$("deck");
+      var widthNow=window.innerWidth;
+      var widthChanged=Math.abs(widthNow-HOME_LAYOUT_WIDTH)>2;
+      HOME_LAYOUT_WIDTH=widthNow;
+      /* Browser-bar show/hide can fire a native resize with unchanged width.
+         A full rebuild removes position:fixed for one paint and produces the
+         flicker. Only a true width/orientation change needs remeasurement. */
+      if (onPhone() && !widthChanged){
+        HOME_STORY.sceneLift=window.innerHeight*.03;
+        if (!KB_DOCKED) queueHomeStoryMotion();
+        return;
+      }
       if (deck) deck.classList.remove("deck-story-fixed","deck-story-bottom");
       HOME_STORY.ready=false;
       HOME_MOTION.initialized=false;
@@ -11850,10 +11951,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function draw(){
     ctx.clearRect(0,0,W,H);
     if(strength<.001) return;
+    var mobile=W<=700;
     var radius=Math.max(150,Math.min(300,Math.min(W,H)*.31));
-    /* Larger facade modules, clearly taller than they are wide. */
-    var bay=Math.max(110,Math.min(150,W*.068));
-    var level=Math.max(158,Math.min(216,H*.175));
+    /* Mobile modules are 25% smaller and 25% more legible under touch. */
+    var cellScale=mobile ? .75 : 1;
+    var lineAlpha=mobile ? .13125 : .105;
+    var bay=Math.max(110,Math.min(150,W*.068))*cellScale;
+    var level=Math.max(158,Math.min(216,H*.175))*cellScale;
     var scrollY=home.scrollTop||0;
     var ox=((W*.5)%bay)-bay;
     var oy=-(scrollY%level)-level;
@@ -11869,7 +11973,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       ctx.beginPath();
       ctx.moveTo(i,-1); ctx.lineTo(i,H+1);
       ctx.lineWidth=.62;
-      ctx.strokeStyle="rgba(10,80,255,"+(strength*.105).toFixed(3)+")";
+      ctx.strokeStyle="rgba(10,80,255,"+(strength*lineAlpha).toFixed(3)+")";
       ctx.stroke();
     }
 
@@ -11877,7 +11981,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       ctx.beginPath();
       ctx.moveTo(-1,i); ctx.lineTo(W+1,i);
       ctx.lineWidth=.62;
-      ctx.strokeStyle="rgba(10,80,255,"+(strength*.105).toFixed(3)+")";
+      ctx.strokeStyle="rgba(10,80,255,"+(strength*lineAlpha).toFixed(3)+")";
       ctx.stroke();
     }
 
