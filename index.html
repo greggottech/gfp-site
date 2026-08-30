@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.121 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.123 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3479,6 +3479,36 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   text-transform:uppercase;
   box-shadow:0 3px 12px rgba(10,80,255,.24)}
 .wind-pill{position:fixed;left:0;top:0;opacity:0;will-change:transform,opacity}
+/* THE LABEL'S OWN BUTTON (p1.122) */
+.pill-b{display:inline-flex;align-items:center;justify-content:center;
+  width:13px;height:13px;margin-left:6px;margin-right:-2px;vertical-align:-2px;
+  border:0;border-radius:50%;background:rgba(255,255,255,.26);color:#fff;
+  font-family:var(--font-sans);font-size:9px;font-weight:700;line-height:1;
+  cursor:pointer;pointer-events:auto;padding:0}
+.pill-b:hover{background:rgba(255,255,255,.46)}
+#pilllayer{pointer-events:none}
+#pill-card{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;
+  justify-content:center;padding:20px;background:rgba(16,17,20,.42);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#pill-card[hidden]{display:none}
+#pill-card .pc-box{position:relative;width:min(420px,100%);background:#fff;
+  border-radius:18px;padding:26px 26px 18px;box-shadow:0 30px 80px rgba(16,17,20,.28);
+  text-align:left}
+#pc-x{position:absolute;top:12px;right:14px;width:26px;height:26px;border:0;
+  background:transparent;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+#pc-x:hover{color:var(--ink)}
+.pc-kind{margin:0 0 8px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
+.pc-title{margin:0;font-family:var(--font-sans);font-size:clamp(19px,1.6vw,23px);
+  font-weight:560;letter-spacing:-.015em;color:var(--ink)}
+.pc-value{margin:4px 0 12px;font-family:var(--font-sans);font-size:14px;font-weight:540;
+  color:var(--blue,#0a50ff)}
+.pc-body{margin:0 0 18px;font-family:var(--font-sans);font-size:14px;line-height:1.55;color:#3c3f45}
+.pc-nav{display:flex;align-items:center;gap:14px;border-top:1px solid rgba(30,20,10,.10);padding-top:12px}
+.pc-nav button{width:32px;height:32px;border:1px solid rgba(30,20,10,.14);border-radius:50%;
+  background:#fff;color:var(--ink);font-size:17px;line-height:1;cursor:pointer}
+.pc-nav button:hover{background:var(--blue,#0a50ff);color:#fff;border-color:transparent}
+.pc-count{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--muted)}
 @media (max-width:700px){.wind-pill,#windmeter .wm-k{font-size:9.5px;padding:5px 9px}}
 #windlayer .wl-base{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.16;stroke-width:.8;stroke-linecap:round}
 #windlayer .wl-run{fill:none;stroke:var(--blue,#0a50ff);stroke-opacity:.46;stroke-width:1;stroke-linecap:round;
@@ -3696,6 +3726,20 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <span class="wind-pill">Design rules</span>
       <span class="wind-pill">Local codes</span>
     </div>
+    <div id="pill-card" hidden>
+      <div class="pc-box" role="dialog" aria-modal="true" aria-labelledby="pc-title">
+        <button id="pc-x" type="button" aria-label="Close">×</button>
+        <p class="pc-kind" id="pc-kind">CONSTRAINT</p>
+        <h3 class="pc-title" id="pc-title">Wind pressure</h3>
+        <p class="pc-value" id="pc-value">2,900 Pa</p>
+        <p class="pc-body" id="pc-body"></p>
+        <div class="pc-nav">
+          <button id="pc-prev" type="button" aria-label="Previous">‹</button>
+          <span class="pc-count" id="pc-count">1 / 6</span>
+          <button id="pc-next" type="button" aria-label="Next">›</button>
+        </div>
+      </div>
+    </div>
     <div id="windmeter" aria-hidden="true">
       <div class="wm-i">
         <p class="wm-k">WIND PRESSURE</p>
@@ -3837,7 +3881,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.123</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3876,7 +3920,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.123</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3896,7 +3940,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.123</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10374,9 +10418,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   /* One clock drives the gauge and every label. Gesture strength changes its
      cruising speed, while signed velocity supplies real braking and reversal. */
-  var PILL_PROGRESS_PER_MS=0.00005;   /* 0.05 scene progress / second */
+  var PILL_PROGRESS_PER_MS=0.000036;   /* p1.123 */   /* 0.05 scene progress / second */
   var PILL_SPEED_PX_PER_MS=0.26;   /* p1.119: 0.045 could not cross even the shortened fall inside a label's own window - they queued at the edge and all entered at the end */     /* 45 pixels / second */
-  var PILL_FORWARD_SPEED=1.30;        /* labels and gauge descend 30% faster */
+  var PILL_FORWARD_SPEED=1.05;        /* labels and gauge descend 30% faster */
   var PILL_MOBILE_FORWARD_BOOST=1.40; /* touch descent is another 40% quicker */
   var PILL_REVERSE_SPEED=3;           /* the complete return trip runs three times faster */
   var GAUGE_READING_PER_MS=0.00016;    /* the digits cannot race ahead of the moving instrument */
@@ -10397,11 +10441,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        momentum saturates here, so it cannot keep adding acceleration. */
     var frameDelta=Math.min(80,Math.abs(delta)*16.67/elapsed);
     var strength=smooth01(frameDelta/46);
-    var requested=0.76+0.62*strength;
+    var requested=0.62+0.42*strength;   /* p1.123: a lower ceiling for the boost */
     /* One light filter removes event-to-event chatter. Direction is not part
        of this magnitude: the signed scene velocity handles it safely. */
     PILL_TEMPO.pending=PILL_TEMPO.pending*0.18+requested*0.82;
-    PILL_TEMPO.pending=Math.max(0.76,Math.min(1.38,PILL_TEMPO.pending));
+    PILL_TEMPO.pending=Math.max(0.62,Math.min(1.04,PILL_TEMPO.pending));
     PILL_TEMPO.lastInput=now;
     PILL_TEMPO.lastSample=now;
     PILL_TEMPO.inputDir=dir;
@@ -10414,10 +10458,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       PILL_TEMPO.target=0.06;
       if (now-PILL_TEMPO.lastInput>600) PILL_TEMPO.inputDir=0;
     }
-    var tau=PILL_TEMPO.target>PILL_TEMPO.value?130:210;
+    /* p1.123: slow to take a boost, quick to let it go - trackpad momentum
+       can no longer keep the scene at speed after the hand has stopped */
+    var tau=PILL_TEMPO.target>PILL_TEMPO.value?240:150;
     PILL_TEMPO.value+=(PILL_TEMPO.target-PILL_TEMPO.value)*(1-Math.exp(-dt/tau));
     if (Math.abs(PILL_TEMPO.target-PILL_TEMPO.value)<0.001) PILL_TEMPO.value=PILL_TEMPO.target;
-    return Math.max(0.06,Math.min(1.38,PILL_TEMPO.value));
+    return Math.max(0.06,Math.min(1.04,PILL_TEMPO.value));
   }
   var PILL_GATE={ mode:"", progress:null, start:0, end:0, zero:0, one:0,
     lastY:0, writing:false, touchY:null, reverseHoldUntil:0, holdY:null,
@@ -10778,6 +10824,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     WIND.pillsMoving=!allHome && !allAway;
   }
   function windDrive(p, prog, dockP){
+    /* p1.122: a label's card is open - the scene holds. The flag rides on the
+       root element because the card's script lives outside this closure. */
+    if (WIND.frozen || document.documentElement.classList.contains("pill-card-open")) return;
     if (!windBuild()) return;
     var l=$("windlayer"), m=$("windmeter"), v=$("windval");
     WIND.p=p;
@@ -12884,6 +12933,72 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   window.addEventListener("resize",resize,{passive:true});
   window.addEventListener("hashchange",queue,{passive:true});
   resize();
+})();
+</script>
+
+<script>
+/* THE LABEL'S CARD (p1.122). Every blue label gets a small button. Pressing it
+   freezes the wind scene where it stands and opens that label's own card; the
+   arrows walk the six without closing it; X lets the scene go again. */
+(function(){
+  var layer=document.getElementById("pilllayer");
+  var card=document.getElementById("pill-card");
+  if (!layer || !card) return;
+  var pills=[].slice.call(layer.querySelectorAll(".wind-pill"));
+  var INFO=[
+    { kind:"MEASURED", title:"Wind pressure", value:"2,900 Pa",
+      body:"The design pressure the facade must carry at this height and exposure. It sets the glass thickness, the mullion depth and the bracket spacing before any of them is drawn." },
+    { kind:"CONSTRAINT", title:"Site constraints", value:"Footprint \u00b7 setbacks \u00b7 height",
+      body:"What the plot allows: the footprint, the setbacks, the height limit and the neighbouring facades. The building is fitted inside them, not adjusted afterwards." },
+    { kind:"CONSTRAINT", title:"Cost targets", value:"Rate per m\u00b2 of facade",
+      body:"The budget the facade has to land within. Quantities are counted as the model changes, so an option that leaves the target says so while it is still an option." },
+    { kind:"CONSTRAINT", title:"Fabrication limits", value:"Sheet, profile and handling limits",
+      body:"The largest glass sheet, the longest profile and the weight one crew can place. Panels are divided to respect them, which is why the model can be built and not only drawn." },
+    { kind:"RULE", title:"Design rules", value:"The office\u2019s own standards",
+      body:"How this practice details a curtain wall: joint widths, transom rules, corner treatments. The workshop follows them the way a colleague would." },
+    { kind:"CODE", title:"Local codes", value:"Regulations in force on site",
+      body:"The building code, fire and safety rules that apply at this address. They are checked against every revision, not once at the end." }
+  ];
+  var at=0;
+  function frozen(f){
+    if (typeof WIND === "object") WIND.frozen=!!f;
+    document.documentElement.classList.toggle("pill-card-open", !!f);
+  }
+  function paint(){
+    var d=INFO[at]||INFO[0];
+    document.getElementById("pc-kind").textContent=d.kind;
+    document.getElementById("pc-title").textContent=d.title;
+    document.getElementById("pc-value").textContent=d.value;
+    document.getElementById("pc-body").textContent=d.body;
+    document.getElementById("pc-count").textContent=(at+1)+" / "+INFO.length;
+  }
+  function open(i){ at=i; paint(); card.hidden=false; frozen(true); document.getElementById("pc-x").focus(); }
+  function close(){ card.hidden=true; frozen(false); }
+  function step(d){ at=(at+d+INFO.length)%INFO.length; paint(); }
+  pills.forEach(function(pill,i){
+    var b=document.createElement("button");
+    b.type="button"; b.className="pill-b"; b.textContent="i";
+    b.setAttribute("aria-label","About this constraint");
+    b.addEventListener("click",function(e){ e.stopPropagation(); e.preventDefault(); open(i); });
+    pill.appendChild(b);
+  });
+  document.getElementById("pc-x").addEventListener("click",close);
+  document.getElementById("pc-prev").addEventListener("click",function(){ step(-1); });
+  document.getElementById("pc-next").addEventListener("click",function(){ step(1); });
+  card.addEventListener("click",function(e){ if (e.target===card) close(); });
+  document.addEventListener("keydown",function(e){
+    if (card.hidden) return;
+    if (e.key==="Escape") close();
+    else if (e.key==="ArrowLeft") step(-1);
+    else if (e.key==="ArrowRight") step(1);
+  });
+  /* while the card is open nothing scrolls past underneath it */
+  var scr=document.getElementById("scr-home");
+  if (scr){
+    ["wheel","touchmove"].forEach(function(ev){
+      scr.addEventListener(ev,function(e){ if (!card.hidden && e.cancelable) e.preventDefault(); },{passive:false,capture:true});
+    });
+  }
 })();
 </script>
 
