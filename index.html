@@ -3147,15 +3147,29 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (max-width:700px){.home-prompt-stage{min-height:calc(var(--home-composer-h) + 298svh) !important}}
 
 /* ================= THE DEMO ON THE BLUE (p1.035) ================= */
-.power-reveal-inner{position:sticky;position:-webkit-sticky}
-.power-demo{position:absolute;left:0;right:0;top:clamp(56px,9vh,84px);bottom:clamp(76px,12vh,110px);
-  display:block;overflow:hidden;
-  padding:0 var(--page-gutter,18px);pointer-events:none}
-.pd-stack{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;
-  padding-top:clamp(10px,1.6vh,20px);will-change:transform}
-.pd-stack .pd-q{margin-top:clamp(8px,1.4vh,18px)}   /* a new turn gets more air than a new line */
-.pd-stack .pd-day + .pd-q{margin-top:0}
-.pd-stack>*,.pd-abub>*{opacity:0;transform:translateY(12px);filter:blur(8px);will-change:opacity,transform,filter}
+.power-reveal-inner{
+  position:sticky;position:-webkit-sticky;
+  /* The demo is full-screen. Padding on this containing block was cropping
+     the chat into two horizontal bands. */
+  padding:0 !important;overflow:visible !important;
+}
+.power-demo{position:fixed;inset:0;z-index:59;
+  display:block;overflow:visible;
+  padding:0 var(--page-gutter,18px);pointer-events:none;
+  opacity:0;visibility:hidden}
+.power-demo.is-on{opacity:1;visibility:visible}
+.pd-stack{position:relative;width:100%;height:100%;box-sizing:border-box;padding:0}
+/* Each exchange is its own viewport layer. The old version translated one
+   tall conversation column, so a card was necessarily sliced at the top or
+   behind the composer between stops. */
+.pd-chat-head,.pd-scene{position:absolute;left:0;right:0;top:0;width:100%;
+  display:flex;flex-direction:column;align-items:center;gap:8px;box-sizing:border-box}
+.pd-chat-head{z-index:4;pointer-events:none}
+.pd-scene{z-index:2;opacity:0;visibility:hidden;transform-origin:50% 0;
+  will-change:transform,opacity;pointer-events:none}
+.pd-scene.is-current{z-index:3}
+.pd-scene .pd-q{margin-top:0}
+.pd-chat-head>*,.pd-scene>*,.pd-abub>*{opacity:0;transform:translateY(12px);filter:blur(8px);will-change:opacity,transform,filter}
 .pd-draw{background:transparent;border:0;border-radius:9px;padding:0;width:auto}
 .pd-draw svg{display:block !important;width:auto !important;height:min(26svh,250px) !important;
   max-width:100% !important;min-height:0 !important;margin:0 auto !important}
@@ -3188,18 +3202,28 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   border-radius:16px 16px 6px 16px;padding:11px 15px;
   box-shadow:0 6px 22px rgba(10,80,255,.28)}
 .pd-head{width:min(720px,100%);display:flex;flex-direction:column;align-items:center;gap:7px;
-  margin-bottom:10px;text-align:center}
+  margin-bottom:10px;text-align:center;transition:gap .28s ease,margin .28s ease}
 .pd-head-a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
   border-radius:12px;background:var(--blue,#0a50ff);color:#fff;
   font-family:var(--font-sans);font-weight:700;font-size:19px;letter-spacing:0;
-  box-shadow:0 6px 18px rgba(10,80,255,.24)}
+  box-shadow:0 6px 18px rgba(10,80,255,.24);transition:width .28s ease,height .28s ease,border-radius .28s ease,font-size .28s ease}
 .pd-head-n{font-family:var(--font-sans);font-size:clamp(15px,1.15vw,17px);font-weight:520;
-  letter-spacing:-.01em;color:var(--ink)}
+  letter-spacing:-.01em;color:var(--ink);transition:font-size .28s ease,letter-spacing .28s ease}
 .pd-head-s{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted);
-  text-transform:uppercase;margin-top:-3px}
-.pd-day{width:min(720px,100%);display:flex;justify-content:center;margin-bottom:2px}
+  text-transform:uppercase;margin-top:-3px;max-width:320px;overflow:hidden;
+  transition:opacity .22s ease,max-width .28s ease,margin .28s ease}
+.pd-day{width:min(720px,100%);display:flex;justify-content:center;margin-bottom:2px;max-height:28px;overflow:hidden;
+  transition:opacity .22s ease,max-height .28s ease,margin .28s ease}
 .pd-day span{font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;color:var(--muted);
   background:rgba(17,18,20,.05);border-radius:999px;padding:4px 10px}
+/* After the opening exchange, the introductory masthead becomes ordinary
+   chat chrome. The assistant's identity remains visible without competing
+   with the messages. */
+.pd-chat-head.is-compact .pd-head{flex-direction:row;justify-content:flex-start;gap:8px;margin-bottom:0;text-align:left}
+.pd-chat-head.is-compact .pd-head-a{width:24px;height:24px;border-radius:7px;font-size:12px}
+.pd-chat-head.is-compact .pd-head-n{font-family:var(--font-mono);font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.pd-chat-head.is-compact .pd-head-s{opacity:0;max-width:0;margin:0}
+.pd-chat-head.is-compact .pd-day{opacity:0 !important;max-height:0;margin:0}
 .pd-meta{width:min(720px,100%);display:flex;align-items:center;gap:5px;
   font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;color:var(--muted);
   margin-top:-3px}
@@ -3232,7 +3256,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .pd-card button{pointer-events:none}
 .pd-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;width:auto;margin:0 3px}
 .pd-typing{width:min(720px,100%);display:flex;justify-content:flex-start;height:0;overflow:visible;align-items:flex-start}
-#pd-typing2,#pd-typing3{display:none !important}   /* p1.103: nothing to wait for - the chat is already there */
+#pd-typing2,#pd-typing3{display:flex}   /* later replies announce themselves as received chat messages */
 .pd-tb{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid rgba(30,20,10,.12);
   border-radius:6px 14px 14px 14px;padding:11px 15px;box-shadow:0 8px 22px rgba(44,34,26,.12)}
 .pd-tb i{width:6px;height:6px;border-radius:50%;background:rgba(17,18,20,.34);animation:pdDot 1.05s infinite ease-in-out}
@@ -3251,12 +3275,14 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .pd-facts dd{margin:0;font-family:var(--font-sans);font-size:clamp(16px,1.4vw,20px);font-weight:500;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
 .pd-facts dd small{font-size:11px;font-weight:400;color:var(--muted);margin-left:4px}
 @media (max-width:700px){
-  .power-demo{gap:3px;top:22px;bottom:132px}
+  .power-demo{gap:3px;top:0;bottom:0}
+  .pd-stack{padding:0}
   .pd-card .facadebox svg{max-height:30vh !important}
   .pd-card .factabs button{padding:3px 8px !important;font-size:9px !important}
   .pd-facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px}
   .pd-facts dd{font-size:15px}
 }
+#home-foot-veil{display:none !important}
 @media (max-height:640px){.pd-card .facadebox svg{max-height:26vh !important}}
 /* THE HERO'S HALVES (p1.087/88): on the desktop the headline sits in the
    middle of the left half, and the paragraph keeps the same band from the
@@ -3327,6 +3353,34 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   font-family:var(--font-sans) !important;font-size:clamp(8.5px,.52vw,9.5px) !important;
   font-weight:420 !important;letter-spacing:0 !important;white-space:nowrap}
 @media (max-width:700px){.deck-alert{display:none}}   /* the phone never showed this status */
+.prompt-choice{
+  position:fixed;left:50%;top:50%;z-index:220;margin:0;
+  width:min(430px,calc(100vw - 28px));box-sizing:border-box;
+  padding:13px 14px 12px;border:1px solid rgba(17,18,20,.11);border-radius:14px;
+  background:rgba(255,255,255,.96);box-shadow:0 18px 52px rgba(21,27,38,.16);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transform:translate(-50%,-50%);transform-origin:center;
+  animation:promptChoiceIn .24s cubic-bezier(.18,.78,.24,1) both;
+}
+.prompt-choice::backdrop{background:rgba(23,27,34,.13);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.prompt-choice[hidden]{display:none !important}
+.prompt-choice p{margin:0;color:rgba(17,18,20,.76);font-size:13px;line-height:1.38}
+.prompt-choice-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin-top:11px}
+.prompt-choice button{
+  appearance:none;border:1px solid rgba(17,18,20,.14);border-radius:999px;
+  padding:8px 12px;background:rgba(17,18,20,.035);color:var(--ink);
+  font-family:var(--font-sans);font-size:11px;font-weight:560;line-height:1;cursor:pointer;
+}
+.prompt-choice .prompt-choice-try{border-color:var(--blue,#0a50ff);background:var(--blue,#0a50ff);color:#fff}
+.prompt-choice button:focus-visible{outline:2px solid rgba(10,80,255,.28);outline-offset:2px}
+@keyframes promptChoiceIn{from{opacity:0}to{opacity:1}}
+@media (max-width:700px){
+  .prompt-choice{padding:12px}
+  .prompt-choice-actions{justify-content:stretch;flex-wrap:nowrap}
+  .prompt-choice button{flex:1;padding-inline:9px;white-space:nowrap}
+}
+@media (max-width:360px){.prompt-choice-actions{flex-wrap:wrap}.prompt-choice button{flex:1 1 100%}}
+@media (prefers-reduced-motion:reduce){.prompt-choice{animation:none}}
 #scr-home .composer #deckq{ min-height:clamp(30px,2.4vw,34px) !important; }
 #scr-home .composer .deck-tags{ grid-row:2 !important; }
 #scr-home .composer #deckattach,
@@ -3644,13 +3698,16 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
              building as the trial draws it, the counted values -->
         <div class="power-demo" id="power-demo" aria-hidden="true">
           <div class="pd-stack" id="pd-stack">
+          <div class="pd-chat-head" id="pd-chat-head">
           <div class="pd-head" id="pd-head">
             <span class="pd-head-a">G</span>
             <span class="pd-head-n">Global Facade Project</span>
             <span class="pd-head-s">AI for the physical world</span>
           </div>
           <div class="pd-day" id="pd-day"><span>TODAY</span></div>
+          </div>
 
+          <div class="pd-scene" id="pd-scene-1">
           <p class="pd-q" id="pd-q"></p>
           <div class="pd-tags" id="pd-tags" aria-hidden="true">
             <span>Wind pressure 2,900 Pa</span><span>Site constraints</span><span>Cost targets</span><span>Fabrication limits</span><span>Design rules</span><span>Local codes</span>
@@ -3663,7 +3720,9 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
             <dl class="pd-facts" id="pd-facts"></dl>
           </div>
           <div class="pd-meta pd-meta-a" id="pd-meta-a"><span id="pd-time-a"></span></div>
+          </div>
 
+          <div class="pd-scene" id="pd-scene-2">
           <p class="pd-q" id="pd-q2"></p>
           <div class="pd-meta pd-meta-q" id="pd-meta-q2"><span class="pd-time"></span><s id="pd-tick2">&#10003;&#10003;</s></div>
           <div class="pd-a" id="pd-a2" aria-hidden="true"><span class="pd-al">G</span><span>GLOBAL FACADE PROJECT</span></div>
@@ -3673,7 +3732,9 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
             <div class="pd-file"><span class="pd-file-i">SKP</span><span class="pd-file-n">gfp-model.skp<small>3D model &middot; SketchUp</small></span></div>
           </div>
           <div class="pd-meta pd-meta-a" id="pd-meta-a2"><span class="pd-time"></span></div>
+          </div>
 
+          <div class="pd-scene" id="pd-scene-3">
           <p class="pd-q" id="pd-q3"></p>
           <div class="pd-meta pd-meta-q" id="pd-meta-q3"><span class="pd-time"></span><s id="pd-tick3">&#10003;&#10003;</s></div>
           <div class="pd-a" id="pd-a3" aria-hidden="true"><span class="pd-al">G</span><span>GLOBAL FACADE PROJECT</span></div>
@@ -3684,6 +3745,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
             <div class="pd-cta" id="pd-cta"><a class="pd-cta-b" href="#classroom">Open the live demo &rarr;</a></div>
           </div>
           <div class="pd-meta pd-meta-a" id="pd-meta-a3"><span class="pd-time"></span></div>
+          </div>
           </div>
         </div>
       </div>
@@ -3806,6 +3868,13 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <div class="deck-alert"><span id="trialbadge" class="b-quiet">…</span></div>
   </div>
 </div></div>
+<dialog id="prompt-choice" class="prompt-choice" aria-label="Choose how to continue" aria-describedby="prompt-choice-copy" aria-hidden="true" hidden>
+  <p id="prompt-choice-copy">Continue the onboarding experience, or try prompting now?</p>
+  <div class="prompt-choice-actions">
+    <button id="prompt-choice-continue" type="button">Continue onboarding</button>
+    <button id="prompt-choice-try" class="prompt-choice-try" type="button">Try prompting</button>
+  </div>
+</dialog>
 
 <!-- THE HIDDEN ROOM (p1.013): the app's own work-screen markup, so the
      lifted brain writes into the elements it knows; the classroom
@@ -8849,6 +8918,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     classroom: "Live demo \u2014 Global Facade Project"
   };
   var current = null;
+  var PROMPT_CHOICE={open:false};
   function screenOf(hash){
     var name = (hash || "").replace("#", "");
     return ORDER.indexOf(name) >= 0 ? name : "home";
@@ -8918,6 +8988,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   };
   function resetHomeDeckStory(){
     var deck=$("deck"), reveal=$("home-prompt-reveal");
+    var homeScr=$("scr-home");
+    if (homeScr) homeScr.classList.remove("chat-demo-on");
+    var powerOverlay=$("power-demo");
+    if (powerOverlay) powerOverlay.classList.remove("is-on");
+    var pdHeadWrap=$("pd-chat-head");
+    if (pdHeadWrap){ pdHeadWrap.classList.remove("is-compact"); pdHeadWrap.removeAttribute("data-full-height"); }
     if (typeof CHAT_HANDOFF === "object"){
       CHAT_HANDOFF.active=false;
       CHAT_HANDOFF.phase=0;
@@ -8932,6 +9008,15 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       CHAT_RECEIVE.holdY=null;
       CHAT_RECEIVE.holdUntil=0;
       if (CHAT_RECEIVE.raf){ cancelAnimationFrame(CHAT_RECEIVE.raf); CHAT_RECEIVE.raf=0; }
+    }
+    if (typeof PD_CHAT_SCENE === "object"){
+      if (PD_CHAT_SCENE.raf){ cancelAnimationFrame(PD_CHAT_SCENE.raf); PD_CHAT_SCENE.raf=0; }
+      PD_CHAT_SCENE.active=0;
+      PD_CHAT_SCENE.target=0;
+      PD_CHAT_SCENE.from=0;
+      PD_CHAT_SCENE.running=false;
+      PD_CHAT_SCENE.phase=1;
+      PD_CHAT_SCENE.start=0;
     }
     HOME_STORY.ready=false;
     if (HOME_STORY.pushRaf){ cancelAnimationFrame(HOME_STORY.pushRaf); HOME_STORY.pushRaf=0; }
@@ -9110,9 +9195,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        visitor reaches the response cue, hold that point and let the typing
        bubble resolve into the received card on its own clock. */
     if (!handoff && typeof CHAT_RECEIVE === "object"){
-      if (!CHAT_RECEIVE.active && !CHAT_RECEIVE.done && CHAT_HANDOFF.phase>=1 && pinP>=.77){
+      /* Sending and receiving are one chat beat. Once the sent prompt has
+         settled, start the reply clock here; do not ask for another scroll
+         gesture merely to move from "sent" to "typing". */
+      if (!CHAT_RECEIVE.active && !CHAT_RECEIVE.done && CHAT_HANDOFF.phase>=1 && pinP>=.58){
         startChatReceive(st,pinP,vh);
-      } else if (!CHAT_RECEIVE.active && CHAT_RECEIVE.done && pinP<.56){
+      } else if (!CHAT_RECEIVE.active && CHAT_RECEIVE.done && pinP<.48){
         CHAT_RECEIVE.done=false;
         CHAT_RECEIVE.phase=0;
       }
@@ -9136,29 +9224,66 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* the opening keeps its beats */
     var d0=T[0];
     var q0=messageOpen*out;
-    var receivedW=(!handoff && !receiving && typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.done)?
-      smooth01((pinP-.56)/.18):0;
-    var baseA=handoff?0:(receiving?1:smooth01((pinP-d0.a)/.09));
-    var baseT=handoff?0:(receiving?(1-smooth01((receiveP-.18)/.22)):
-      smooth01((pinP-d0.t)/.07)*(1-smooth01((pinP-d0.c)/.07)));
-    var baseC=handoff?0:(receiving?smooth01((receiveP-.20)/.54):smooth01((pinP-d0.c)/.15));
-    var baseX=handoff?0:(receiving?smooth01((receiveP-.66)/.24):smooth01((pinP-d0.x)/.18));
+    var receivedW=(!handoff && !receiving && typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.done)?1:0;
+    /* A short quiet pause makes the sent message readable. The assistant
+       identity and typing bubble then appear on the reply clock, followed
+       by the result. None of these beats is mapped to a scroll position. */
+    var baseA=handoff?0:(receiving?smooth01((receiveP-.14)/.12):receivedW);
+    var baseT=handoff?0:(receiving?
+      smooth01((receiveP-.23)/.10)*(1-smooth01((receiveP-.56)/.10)):0);
+    var baseC=handoff?0:(receiving?smooth01((receiveP-.60)/.27):receivedW);
+    var baseX=handoff?0:(receiving?smooth01((receiveP-.82)/.14):receivedW);
     var a0=Math.max(baseA,receivedW)*out;
     var t0=baseT*(1-receivedW)*out;
     var c0=Math.max(baseC,receivedW)*out;
     var x0=Math.max(baseX,receivedW)*out;
-    pdTurn(1, q0, a0, t0, c0, x0);
-    /* p1.103: from here the rest of the chat is simply there - it is
-       scrolled, not revealed */
-    var restP=(receiving?0:smooth01((pinP-1.18)/.14))*out;
-    pdTurn(2, restP, restP, 0, restP, restP);
-    pdTurn(3, restP, restP, 0, restP, restP);
-    var pQ=[q0, restP, restP], pC=[c0, restP, restP];
+    /* Scroll only chooses the exchange. Forward changes then run on their
+       own clock: question, assistant identity, typing bubble, received card. */
+    var targetSlide=pinP<1.20?0:(pinP<1.80?1:2);
+    var sceneState=pdChatScene(targetSlide,storyScroll);
+    var phase=sceneState.phase;
+    var sceneP=[0,0,0];
+    if (sceneState.running){
+      /* Keep the old exchange long enough for the eye to register its exit;
+         the next question enters before the old card has fully disappeared. */
+      sceneP[sceneState.from]=1-smooth01((phase-.03)/.30);
+      sceneP[sceneState.target]=Math.max(sceneP[sceneState.target],smooth01((phase-.18)/.28));
+    } else sceneP[sceneState.active]=1;
+
+    var fQ=0,fA=0,fT=0,fC=0,fX=0;
+    var q2P=0,a2P=0,t2P=0,c2P=0;
+    var q3P=0,a3P=0,t3P=0,c3P=0;
+    var old=sceneState.running?sceneState.from:sceneState.active;
+    if (old===0){ fQ=q0; fA=a0; fT=t0; fC=c0; fX=x0; }
+    if (old===1){ q2P=a2P=c2P=1; }
+    if (old===2){ q3P=a3P=c3P=1; }
+
+    if (sceneState.running){
+      if (sceneState.target===0){
+        fQ=q0; fA=a0; fT=0; fC=c0; fX=x0;
+      } else if (sceneState.forward){
+        var qIn=smooth01((phase-.16)/.18);
+        var aIn=smooth01((phase-.34)/.14);
+        var typeIn=smooth01((phase-.39)/.10)*(1-smooth01((phase-.68)/.10));
+        var cardIn=smooth01((phase-.72)/.28);
+        if (sceneState.target===1){ q2P=qIn; a2P=aIn; t2P=typeIn; c2P=cardIn; }
+        else { q3P=qIn; a3P=aIn; t3P=typeIn; c3P=cardIn; }
+      } else if (sceneState.target===1){ q2P=a2P=c2P=1; }
+      else { q3P=a3P=c3P=1; }
+    }
+
+    pdTurn(1, fQ, fA, fT, fC, fX);
+    pdTurn(2, q2P, a2P, t2P, c2P, c2P);
+    pdTurn(3, q3P, a3P, t3P, c3P, c3P);
     /* The chat header is ordinary chrome, not an introductory scene. */
     var headP=uiOpen*(1-demoOut);
     var dayP=uiOpen*(1-demoOut);
+    var demoVisible=headP>.01 && demoOut<.995;
+    scr.classList.toggle("chat-demo-on",demoVisible);
+    var demoOverlay=$("power-demo");
+    if (demoOverlay) demoOverlay.classList.toggle("is-on",demoVisible);
     powerDemoPaint(dayP, headP, 0, 0, 0, 0);
-    pdStackRide(pC[0], pC[1], pC[2]);
+    pdStackRide(sceneP[0]*out,sceneP[1]*out,sceneP[2]*out);
     var closeIn=smooth01((pinP-3.64)/.26);
     var textOut=smooth01((pinP-5.10)/.25);   /* a safety only - the line scrolls away with the field at 3.75 */
     /* p1.077: the blue is ONE slide - it rises for the closing line and
@@ -9417,6 +9542,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   function show(name){
     placeDeck(name);
+    if (name !== "home") promptChoiceClose(false);
     if (name === current) return;
     var to = ORDER.indexOf(name);
     ORDER.forEach(function(n){
@@ -10925,9 +11051,48 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var DEMO_PROMPT_3="Create a photorealistic visualisation.";
   var GHOST={ target:0, shown:0, raf:0, on:false, sent:false };
   var CHAT_HANDOFF={ active:false, phase:0, start:0, duration:1200, raf:0 };
-  var CHAT_RECEIVE={ active:false, done:false, phase:0, start:0, duration:980,
+  var CHAT_RECEIVE={ active:false, done:false, phase:0, start:0, duration:1380,
     raf:0, storyY:0, endY:0, holdY:null, holdUntil:0 };
+  var PD_CHAT_SCENE={active:0,target:0,from:0,running:false,forward:true,
+    phase:1,start:0,duration:1180,raf:0,storyY:0};
   var BLUE_SEND_P=0, PD_TYPED=null;
+  function pdChatScene(target,storyY){
+    target=Math.max(0,Math.min(2,target|0));
+    if (typeof storyY === "number") PD_CHAT_SCENE.storyY=storyY;
+    if (target!==PD_CHAT_SCENE.target){
+      var from=PD_CHAT_SCENE.running && PD_CHAT_SCENE.phase>.45?
+        PD_CHAT_SCENE.target:PD_CHAT_SCENE.active;
+      var forward=target>from;
+      PD_CHAT_SCENE.from=from;
+      PD_CHAT_SCENE.target=target;
+      PD_CHAT_SCENE.forward=forward;
+      PD_CHAT_SCENE.running=target!==from;
+      PD_CHAT_SCENE.phase=PD_CHAT_SCENE.running?0:1;
+      PD_CHAT_SCENE.duration=forward?1180:620;
+      PD_CHAT_SCENE.start=0;
+      if (PD_CHAT_SCENE.raf){ cancelAnimationFrame(PD_CHAT_SCENE.raf); PD_CHAT_SCENE.raf=0; }
+      if (PD_CHAT_SCENE.running){
+        var requested=target;
+        var step=function(ts){
+          if (PD_CHAT_SCENE.target!==requested){ PD_CHAT_SCENE.raf=0; return; }
+          if (!PD_CHAT_SCENE.start) PD_CHAT_SCENE.start=ts;
+          PD_CHAT_SCENE.phase=Math.max(0,Math.min(1,(ts-PD_CHAT_SCENE.start)/PD_CHAT_SCENE.duration));
+          updateHomeDeckStory(PD_CHAT_SCENE.storyY);
+          if (PD_CHAT_SCENE.phase<1) PD_CHAT_SCENE.raf=requestAnimationFrame(step);
+          else {
+            PD_CHAT_SCENE.raf=0;
+            PD_CHAT_SCENE.start=0;
+            PD_CHAT_SCENE.active=PD_CHAT_SCENE.target;
+            PD_CHAT_SCENE.from=PD_CHAT_SCENE.target;
+            PD_CHAT_SCENE.running=false;
+            updateHomeDeckStory(PD_CHAT_SCENE.storyY);
+          }
+        };
+        PD_CHAT_SCENE.raf=requestAnimationFrame(step);
+      }
+    }
+    return PD_CHAT_SCENE;
+  }
   function startChatReceive(st,pinP,vh){
     if (CHAT_RECEIVE.active || CHAT_RECEIVE.done) return;
     var scr=$("scr-home");
@@ -10937,11 +11102,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     CHAT_RECEIVE.start=0;
     CHAT_RECEIVE.storyY=st;
     CHAT_RECEIVE.holdY=scr.scrollTop;
-    /* Finish at the scroll coordinate whose ordinary state matches the fully
-       received card. The coordinate swap is invisible because both frames
-       paint the same result. */
-    CHAT_RECEIVE.endY=Math.min(scr.scrollHeight-scr.clientHeight,
-      st+Math.max(0,(.97-pinP)*vh*1.6));
+    /* The whole receive event happens at the current coordinate. Advancing
+       the underlying scroll here created a redundant hidden scene and a
+       visible snap when the timer completed. */
+    CHAT_RECEIVE.endY=CHAT_RECEIVE.holdY;
     function step(ts){
       if (!CHAT_RECEIVE.start) CHAT_RECEIVE.start=ts;
       var u=Math.max(0,Math.min(1,(ts-CHAT_RECEIVE.start)/CHAT_RECEIVE.duration));
@@ -10954,7 +11118,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         CHAT_RECEIVE.raf=0;
         CHAT_RECEIVE.holdY=CHAT_RECEIVE.endY;
         CHAT_RECEIVE.holdUntil=((window.performance&&performance.now)?performance.now():Date.now())+180;
-        scr.scrollTop=CHAT_RECEIVE.endY;
         HOME_MOTION.target=HOME_MOTION.value=CHAT_RECEIVE.endY;
         HOME_MOTION.velocity=0;
         HOME_MOTION.initialized=true;
@@ -11015,6 +11178,55 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (GHOST.raf){ cancelAnimationFrame(GHOST.raf); GHOST.raf=0; }
     ghostPaint();
   }
+  function onboardingPromptActive(){
+    var home=$("scr-home");
+    /* This decision belongs to the whole Home story, not to one composer
+       position. The visible-screen fallback covers the short interval while
+       the route is settling on slower mobile browsers. */
+    return current === "home" || !!(home && home.classList.contains("on") && current !== "classroom");
+  }
+  function promptChoiceOpen(beforeTyping){
+    var q=$("deckq"), box=$("prompt-choice");
+    if (!q || !box || !onboardingPromptActive()) return false;
+    if (!beforeTyping && !q.value.trim()) return false;
+    if (PROMPT_CHOICE.open) return true;
+    PROMPT_CHOICE.open=true;
+    box.hidden=false;
+    box.setAttribute("aria-hidden","false");
+    /* A native modal is immune to the story's transforms, clipping and mobile
+       keyboard viewport. The attribute fallback covers older WebViews. */
+    try{
+      if (typeof box.showModal === "function" && !box.open) box.showModal();
+      else box.setAttribute("open","");
+    }catch(_pcShow){ box.setAttribute("open",""); }
+    return true;
+  }
+  function promptChoiceClose(){
+    var box=$("prompt-choice");
+    PROMPT_CHOICE.open=false;
+    if (!box) return;
+    try{ if (box.open && typeof box.close === "function") box.close(); }
+    catch(_pcClose){ box.removeAttribute("open"); }
+    box.removeAttribute("open");
+    box.hidden=true;
+    box.setAttribute("aria-hidden","true");
+  }
+  function promptChoiceContinue(){
+    var q=$("deckq");
+    promptChoiceClose();        /* the visitor's draft deliberately survives */
+    try{ if (q) q.blur(); }catch(_pcBlur){}
+  }
+  function promptChoiceTry(){
+    var q=$("deckq");
+    if (q) q.value="";          /* clear only after Try prompting is chosen */
+    promptChoiceClose();
+    try{ if (q) q.blur(); }catch(_pcTryBlur){}
+    if (screenOf(location.hash)!=="classroom") location.hash="classroom";
+    else show("classroom");
+    /* Arrive as a usable chat, with no second tap required. The early Home
+       gate is already inactive by the time focus is restored. */
+    setTimeout(function(){ try{ if (q && current === "classroom") q.focus(); }catch(_pcTryFocus){} },260);
+  }
   /* THE FINGER ON THE BOX (p1.039): while the composer is fixed, a pan on
      it scrolls the page by hand (fixed elements chain to the root, and the
      root here does not scroll) */
@@ -11053,9 +11265,64 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   })();
   (function(){
     var q=$("deckq"), g=$("deckghost");
-    if (q) q.addEventListener("focus", ghostCancel);
+    /* Intent is captured before focus, the software keyboard and text input.
+       Pointer Events cover desktop, Android and modern iOS; the legacy pair
+       keeps older touch WebViews and mouse-only browsers on the same path. */
+    function earlyPromptIntent(e){
+      if (!q || !onboardingPromptActive() || PROMPT_CHOICE.open) return;
+      var t=e.target;
+      if (t !== q && t !== g) return;
+      if (e.cancelable) e.preventDefault();
+      e.stopImmediatePropagation();
+      ghostCancel();
+      promptChoiceOpen(true);
+      try{ q.blur(); }catch(_pcEarlyBlur){}
+    }
+    if (window.PointerEvent){
+      document.addEventListener("pointerdown",earlyPromptIntent,true);
+    } else {
+      document.addEventListener("touchstart",earlyPromptIntent,{capture:true,passive:false});
+      document.addEventListener("mousedown",earlyPromptIntent,true);
+    }
+    /* Keyboard navigation and programmatic focus have no pointerdown. */
+    document.addEventListener("focusin",function(e){
+      if (e.target !== q || !onboardingPromptActive() || PROMPT_CHOICE.open) return;
+      ghostCancel();
+      promptChoiceOpen(true);
+    },true);
+    if (q){
+      q.addEventListener("focus", ghostCancel);
+      q.addEventListener("input", promptChoiceOpen);
+      q.addEventListener("paste", function(){ setTimeout(promptChoiceOpen,0); });
+      q.addEventListener("keydown", function(e){
+        if (!PROMPT_CHOICE.open && e.key && (e.key.length===1 || e.key==="Process")) setTimeout(promptChoiceOpen,0);
+      });
+    }
+    /* Capture at document level as well: this remains active if the composer
+       is temporarily reparented between the home story and the Try screen. */
+    document.addEventListener("input",function(e){ if (e.target===$("deckq")) promptChoiceOpen(); },true);
     /* a tap on the typing words is a tap into the field: the ghost yields and the field takes the focus */
     if (g) g.addEventListener("click", function(){ ghostCancel(); try{ q.focus(); }catch(_f){} });
+    var keep=$("prompt-choice-continue"), tryIt=$("prompt-choice-try");
+    if (keep) keep.addEventListener("click", promptChoiceContinue);
+    if (tryIt) tryIt.addEventListener("click", promptChoiceTry);
+    /* Capture Send and Enter before the older demo handler can clear the
+       field. This is the hard guard: while onboarding, no non-empty draft
+       can leave the composer without one of the two explicit choices. */
+    function holdForChoice(e){
+      if (!onboardingPromptActive() || !q || !q.value.trim()) return;
+      promptChoiceOpen();
+      if (PROMPT_CHOICE.open){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    }
+    var send=$("deckgo");
+    if (send) send.addEventListener("click",holdForChoice,true);
+    if (q) q.addEventListener("keydown",function(e){ if (e.key==="Enter") holdForChoice(e); },true);
+    document.addEventListener("keydown", function(e){
+      if (e.key==="Escape" && PROMPT_CHOICE.open){ e.preventDefault(); promptChoiceContinue(); }
+    });
   })();
   var KB_BASE_H=window.innerHeight;
   window.addEventListener("resize", function(){ if (!KB_DOCKED) KB_BASE_H=Math.max(KB_BASE_H, window.innerHeight); });
@@ -11558,6 +11825,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     } catch (e){ done(""); }
   }
   function ask(){
+    if (onboardingPromptActive()){
+      if (!PROMPT_CHOICE.open) promptChoiceOpen();
+      if (PROMPT_CHOICE.open) return;
+    }
     var q = $("deckq").value.trim();
     if (!q) return;
     $("deckq").value = "";
@@ -11677,7 +11948,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     file.addEventListener("change", function(){ takeFiles(this.files); this.value = ""; });
   })();
   $("deckgo").addEventListener("click", ask);
-  $("deckq").addEventListener("keydown", function(e){ if (e.key === "Enter") ask(); });
+  $("deckq").addEventListener("keydown", function(e){
+    if (e.key !== "Enter") return;
+    if (PROMPT_CHOICE.open){ e.preventDefault(); return; }
+    ask();
+  });
   $("logclear").addEventListener("click", function(){
     LOG = []; saveLog(); drawLog();
   });
@@ -11744,6 +12019,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   /* THE DEMO ON THE BLUE (p1.035): the same model, the trial's own row */
   var PD_READY=false;
   function powerDemoBuild(){
+    /* Escape #rooms > .screen completely. A viewport-fixed descendant can
+       still be clipped by a scrolling ancestor in Chromium; mounting this
+       sibling on body makes the viewport the real paint and clip boundary. */
+    var overlay=$("power-demo");
+    if (overlay && overlay.parentNode!==document.body) document.body.appendChild(overlay);
     if (PD_READY) return true;
     var q=$("pd-q"), card=$("pd-card"), facts=$("pd-facts");
     if (!q || !card || !facts || typeof GFPAPP !== "object") return false;
@@ -11781,7 +12061,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var el=$(id); if (!el) return;
       el.style.opacity=String(p);
       el.style.transform="translateY("+(12*(1-p)).toFixed(1)+"px)";
-      el.style.filter="blur("+((blur===0?0:8)*(1-p)).toFixed(2)+"px)";
+      /* Chat messages move and fade; they do not dissolve into a milky blur. */
+      el.style.filter="none";
     };
     var qe=$("pd-q"+sfx);
     if (qe){
@@ -11797,7 +12078,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var ab=$("pd-abub"+sfx);
     if (ab){
       ab.style.opacity=String(cardP);
-      ab.style.filter="blur("+(3*(1-cardP)).toFixed(2)+"px)";
+      ab.style.filter="none";
       ab.style.transform="translateY("+(14*(1-cardP)).toFixed(1)+"px) scale("+(0.97+0.03*cardP).toFixed(3)+")";
       var kids=ab.children;
       for (var ki=0; ki<kids.length; ki++){
@@ -11814,54 +12095,57 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function pdStackRide(p1, p2, p3){
     var win=$("power-demo"), stack=$("pd-stack");
     if (!win || !stack) return;
-    var H=win.clientHeight;
-    var ends=[$("pd-meta-a"), $("pd-meta-a2"), $("pd-meta-a3")];
-    var anch=[0,0,0];
-    for (var i=0; i<3; i++){
-      var e=ends[i];
-      anch[i]=e?Math.max(0, (e.offsetTop+e.offsetHeight)-H):0;
+    var wr=win.getBoundingClientRect(), H=wr.height;
+    var header=document.querySelector("header"), headerBottom=0;
+    if (header){
+      var hr=header.getBoundingClientRect();
+      headerBottom=Math.max(0,Math.min(H,hr.bottom-wr.top));
     }
-    var off=0;
-    var pin=(WIND.pinP||0);
-    /* The opening chat belongs near the top of the viewport. It should read
-       as a regular conversation, never as a centered logo/message splash. */
-    if (pin < .79 && p1 <= .001){
-      stack.style.transform="translateY(0px)";
-      return;
+    var topEdge=Math.max(12,headerBottom+10);
+    var deck=$("deck"), bottomEdge=H-12;
+    if (deck){
+      var dr=deck.getBoundingClientRect();
+      if (dr.top>wr.top && dr.top<wr.bottom) bottomEdge=Math.min(bottomEdge,dr.top-wr.top-12);
     }
-    if (pin < 1.02){ off=anch[0]*Math.min(1, p1); }   /* the opening rides itself into view */
-    else {
-      /* p1.103: a plain, steady scroll of the whole conversation - the chat
-         moves with the finger, near enough one to one */
-      var maxOff=Math.max(0, stack.scrollHeight-H);
-      var sp=Math.max(0, Math.min(1, (pin-1.02)/1.02));
-      off=anch[0]+(maxOff-anch[0])*sp;
-    }
-    /* While the first answer is arriving, never stop with the user's blue
-       message sliced by the top mask. Either it remains wholly visible or,
-       once later turns begin, it scrolls away as a complete chat row. */
-    if (pin < 1.02){
-      var firstQ=$("pd-q");
-      if (firstQ){
-        var maxOpeningOff=Math.max(0,firstQ.offsetTop-6);
-        off=Math.min(off,maxOpeningOff);
+
+    /* The chat identity is a stable header layer. Its measured bottom, not a
+       guessed strip, defines where a complete response may begin. */
+    var active=p3>.02?2:(p2>.02?1:0);
+    var chatHead=$("pd-chat-head");
+    if (chatHead){
+      /* Preserve the introductory header's footprint while its contents
+         condense. Otherwise every reply jumps upward by the lost masthead
+         height exactly when the scene changes. */
+      if (!chatHead.getAttribute("data-full-height")){
+        chatHead.classList.remove("is-compact");
+        chatHead.setAttribute("data-full-height",String(chatHead.offsetHeight));
       }
+      chatHead.classList.toggle("is-compact",active>0);
+      chatHead.style.transform="translateY("+topEdge.toFixed(1)+"px)";
+      topEdge+=Math.max(chatHead.offsetHeight,+(chatHead.getAttribute("data-full-height")||0))+10;
     }
-    /* Later conversation turns may rebalance their remaining short content;
-       the opening itself stays top-anchored like an ordinary chat. */
-    var kids=stack.children, last=null;
-    for (var ki=0; ki<kids.length; ki++){
-      var kv=+(kids[ki].style.opacity||0);
-      if (kv > 0.02) last=kids[ki];
+    if (bottomEdge<topEdge+80) bottomEdge=Math.min(H-8,topEdge+80);
+
+    var scenes=[$("pd-scene-1"),$("pd-scene-2"),$("pd-scene-3")];
+    var states=[p1,p2,p3];
+    for (var i=0;i<scenes.length;i++){
+      var scene=scenes[i]; if (!scene) continue;
+      var sceneH=Math.max(1,scene.offsetHeight);
+      var available=Math.max(80,bottomEdge-topEdge);
+      var scale=Math.min(1,available/sceneH);
+      var shown=Math.max(0,Math.min(1,states[i]||0));
+      var fittedH=sceneH*scale;
+      var y=topEdge+Math.max(0,(available-fittedH)/2);
+      /* The incoming exchange rises a few pixels, but never crosses either
+         safe edge. Scaling is only a last-resort guard on short viewports. */
+      var leaving=(typeof PD_CHAT_SCENE === "object" && PD_CHAT_SCENE.running && i===PD_CHAT_SCENE.from);
+      y+=(leaving?-10:14)*(1-shown);
+      scene.style.transform="translateY("+y.toFixed(1)+"px) scale("+scale.toFixed(4)+")";
+      scene.style.opacity=String(shown);
+      scene.style.visibility=shown>.004?"visible":"hidden";
+      scene.classList.toggle("is-current",i===active);
     }
-    if (pin>=1.02 && last){
-      var visB=last.offsetTop+last.offsetHeight;
-      if (visB < H){
-        var mid=-(H-visB)/2;
-        off=off+(mid-off)*Math.max(0, Math.min(1, 1-p1));   /* it leaves the middle as the answer comes */
-      }
-    }
-    stack.style.transform="translateY("+(-off).toFixed(1)+"px)";
+    stack.style.transform="none";
   }
   function powerDemoPaint(qP, cardP, factsP, aP, ctaP, typP){
     if (!powerDemoBuild()) return;
@@ -12028,11 +12312,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   if(!ctx) return;
 
   var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0;
-  var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,strength=0;
+  var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,edgeX=x,strength=0;
   var active=false,areas=[hero,story];
 
   function resize(){
     W=Math.max(1,window.innerWidth); H=Math.max(1,window.innerHeight);
+    edgeX=W*.5;
     DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
     canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR);
     canvas.style.width=W+"px"; canvas.style.height=H+"px";
@@ -12081,8 +12366,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        as a distinctly blue technical line. Spot geometry is unchanged. */
     var cellScale=mobile ? .75 : 1;
     var lineAlpha=mobile ? .275 : .22;
-    var bay=Math.max(110,Math.min(150,W*.068))*cellScale;
-    var level=Math.max(158,Math.min(216,H*.175))*cellScale;
+    var bay=Math.max(112,Math.min(146,W*.066))*cellScale*2.4;
+    /* One repeated curtain-wall floor: a short spandrel field sits above a
+       tall vision-glass sheet. Every silicone joint is a single shared line. */
+    var spandrelH=bay*.56;
+    var visionH=bay*1.82;
+    var level=spandrelH+visionH;
     var scrollY=home.scrollTop||0;
     var ox=((W*.5)%bay)-bay;
     var oy=-(scrollY%level)-level;
@@ -12090,25 +12379,101 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
     ctx.save();
     openingClip();
-    ctx.lineCap="round";
+    ctx.lineCap="butt";
     ctx.lineJoin="round";
 
-    /* Every mullion and transom has one quiet, even stroke. */
-    for(i=ox;i<=W+bay;i+=bay){
+    /* Shared seams are drawn once, after the glass wash. This avoids the
+       doubled outline that appears when every neighbouring sheet is stroked. */
+    ctx.lineWidth=.62;
+    /* Screen-centred intensity: keep the perimeter at its established value
+       and lift the exact centre by 25%, without changing stroke thickness. */
+    function centredLineWash(mult){
+      var base=strength*lineAlpha*mult;
+      var reach=Math.sqrt(W*W+H*H)*.52;
+      var wash=ctx.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,reach);
+      wash.addColorStop(0,"rgba(10,80,255,"+(base*1.25).toFixed(3)+")");
+      wash.addColorStop(.62,"rgba(10,80,255,"+(base*1.08).toFixed(3)+")");
+      wash.addColorStop(1,"rgba(10,80,255,"+base.toFixed(3)+")");
+      return wash;
+    }
+    var lineWash=centredLineWash(1);
+    var ridgeWash=centredLineWash(1.28);
+    ctx.strokeStyle=lineWash;
+    /* A floating vertical corner divides the field into two façade planes.
+       Both planes recede away from that ridge; there is no upward vanishing
+       point. The corner has its own slower, limited motion rather than being
+       attached to the reveal spot. */
+    var fold=mobile?.64:.74;
+    var focal=Math.max(340,W*.86);
+    var edgeScreen=edgeX;
+    function projectPoint(px,py){
+      var dx=px-W*.5;
+      var side=dx<0?-1:1;
+      var distance=Math.abs(dx);
+      var z=distance*Math.sin(fold);
+      var depth=focal+z;
+      var scale=focal/depth;
+      return {
+        x:edgeScreen+side*distance*Math.cos(fold)*scale,
+        y:H*.5+(py-H*.5)*scale
+      };
+    }
+    function panePath(px,py,pw,ph){
+      var botY=py+ph;
+      var topL=projectPoint(px,py), topR=projectPoint(px+pw,py);
+      var botR=projectPoint(px+pw,botY), botL=projectPoint(px,botY);
       ctx.beginPath();
-      ctx.moveTo(i,-1); ctx.lineTo(i,H+1);
-      ctx.lineWidth=.62;
-      ctx.strokeStyle="rgba(10,80,255,"+(strength*lineAlpha).toFixed(3)+")";
+      ctx.moveTo(topL.x,topL.y); ctx.lineTo(topR.x,topR.y);
+      ctx.lineTo(botR.x,botR.y); ctx.lineTo(botL.x,botL.y);
+      ctx.closePath();
+    }
+    function horizontalSeam(py){
+      ctx.beginPath();
+      var first=true;
+      for(var gx=ox;gx<=W+bay;gx+=bay){
+        var gp=projectPoint(gx,py);
+        if(first){ ctx.moveTo(gp.x,gp.y); first=false; }
+        else ctx.lineTo(gp.x,gp.y);
+      }
+      ctx.stroke();
+    }
+    var glassWash=ctx.createLinearGradient(0,0,W,H*.18);
+    glassWash.addColorStop(0,"rgba(10,80,255,"+(strength*lineAlpha*.024).toFixed(4)+")");
+    glassWash.addColorStop(.48,"rgba(10,80,255,"+(strength*lineAlpha*.055).toFixed(4)+")");
+    glassWash.addColorStop(1,"rgba(10,80,255,"+(strength*lineAlpha*.020).toFixed(4)+")");
+    for(var row=oy;row<=H+level;row+=level){
+      for(i=ox;i<=W+bay;i+=bay){
+        /* Vision glass carries only a trace of colour. Spandrels remain
+           outline-only, as requested. */
+        ctx.fillStyle=glassWash;
+        panePath(i,row+spandrelH,bay,visionH);
+        ctx.fill();
+      }
+
+      /* Two horizontal joints per floor: the floor/spandrel boundary and the
+         spandrel/vision boundary. The next floor owns the following boundary. */
+      horizontalSeam(row);
+      horizontalSeam(row+spandrelH);
+    }
+
+    /* Each vertical silicone joint is also shared by its two glass sheets.
+       The centre joint is skipped because the ridge below owns that seam. */
+    for(i=ox;i<=W+bay;i+=bay){
+      if(Math.abs(i-W*.5)<.5) continue;
+      var vt=projectPoint(i,-H*2);
+      var vb=projectPoint(i,H*3);
+      ctx.beginPath();
+      ctx.moveTo(vt.x,vt.y); ctx.lineTo(vb.x,vb.y);
       ctx.stroke();
     }
 
-    for(i=oy;i<=H+level;i+=level){
-      ctx.beginPath();
-      ctx.moveTo(-1,i); ctx.lineTo(W+1,i);
-      ctx.lineWidth=.62;
-      ctx.strokeStyle="rgba(10,80,255,"+(strength*lineAlpha).toFixed(3)+")";
-      ctx.stroke();
-    }
+    /* The ridge is the closest line in the projection and gives the two
+       receding fields a clear architectural origin. */
+    ctx.beginPath();
+    ctx.moveTo(edgeScreen,-1); ctx.lineTo(edgeScreen,H+1);
+    ctx.lineWidth=.92;
+    ctx.strokeStyle=ridgeWash;
+    ctx.stroke();
 
     /* The field exists only near the gesture and dissolves at its edge. */
     ctx.globalCompositeOperation="destination-in";
@@ -12129,8 +12494,14 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if(!home.classList.contains("on")||!inOpening(tx,ty)) desired=0;
     var tau=desired>strength?72:360;
     strength+=(desired-strength)*(1-Math.exp(-dt/tau));
-    x+=(tx-x)*(1-Math.exp(-dt/78));
+    x+=(tx-x)*(1-Math.exp(-dt/54));
     y+=(ty-y)*(1-Math.exp(-dt/78));
+    /* The light follows the gesture; the building corner only acknowledges
+       it. Limited travel plus heavier inertia keeps the façade floating. */
+    var edgeFollow=1/3;
+    var edgeTarget=(active&&age<520)?W*.5+(tx-W*.5)*edgeFollow:W*.5;
+    var edgeTau=(active&&age<520)?420:680;
+    edgeX+=(edgeTarget-edgeX)*(1-Math.exp(-dt/edgeTau));
     if(strength<.001&&desired<.001){ strength=0; ctx.clearRect(0,0,W,H); return; }
     draw(); queue();
   }
