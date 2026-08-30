@@ -8906,7 +8906,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
   var HOME_STORY = {
     ready:false, naturalTop:0, powerTop:0, h:0, pinStart:0,
-    sceneLift:0,
+    sceneLift:0, catchActive:false,
     thesisStart:0, thesisEnd:0,
     buildStart:0, buildEnd:0,
     imageStart:0, imageEnd:0,
@@ -8942,6 +8942,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     HOME_STORY.pushTarget=undefined;
     HOME_STORY.pushT=0;
     HOME_STORY.pushStorySt=0;
+    HOME_STORY.catchActive=false;
     HOME_MOTION.initialized=false;
     HOME_MOTION.velocity=0;
     if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
@@ -9224,7 +9225,20 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var hW=Math.max(h, deck.getBoundingClientRect().height||h);
       var bottomW=offW+scr.clientHeight-hW-Math.max(12,Math.min(20,innerWidth*.014));
       var flowTopW=offW+HOME_STORY.naturalTop-stReal;
-      if (flowTopW > bottomW+0.5){
+      if (onPhone()){
+        /* On touch screens this used to switch from fixed-bottom to document
+           flow at exactly this point. Android can reflow the viewport between
+           those two layouts, producing the visible upward jump. Keep one fixed
+           object and reproduce the natural rise with its measured Y instead. */
+        var phoneRideY=Math.min(bottomW,flowTopW);
+        var frameW=homeDeckHorizontalFrame(scr);
+        deck.classList.add("deck-story-fixed");
+        deck.classList.toggle("deck-story-bottom",phoneRideY>=bottomW-.5);
+        deck.style.setProperty("--deck-story-y",phoneRideY.toFixed(2)+"px");
+        deck.style.setProperty("left",frameW.left.toFixed(2)+"px","important");
+        deck.style.setProperty("right","auto","important");
+        deck.style.setProperty("width",frameW.width.toFixed(2)+"px","important");
+      } else if (flowTopW > bottomW+0.5){
         var frameW=homeDeckHorizontalFrame(scr);
         deck.classList.add("deck-story-fixed","deck-story-bottom");
         deck.style.setProperty("--deck-story-y",bottomW.toFixed(2)+"px");
@@ -9252,6 +9266,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       HOME_STORY.pinY0=undefined;
       HOME_STORY.hSm=undefined;
       HOME_STORY.catchSt=undefined;
+      HOME_STORY.catchActive=false;
       if (HOME_STORY.pushRaf){ cancelAnimationFrame(HOME_STORY.pushRaf); HOME_STORY.pushRaf=0; }
       HOME_STORY.pushY=undefined;
       HOME_STORY.pushTarget=undefined;
@@ -9262,9 +9277,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* THE CATCH (p1.070): the last flowing position is captured at the
        crossing, and the pin eases the box from that exact spot to the
        centre - no snap, no velocity wall */
-    if (!deck.classList.contains("deck-story-fixed")){
+    if (!HOME_STORY.catchActive || !deck.classList.contains("deck-story-fixed")){
       HOME_STORY.pinY0=deck.getBoundingClientRect().top;
       HOME_STORY.catchSt=st;   /* p1.073: the take-over scroll - the catch window runs from here */
+      HOME_STORY.catchActive=true;
     }
     deck.classList.add("deck-story-fixed");
     var srBox=scr.getBoundingClientRect();
