@@ -11181,17 +11181,37 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       return false;
     }
     scr.addEventListener("wheel",function(e){ blockDelta(e.deltaY,e); },{passive:false});
-    scr.addEventListener("touchstart",function(e){
-      measure(true);
-      PILL_GATE.touchY=(e.touches&&e.touches.length===1)?e.touches[0].clientY:null;
-    },{passive:true});
-    scr.addEventListener("touchmove",function(e){
+    var gateTouchListening=false;
+    function gateTouchMove(e){
       if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
       var y=e.touches[0].clientY, delta=PILL_GATE.touchY-y;
       blockDelta(delta,e); PILL_GATE.touchY=y;
-    },{passive:false});
-    scr.addEventListener("touchend",function(){ PILL_GATE.touchY=null; },{passive:true});
-    scr.addEventListener("touchcancel",function(){ PILL_GATE.touchY=null; },{passive:true});
+    }
+    function stopGateTouch(){
+      if (gateTouchListening){
+        scr.removeEventListener("touchmove",gateTouchMove,false);
+        gateTouchListening=false;
+      }
+      PILL_GATE.touchY=null;
+    }
+    scr.addEventListener("touchstart",function(e){
+      stopGateTouch();
+      measure(true);
+      if (!e.touches || e.touches.length!==1) return;
+      var sy=scr.scrollTop,reach=scr.clientHeight*.95;
+      var receivingNow=typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.active;
+      /* Keep the main Home slides on the compositor's native scroll path.
+         The cancellable listener exists only within reach of the label gate,
+         where the landing animation genuinely has to hold the gesture. */
+      var nearGate=!!PILL_GATE.mode || receivingNow ||
+        (sy>=PILL_GATE.start-reach && sy<=PILL_GATE.one+reach);
+      if (!nearGate) return;
+      PILL_GATE.touchY=e.touches[0].clientY;
+      scr.addEventListener("touchmove",gateTouchMove,{passive:false});
+      gateTouchListening=true;
+    },{passive:true});
+    scr.addEventListener("touchend",stopGateTouch,{passive:true});
+    scr.addEventListener("touchcancel",stopGateTouch,{passive:true});
     scr.addEventListener("scroll",function(){
       if (disabled() || !hasPills() || current!=="home"){
         PILL_GATE.lastY=scr.scrollTop; return;
@@ -12509,7 +12529,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
   var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0,openingRects=[];
   var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,edgeX=x,strength=0;
-  var active=false;
+  var active=false,touchOrigin=null,touchScrolling=false;
 
   /* On phones the hero element already contains the two full-height opening
      slides: the proposition and its explanatory text. Stop the hidden facade
@@ -12563,10 +12583,24 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   /* Touch produces pointermove and touchmove on Android. Consume only the
      dedicated touch stream so one finger never schedules the effect twice. */
   function pointerMove(e){ if(e.pointerType==="touch") return; move(e.clientX,e.clientY); }
-  function touchMove(e){
-    if(e.touches&&e.touches.length) move(e.touches[0].clientX,e.touches[0].clientY);
+  function touchStart(e){
+    if(!e.touches||e.touches.length!==1) return;
+    var p=e.touches[0];
+    touchOrigin={x:p.clientX,y:p.clientY}; touchScrolling=false;
+    move(p.clientX,p.clientY);
   }
-  function leave(){ active=false; queue(); }
+  function touchMove(e){
+    if(!e.touches||e.touches.length!==1||!touchOrigin) return;
+    var p=e.touches[0],dx=p.clientX-touchOrigin.x,dy=p.clientY-touchOrigin.y;
+    if(!touchScrolling&&Math.abs(dy)>8&&Math.abs(dy)>=Math.abs(dx)){
+      /* A vertical pan belongs entirely to native page scrolling. The ghost
+         field may reveal on contact, but it must not keep repainting under a
+         moving finger. */
+      touchScrolling=true; active=false; queue(); return;
+    }
+    if(!touchScrolling) move(p.clientX,p.clientY);
+  }
+  function leave(){ active=false; touchOrigin=null; touchScrolling=false; queue(); }
   function queue(){ if(!raf) raf=requestAnimationFrame(frame); }
 
   function openingClip(){
@@ -12735,7 +12769,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   home.addEventListener("pointermove",pointerMove,{passive:true});
   home.addEventListener("pointerleave",leave,{passive:true});
   home.addEventListener("pointercancel",leave,{passive:true});
-  home.addEventListener("touchstart",touchMove,{passive:true});
+  home.addEventListener("touchstart",touchStart,{passive:true});
   home.addEventListener("touchmove",touchMove,{passive:true});
   home.addEventListener("touchend",leave,{passive:true});
   home.addEventListener("scroll",function(){
