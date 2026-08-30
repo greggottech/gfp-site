@@ -10302,6 +10302,19 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var sc=1;
       var alpha=Math.min(1,p/0.07)*(1-outP);
       var tx=x+sway, ty=y;
+      /* Reverse is an ejection, not the forward portal played backward. As
+         soon as the shared timeline turns, every label fans from its own
+         dock slot toward its own wind lane. The lift varies deterministically
+         by label, so the group reads as a sprinkle instead of one blue row. */
+      var reverseQ=Math.max(0,Math.min(1,1-prog));
+      var reverseBurst=smooth01(reverseQ/.06);
+      var reverseClimb=smooth01((reverseQ-.035)/.58);
+      var reverseLift=34+((i*37)%4)*15;
+      var reverseX=sx+(xL-sx)*reverseBurst;
+      var reverseShelf=touchY-reverseLift*reverseBurst;
+      var reverseY=reverseShelf+(-70-reverseShelf)*reverseClimb;
+      var reverseRot=(PILL_LANES[i%PILL_LANES.length]-.5)*7*reverseBurst*(1-reverseClimb);
+      if (reversingScene){ tx=reverseX; ty=reverseY; rot=reverseRot; }
       if (i===0){
         /* The gauge uses the same continuous portal as every other label. */
         tx=sx; ty=sy; rot=0; sc=0.86+0.14*smooth01(p);
@@ -10349,17 +10362,30 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         else if (el._portal>el._portalTarget) el._portal=Math.max(el._portalTarget,el._portal-portalStep);
 
         if (el._portal>0.001 || el._portalTarget===1){
-          var portalAlpha;
-          if (el._portal<0.5){
-            tx=sx; ty=touchY;
-            portalAlpha=1-smooth01(el._portal*2);
+          if (reversingScene && el._portalTarget===0){
+            /* Stay visible and leave continuously from the real slot. The
+               old two-half portal faded to zero, teleported every label to
+               touchY, and rebuilt the ugly line shown in the screenshot. */
+            var releaseP=smooth01(1-el._portal);
+            tx=sx+(reverseX-sx)*releaseP;
+            ty=sy+(reverseY-sy)*releaseP;
+            el._px=tx; el._py=ty;
+            rot=reverseRot*releaseP;
+            sc=1;
+            alpha=1-outP;
           } else {
-            tx=sx; ty=sy;
-            portalAlpha=smooth01((el._portal-0.5)*2);
+            var portalAlpha;
+            if (el._portal<0.5){
+              tx=sx; ty=touchY;
+              portalAlpha=1-smooth01(el._portal*2);
+            } else {
+              tx=sx; ty=sy;
+              portalAlpha=smooth01((el._portal-0.5)*2);
+            }
+            el._px=tx; el._py=ty; rot=0;
+            sc=0.90+0.10*portalAlpha;
+            alpha=(1-outP)*portalAlpha;
           }
-          el._px=tx; el._py=ty; rot=0;
-          sc=0.90+0.10*portalAlpha;
-          alpha=(1-outP)*portalAlpha;
         } else if (p<0.69){
           el._contactZapped=false;
         }
@@ -12050,9 +12076,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if(strength<.001) return;
     var mobile=W<=700;
     var radius=Math.max(150,Math.min(300,Math.min(W,H)*.31));
-    /* Mobile modules are 25% smaller and 25% more legible under touch. */
+    /* Mobile modules stay 25% smaller. A merely proportional lift from the
+       very low original alpha remained milky, so the active core now reads
+       as a distinctly blue technical line. Spot geometry is unchanged. */
     var cellScale=mobile ? .75 : 1;
-    var lineAlpha=mobile ? .13125 : .105;
+    var lineAlpha=mobile ? .275 : .22;
     var bay=Math.max(110,Math.min(150,W*.068))*cellScale;
     var level=Math.max(158,Math.min(216,H*.175))*cellScale;
     var scrollY=home.scrollTop||0;
