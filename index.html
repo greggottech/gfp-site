@@ -9167,7 +9167,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var pinP=pinned/(vh*1.6);   /* p1.024: one unit = 1.6 viewports of scroll */
 
     var scopes=stage.querySelectorAll(".power-scope");
-    var scopesOut=0;   /* p1.036: the words stay until the field lets go */
+    /* Exit the entire white proposition as one object before the blue field
+       dissolves.  The previous independent timings left white type stranded
+       on the cream surface for a frame (and longer with the child opacity
+       transitions), which read as a broken intermediate slide. */
+    var copyOut=smooth01((pinP-4.18)/.14);
+    var scopesOut=copyOut;
     /* Longer, overlapping dissolves. Nothing travels into frame: each scope
        condenses gently from soft focus while the previous words remain. */
     var scopeStarts=[2.76,2.88,3.00,3.12,3.24,3.36];   /* the six words come after the three turns */
@@ -9177,7 +9182,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var scopeP=smooth01((pinP-startP)/fadeSpan);
       /* THE CLOSING LINE (p1.024): once the line has arrived the six words
          step back to a third and stay there through the hold */
-      var goneP=smooth01((pinP-5.10)/.25);   /* a safety only - the field lets go first */
+      var goneP=copyOut;
       var dimP=smooth01((pinP-3.94)/.22);    /* the words step back to a third under the closing line */
       scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP)*(1-scopesOut)*(1-goneP));
       scopes[i].style.transform="none";
@@ -9303,14 +9308,20 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     powerDemoPaint(dayP, headP, 0, 0, 0, 0);
     pdStackRide(sceneP[0]*out,sceneP[1]*out,sceneP[2]*out);
     var closeIn=smooth01((pinP-3.64)/.26);
-    var textOut=smooth01((pinP-5.10)/.25);   /* a safety only - the line scrolls away with the field at 3.75 */
+    var textOut=copyOut;
     /* p1.077: the blue is ONE slide - it rises for the closing line and
        leaves with it; the wind ride and the chat stay on cream */
     var blueOn=smooth01((pinP-2.72)/.22);   /* it rises WITH the first word, never ahead of it */
-    var blueOut=smooth01((pinP-4.52)/.30);
+    /* Hold blue until the copy is fully gone, then clear it briskly. */
+    var blueOut=smooth01((pinP-4.40)/.18);
     var blueP=blueIn*blueOn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
+    var copy=stage.querySelector(".power-reveal-copy");
+    if (copy){
+      copy.style.opacity=String(1-copyOut);
+      copy.style.visibility=copyOut>.995?"hidden":"visible";
+    }
     var main=stage.querySelector(".power-reveal-main");
     var close=stage.querySelector(".power-reveal-close");
     if (main){
@@ -10966,7 +10977,17 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var layer=$("pilllayer");
       return !!(layer && layer.children && layer.children.length);
     }
-    function measure(){
+    var measureStamp=0,measureWidth=0,measureHeight=0;
+    function measure(force){
+      /* A non-passive touch listener is required only so the label landing
+         can stop a gesture at its boundary. Do not make Android recalculate
+         three section rectangles for every touchmove on the entire homepage:
+         these document-relative limits stay stable until layout/viewport size
+         changes, so one measurement at gesture start is enough. */
+      var now=(window.performance&&performance.now)?performance.now():Date.now();
+      var cw=scr.clientWidth,ch=scr.clientHeight;
+      if (!force && measureStamp && cw===measureWidth && ch===measureHeight &&
+          now-measureStamp<600) return;
       var sr=scr.getBoundingClientRect(), mr=meets.getBoundingClientRect(), nr=next.getBoundingClientRect();
       PILL_GATE.start=scr.scrollTop+(mr.top-sr.top);
       /* The following scene may not even enter the viewport while the labels
@@ -10974,6 +10995,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       PILL_GATE.end=scr.scrollTop+(nr.top-sr.top)-scr.clientHeight+1;
       PILL_GATE.zero=PILL_GATE.start-scr.clientHeight*.9;
       PILL_GATE.one=PILL_GATE.start+mr.height-scr.clientHeight*.35;
+      measureStamp=now; measureWidth=cw; measureHeight=ch;
     }
     function wake(){
       if (WIND.dArgs) windDrive(WIND.dArgs[0],WIND.dArgs[1],WIND.dArgs[2]);
@@ -10994,7 +11016,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     function jumpForwardToChat(){
       if (PILL_GATE.jumpingForward) return;
-      measure();
+      measure(false);
       PILL_GATE.jumpingForward=true;
       PILL_GATE.mode="released-down";
       PILL_GATE.progress=null;
@@ -11139,7 +11161,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       }
       PILL_GATE.holdY=null;
       feedPillTempo(delta);
-      measure();
+      measure(false);
       var dir=delta>0?1:-1;
       if (dir<0 && PILL_GATE.mode==="up" && WIND.allPillsAway){
         if (e && e.cancelable) e.preventDefault();
@@ -11160,6 +11182,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     scr.addEventListener("wheel",function(e){ blockDelta(e.deltaY,e); },{passive:false});
     scr.addEventListener("touchstart",function(e){
+      measure(true);
       PILL_GATE.touchY=(e.touches&&e.touches.length===1)?e.touches[0].clientY:null;
     },{passive:true});
     scr.addEventListener("touchmove",function(e){
@@ -11199,7 +11222,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       }
       PILL_GATE.holdY=null;
       if (PILL_GATE.writing){ PILL_GATE.writing=false; PILL_GATE.lastY=scr.scrollTop; return; }
-      measure();
+      measure(false);
       var y=scr.scrollTop, dir=y>PILL_GATE.lastY?1:(y<PILL_GATE.lastY?-1:0);
       if (PILL_GATE.mode==="released-down"){
         if (dir<0) setMode("");
@@ -11215,9 +11238,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (PILL_GATE.mode==="up" && !WIND.allPillsAway && y<PILL_GATE.start){ pin(PILL_GATE.start); return; }
       PILL_GATE.lastY=y;
     },{passive:true});
-    window.addEventListener("resize",measure,{passive:true});
+    window.addEventListener("resize",function(){ measure(true); },{passive:true});
     PILL_GATE.lastY=scr.scrollTop;
-    measure();
+    measure(true);
   })();
   var DEMO_PROMPT="Build 10 residential floors above 3 commercial floors. Recess floor 3 by 3 m on every side. Footprint: 28 \u00D7 24 m.";
   var DEMO_PROMPT_2="Add one residential floor and export the 3D model.";
@@ -12484,7 +12507,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var ctx=canvas.getContext("2d");
   if(!ctx) return;
 
-  var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0;
+  var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0,openingRects=[];
   var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,edgeX=x,strength=0;
   var active=false;
 
@@ -12494,31 +12517,52 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function openingAreas(){ return W<=700?[hero]:[hero,story]; }
 
   function resize(){
-    W=Math.max(1,window.innerWidth); H=Math.max(1,window.innerHeight);
+    var nextW=Math.max(1,window.innerWidth);
+    /* Android changes innerHeight repeatedly while its browser chrome hides
+       and returns. Reallocating a DPR canvas during that same scroll is a
+       visible hitch. Use the stable device-height canvas on narrow touch
+       screens; the viewport simply clips the unused portion. */
+    var touchNarrow=nextW<=700 && ((navigator.maxTouchPoints||0)>0);
+    var stableScreenH=(window.screen&&window.screen.height)||0;
+    var nextH=Math.max(1,touchNarrow&&stableScreenH?Math.max(window.innerHeight,stableScreenH):window.innerHeight);
+    var nextDPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+    /* Address-bar resize events can still repeat even though the stable
+       canvas dimensions have not changed. Never clear and reallocate the
+       backing store in that case. */
+    if(nextW===W&&nextH===H&&nextDPR===DPR){ if(strength>.001) queue(); return; }
+    W=nextW; H=nextH; DPR=nextDPR;
     edgeX=W*.5;
-    DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
     canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR);
     canvas.style.width=W+"px"; canvas.style.height=H+"px";
     ctx.setTransform(DPR,0,0,DPR,0,0);
     if(strength>.001) queue();
   }
-  function inOpening(px,py){
-    if(!home.classList.contains("on")) return false;
+  function refreshOpeningRects(){
+    openingRects.length=0;
     var areas=openingAreas();
     for(var i=0;i<areas.length;i++){
       var r=areas[i].getBoundingClientRect();
-      if(px>=Math.max(0,r.left)&&px<=Math.min(W,r.right)&&
-         py>=Math.max(0,r.top)&&py<=Math.min(H,r.bottom)) return true;
+      var l=Math.max(0,r.left),t=Math.max(0,r.top);
+      var rr=Math.min(W,r.right),bb=Math.min(H,r.bottom);
+      if(rr>l&&bb>t) openingRects.push({left:l,top:t,right:rr,bottom:bb});
+    }
+  }
+  function inOpening(px,py){
+    if(!home.classList.contains("on")) return false;
+    for(var i=0;i<openingRects.length;i++){
+      var r=openingRects[i];
+      if(px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom) return true;
     }
     return false;
   }
   function move(px,py){
-    if(!inOpening(px,py)){ active=false; queue(); return; }
     tx=px; ty=py;
     if(strength<.012){ x=tx; y=ty; }
     active=true; lastMove=performance.now(); queue();
   }
-  function pointerMove(e){ move(e.clientX,e.clientY); }
+  /* Touch produces pointermove and touchmove on Android. Consume only the
+     dedicated touch stream so one finger never schedules the effect twice. */
+  function pointerMove(e){ if(e.pointerType==="touch") return; move(e.clientX,e.clientY); }
   function touchMove(e){
     if(e.touches&&e.touches.length) move(e.touches[0].clientX,e.touches[0].clientY);
   }
@@ -12527,12 +12571,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 
   function openingClip(){
     ctx.beginPath();
-    var areas=openingAreas();
-    for(var i=0;i<areas.length;i++){
-      var r=areas[i].getBoundingClientRect();
-      var l=Math.max(0,r.left),t=Math.max(0,r.top);
-      var rr=Math.min(W,r.right),bb=Math.min(H,r.bottom);
-      if(rr>l&&bb>t) ctx.rect(l,t,rr-l,bb-t);
+    for(var i=0;i<openingRects.length;i++){
+      var r=openingRects[i];
+      ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);
     }
     ctx.clip();
   }
@@ -12552,9 +12593,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var spandrelH=bay*.56;
     var visionH=bay*1.82;
     var level=spandrelH+visionH;
-    var scrollY=home.scrollTop||0;
     var ox=((W*.5)%bay)-bay;
-    var oy=-(scrollY%level)-level;
+    /* The ghost façade is a fixed architectural field. Coupling its module
+       origin to scroll made the wall slide under the finger and visually
+       contradicted the page movement, especially on phones. */
+    var oy=-level;
     var i;
 
     ctx.save();
@@ -12669,6 +12712,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function frame(now){
     raf=0;
     var dt=Math.min(48,now-(lastFrame||now-16.7)); lastFrame=now;
+    /* Read section geometry once per display frame. Previously both the input
+       handler and the draw pass queried it, forcing redundant mobile layout. */
+    refreshOpeningRects();
     var age=lastMove?now-lastMove:9999;
     var desired=(active&&age<90)?1:Math.exp(-Math.max(0,age-90)/620);
     if(!home.classList.contains("on")||!inOpening(tx,ty)) desired=0;
@@ -12693,7 +12739,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   home.addEventListener("touchmove",touchMove,{passive:true});
   home.addEventListener("touchend",leave,{passive:true});
   home.addEventListener("scroll",function(){
-    if(active&&!inOpening(tx,ty)) active=false;
     if(strength>.001) queue();
   },{passive:true});
   window.addEventListener("resize",resize,{passive:true});
