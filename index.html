@@ -3303,19 +3303,16 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 .pill-ghost-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .pill-ghost{
   position:absolute;display:inline-flex;align-items:center;justify-content:center;
-  box-sizing:border-box;border:1px solid rgba(86,90,97,.24);border-radius:999px;
-  background:rgba(91,95,102,.085);color:rgba(65,69,76,.40);
-  font-family:var(--font-sans);font-weight:540;font-size:clamp(9px,.62vw,10.5px);
-  letter-spacing:.045em;line-height:1;text-transform:uppercase;white-space:nowrap;
-  box-shadow:0 2px 8px rgba(30,34,40,.035);
+  box-sizing:border-box;border:0;border-radius:999px;
+  background:rgba(91,95,102,.085);color:transparent;
+  font-size:0;line-height:0;white-space:nowrap;box-shadow:none;
   transition:opacity .16s ease;
   animation:pillGhostBlink 1.15s ease-in-out var(--ghost-delay,0s) infinite alternate;
 }
 @keyframes pillGhostBlink{
-  from{background:rgba(91,95,102,.045);border-color:rgba(86,90,97,.15);color:rgba(65,69,76,.27)}
-  to{background:rgba(91,95,102,.12);border-color:rgba(86,90,97,.32);color:rgba(65,69,76,.48)}
+  from{background:rgba(91,95,102,.045)}
+  to{background:rgba(91,95,102,.14)}
 }
-@media (max-width:700px){.pill-ghost{font-size:9.5px}}
 @media (prefers-reduced-motion:reduce){.pill-ghost{animation:none}}
 /* p1.093: one row for the line, one for the labels - so the two buttons
    can span the whole box and stand in its middle */
@@ -10149,7 +10146,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     for (var i=0;i<PILLS.length;i++){
       var ghost=document.createElement("span");
       ghost.className="pill-ghost";
-      ghost.textContent=(PILLS[i].textContent||"").replace(/\s+/g," ").trim();
+      ghost.textContent="";
       ghost.style.setProperty("--ghost-delay",(-i*.13).toFixed(2)+"s");
       ghost.style.opacity="0";
       layer.appendChild(ghost);
