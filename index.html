@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.116 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.117 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3837,7 +3837,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.117</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3876,7 +3876,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.117</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3896,7 +3896,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.116</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.117</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10975,6 +10975,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        a scene and should never ask for another gesture. */
     if (PILL_GATE.mode==="down" && WIND.allPillsHome &&
         typeof PILL_GATE.finishForward==="function"){
+      /* p1.117: hold the finished row for its own beat before handing over */
+      var homeNow=(window.performance&&performance.now)?performance.now():Date.now();
+      if (!PILL_GATE.homeSince) PILL_GATE.homeSince=homeNow;
+      if (homeNow-PILL_GATE.homeSince < 380) return;
       PILL_GATE.finishForward();
       return;
     }
@@ -11147,7 +11151,19 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     function releaseForDirection(dir){
       if (dir<0 && (PILL_GATE.mode==="down" || PILL_GATE.mode==="released-down")){ setMode(""); return true; }
       if (dir>0 && (PILL_GATE.mode==="up" || PILL_GATE.mode==="released-up")){ setMode(""); return true; }
-      if (dir>0 && PILL_GATE.mode==="down" && WIND.allPillsHome){ setMode("released-down"); return true; }
+      var homeT=(window.performance&&performance.now)?performance.now():Date.now();
+      if (!WIND.allPillsHome) PILL_GATE.homeSince=0;
+      if (dir>0 && PILL_GATE.mode==="down" && WIND.allPillsHome){
+        /* p1.117: the sixth label completes on the very frame the gate would
+           let go, so the finished row was never seen. Hold a fixed beat -
+           its own timer, not the scroll's - and only then release. */
+        if (!PILL_GATE.homeSince) PILL_GATE.homeSince=homeT;
+        if (homeT-PILL_GATE.homeSince < 380){
+          pin(PILL_GATE.end);   /* releaseForDirection has no event to cancel */
+          return true;
+        }
+        setMode("released-down"); return true;
+      }
       return false;
     }
     function blockDelta(delta, e){
