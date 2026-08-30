@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.124 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.125 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3881,7 +3881,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.124</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3920,7 +3920,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.124</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3940,7 +3940,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.124</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10424,6 +10424,16 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var PILL_MOBILE_FORWARD_BOOST=1.40; /* touch descent is another 40% quicker */
   var PILL_REVERSE_SPEED=3;           /* the complete return trip runs three times faster */
   var GAUGE_READING_PER_MS=0.00016;    /* the digits cannot race ahead of the moving instrument */
+  /* p1.125: a thumb is not a wheel. On a coarse pointer the scene runs at
+     twice the base speed, the instrument and the labels are allowed more
+     pixels a second, and a swipe counts as a stronger gesture. */
+  var PILL_TOUCH=(typeof window!=="undefined" && typeof window.matchMedia==="function" &&
+    (window.matchMedia("(pointer:coarse)").matches || "ontouchstart" in window));
+  var PILL_TEMPO_SPAN=PILL_TOUCH?27:46;
+  if (PILL_TOUCH){
+    PILL_PROGRESS_PER_MS=0.000078;
+    PILL_SPEED_PX_PER_MS=0.46;
+  }
   var PILL_ACCEL_PER_MS2=PILL_PROGRESS_PER_MS/280; /* about 280 ms to brake from normal forward speed */
   var PILL_TEMPO={
     value:1, target:1, pending:1,
@@ -10440,7 +10450,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* Normalise the gesture to an approximate 60 Hz delta. Large MacBook
        momentum saturates here, so it cannot keep adding acceleration. */
     var frameDelta=Math.min(80,Math.abs(delta)*16.67/elapsed);
-    var strength=smooth01(frameDelta/46);
+    var strength=smooth01(frameDelta/PILL_TEMPO_SPAN);   /* a swipe reads stronger than a pad stroke */
     var requested=0.62+0.42*strength;   /* p1.123: a lower ceiling for the boost */
     /* One light filter removes event-to-event chatter. Direction is not part
        of this magnitude: the signed scene velocity handles it safely. */
@@ -11298,7 +11308,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     },{passive:true});
     scr.addEventListener("touchmove",function(e){
       if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
-      var y=e.touches[0].clientY, delta=PILL_GATE.touchY-y;
+      var y=e.touches[0].clientY, delta=(PILL_GATE.touchY-y)*1.9;   /* p1.125 */
       blockDelta(delta,e); PILL_GATE.touchY=y;
     },{passive:false});
     scr.addEventListener("touchend",function(){ PILL_GATE.touchY=null; },{passive:true});
