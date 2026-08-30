@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.109 (his polished v46 + fixes + THE PHONE + THE DETAILS + THE GUTTER + THREE SMALL ONES + THE SCREEN'S MIDDLE) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.114 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3270,30 +3270,53 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
   font-family:var(--font-sans);font-size:12.5px;font-weight:540;letter-spacing:.01em;
   border-radius:999px;padding:9px 16px;box-shadow:0 8px 22px rgba(10,80,255,.30)}
 .pd-cta-b:active{transform:translateY(1px)}
+.pd-next{position:absolute;left:50%;top:0;z-index:6;
+  appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-width:78px;min-height:42px;padding:8px 14px;border:1px solid rgba(17,18,20,.12);border-radius:999px;
+  background:rgba(255,255,255,.78);color:rgba(17,18,20,.62);box-shadow:0 8px 24px rgba(44,34,26,.10);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;line-height:1;text-transform:uppercase;
+  opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,0);
+  transition:opacity .20s ease,visibility 0s linear .20s,background .18s ease,color .18s ease,box-shadow .18s ease;
+  cursor:pointer}
+.pd-next.is-visible{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
+.pd-next:hover{background:#fff;color:var(--ink);box-shadow:0 10px 28px rgba(44,34,26,.14)}
+.pd-next:focus-visible{outline:2px solid var(--blue,#0a50ff);outline-offset:3px}
+.pd-next-chevron{display:block;width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:translateY(-2px) rotate(45deg)}
+@media (max-width:700px){.pd-next{min-width:76px;min-height:40px;padding:7px 13px}}
+@media (prefers-reduced-motion:reduce){.pd-next{transition:none}}
 .pd-facts div{border-top:1px solid rgba(30,20,10,.14);padding-top:3px}
 .pd-facts dt{font-family:var(--font-mono);font-size:8.5px;letter-spacing:.1em;color:var(--muted);margin:0 0 1px}
 .pd-facts dd{margin:0;font-family:var(--font-sans);font-size:clamp(16px,1.4vw,20px);font-weight:500;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
 .pd-facts dd small{font-size:11px;font-weight:400;color:var(--muted);margin-left:4px}
 @media (max-width:700px){
-  /* The chat is a full-width mobile surface. The previous 18 px shell was
-     subsequently scaled to fit the tall facade reply, multiplying the side
-     inset and making every message look unnaturally narrow. */
-  .power-demo{gap:3px;top:0;bottom:0;padding-left:8px;padding-right:8px}
+  /* Keep the conversation close to the phone's edges. The scene-sizing
+     script scales an exchange when it is too tall, so reducing the reply's
+     own height also prevents every bubble from becoming unnecessarily
+     narrow. */
+  .power-demo{gap:3px;top:0;bottom:0;padding-left:6px;padding-right:6px}
   .pd-stack{padding:0}
-  .pd-head,.pd-day,.pd-q,.pd-meta,.pd-a,.pd-typing,.pd-abub{width:100%;max-width:none}
-  .pd-qb{max-width:92%}
-  /* Keep the facade reply short enough that the conversation no longer has
-     to shrink as one large block. Its own surface can be explored with a
-     normal finger scroll, while the composer remains visible below. */
-  #pd-abub{max-height:min(38svh,340px);overflow-y:auto;overflow-x:hidden;
-    overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;
-    pointer-events:auto;scrollbar-width:thin;scrollbar-color:rgba(10,80,255,.22) transparent}
-  #pd-abub::-webkit-scrollbar{width:3px}
-  #pd-abub::-webkit-scrollbar-thumb{background:rgba(10,80,255,.22);border-radius:999px}
-  .pd-card .facadebox svg{max-height:30vh !important}
-  .pd-card .factabs button{padding:3px 8px !important;font-size:9px !important}
-  .pd-facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px}
-  .pd-facts dd{font-size:15px}
+  .pd-head,.pd-day,.pd-q,.pd-meta,.pd-a,.pd-typing,.pd-abub{
+    width:100%;max-width:none
+  }
+  .pd-qb{max-width:94%}
+  .pd-abub{padding:7px;gap:5px;overflow:visible}
+  .pd-card{width:100%}
+  .pd-card .eline{width:100%}
+  .pd-card .facadebox{padding:4px 6px 2px !important}
+  .pd-card .facadebox svg{
+    display:block !important;width:100% !important;
+    height:min(21svh,180px) !important;max-height:min(21svh,180px) !important;
+    min-height:0 !important;margin:0 auto !important
+  }
+  .pd-card .facadeinfo{padding:4px 8px 5px !important}
+  .pd-card .factabs button{padding:2px 6px !important;font-size:8px !important}
+  .pd-facts{grid-template-columns:repeat(3,minmax(0,1fr));gap:3px 7px !important;margin:0 1px}
+  .pd-facts div{padding-top:2px}
+  .pd-facts dt{font-size:7px}
+  .pd-facts dd{font-size:12.5px !important}
+  .pd-facts dd small{font-size:9px}
 }
 #home-foot-veil{display:none !important}
 @media (max-height:640px){.pd-card .facadebox svg{max-height:26vh !important}}
@@ -3330,7 +3353,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (prefers-reduced-motion:reduce){
   .reveal-thesis.thesis-in{animation:none;opacity:1;transform:none;filter:none}
 }
-.power-reveal-stage{min-height:900svh !important}   /* the runway: send, three turns, the six words, the closing line, the hold */
+.power-reveal-stage{min-height:860svh !important}   /* p1.114: the blue conclusion now meets the next section without an empty cream stop */
 
 /* ================= THE WIND (p1.038) ================= */
 #windlayer{position:fixed;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;opacity:0;
@@ -3764,6 +3787,9 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
           </div>
           <div class="pd-meta pd-meta-a" id="pd-meta-a3"><span class="pd-time"></span></div>
           </div>
+          <button class="pd-next" id="pd-next" type="button" aria-label="Continue to the next chat scene">
+            <span>Next</span><i class="pd-next-chevron" aria-hidden="true"></i>
+          </button>
           </div>
         </div>
       </div>
@@ -3809,7 +3835,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3848,7 +3874,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3868,7 +3894,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.109</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.114</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -9036,6 +9062,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       PD_CHAT_SCENE.phase=1;
       PD_CHAT_SCENE.start=0;
     }
+    if (typeof PD_NEXT_SCROLL === "object"){
+      if (PD_NEXT_SCROLL.raf){ cancelAnimationFrame(PD_NEXT_SCROLL.raf); PD_NEXT_SCROLL.raf=0; }
+      PD_NEXT_SCROLL.active=false;
+    }
     HOME_STORY.ready=false;
     if (HOME_STORY.pushRaf){ cancelAnimationFrame(HOME_STORY.pushRaf); HOME_STORY.pushRaf=0; }
     HOME_STORY.pushY=undefined;
@@ -9167,12 +9197,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var pinP=pinned/(vh*1.6);   /* p1.024: one unit = 1.6 viewports of scroll */
 
     var scopes=stage.querySelectorAll(".power-scope");
-    /* Exit the entire white proposition as one object before the blue field
-       dissolves.  The previous independent timings left white type stranded
-       on the cream surface for a frame (and longer with the child opacity
-       transitions), which read as a broken intermediate slide. */
-    var copyOut=smooth01((pinP-4.18)/.14);
-    var scopesOut=copyOut;
+    var scopesOut=0;   /* p1.036: the words stay until the field lets go */
     /* Longer, overlapping dissolves. Nothing travels into frame: each scope
        condenses gently from soft focus while the previous words remain. */
     var scopeStarts=[2.76,2.88,3.00,3.12,3.24,3.36];   /* the six words come after the three turns */
@@ -9182,7 +9207,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var scopeP=smooth01((pinP-startP)/fadeSpan);
       /* THE CLOSING LINE (p1.024): once the line has arrived the six words
          step back to a third and stay there through the hold */
-      var goneP=copyOut;
+      var goneP=smooth01((pinP-5.10)/.25);   /* a safety only - the field lets go first */
       var dimP=smooth01((pinP-3.94)/.22);    /* the words step back to a third under the closing line */
       scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP)*(1-scopesOut)*(1-goneP));
       scopes[i].style.transform="none";
@@ -9304,24 +9329,23 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var demoVisible=headP>.01 && demoOut<.995;
     scr.classList.toggle("chat-demo-on",demoVisible);
     var demoOverlay=$("power-demo");
-    if (demoOverlay) demoOverlay.classList.toggle("is-on",demoVisible);
+    if (demoOverlay){
+      demoOverlay.classList.toggle("is-on",demoVisible);
+      demoOverlay.setAttribute("aria-hidden",demoVisible?"false":"true");
+    }
     powerDemoPaint(dayP, headP, 0, 0, 0, 0);
     pdStackRide(sceneP[0]*out,sceneP[1]*out,sceneP[2]*out);
     var closeIn=smooth01((pinP-3.64)/.26);
-    var textOut=copyOut;
+    /* The white copy and blue field leave as one surface at the sticky
+       boundary. Separating those exits created a full cream-looking stop. */
+    var textOut=smooth01((pinP-4.50)/.25);
     /* p1.077: the blue is ONE slide - it rises for the closing line and
        leaves with it; the wind ride and the chat stay on cream */
     var blueOn=smooth01((pinP-2.72)/.22);   /* it rises WITH the first word, never ahead of it */
-    /* Hold blue until the copy is fully gone, then clear it briskly. */
-    var blueOut=smooth01((pinP-4.40)/.18);
+    var blueOut=smooth01((pinP-4.50)/.25);
     var blueP=blueIn*blueOn*(1-blueOut);
     if (wash) wash.style.opacity=String(blueP);
 
-    var copy=stage.querySelector(".power-reveal-copy");
-    if (copy){
-      copy.style.opacity=String(1-copyOut);
-      copy.style.visibility=copyOut>.995?"hidden":"visible";
-    }
     var main=stage.querySelector(".power-reveal-main");
     var close=stage.querySelector(".power-reveal-close");
     if (main){
@@ -9652,6 +9676,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function queueHomeStoryMotion(){
     var scr=$("scr-home");
     if (!scr || current !== "home") return;
+    if (typeof PD_NEXT_SCROLL === "object" && PD_NEXT_SCROLL.active) return;
     HOME_MOTION.target=scr.scrollTop;
     if (onPhone()){
       /* No inertia on touch. Coalesce work to the display clock while using
@@ -10977,17 +11002,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var layer=$("pilllayer");
       return !!(layer && layer.children && layer.children.length);
     }
-    var measureStamp=0,measureWidth=0,measureHeight=0;
-    function measure(force){
-      /* A non-passive touch listener is required only so the label landing
-         can stop a gesture at its boundary. Do not make Android recalculate
-         three section rectangles for every touchmove on the entire homepage:
-         these document-relative limits stay stable until layout/viewport size
-         changes, so one measurement at gesture start is enough. */
-      var now=(window.performance&&performance.now)?performance.now():Date.now();
-      var cw=scr.clientWidth,ch=scr.clientHeight;
-      if (!force && measureStamp && cw===measureWidth && ch===measureHeight &&
-          now-measureStamp<600) return;
+    function measure(){
       var sr=scr.getBoundingClientRect(), mr=meets.getBoundingClientRect(), nr=next.getBoundingClientRect();
       PILL_GATE.start=scr.scrollTop+(mr.top-sr.top);
       /* The following scene may not even enter the viewport while the labels
@@ -10995,7 +11010,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       PILL_GATE.end=scr.scrollTop+(nr.top-sr.top)-scr.clientHeight+1;
       PILL_GATE.zero=PILL_GATE.start-scr.clientHeight*.9;
       PILL_GATE.one=PILL_GATE.start+mr.height-scr.clientHeight*.35;
-      measureStamp=now; measureWidth=cw; measureHeight=ch;
     }
     function wake(){
       if (WIND.dArgs) windDrive(WIND.dArgs[0],WIND.dArgs[1],WIND.dArgs[2]);
@@ -11016,7 +11030,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     function jumpForwardToChat(){
       if (PILL_GATE.jumpingForward) return;
-      measure(false);
+      measure();
       PILL_GATE.jumpingForward=true;
       PILL_GATE.mode="released-down";
       PILL_GATE.progress=null;
@@ -11161,7 +11175,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       }
       PILL_GATE.holdY=null;
       feedPillTempo(delta);
-      measure(false);
+      measure();
       var dir=delta>0?1:-1;
       if (dir<0 && PILL_GATE.mode==="up" && WIND.allPillsAway){
         if (e && e.cancelable) e.preventDefault();
@@ -11181,37 +11195,16 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       return false;
     }
     scr.addEventListener("wheel",function(e){ blockDelta(e.deltaY,e); },{passive:false});
-    var gateTouchListening=false;
-    function gateTouchMove(e){
+    scr.addEventListener("touchstart",function(e){
+      PILL_GATE.touchY=(e.touches&&e.touches.length===1)?e.touches[0].clientY:null;
+    },{passive:true});
+    scr.addEventListener("touchmove",function(e){
       if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
       var y=e.touches[0].clientY, delta=PILL_GATE.touchY-y;
       blockDelta(delta,e); PILL_GATE.touchY=y;
-    }
-    function stopGateTouch(){
-      if (gateTouchListening){
-        scr.removeEventListener("touchmove",gateTouchMove,false);
-        gateTouchListening=false;
-      }
-      PILL_GATE.touchY=null;
-    }
-    scr.addEventListener("touchstart",function(e){
-      stopGateTouch();
-      measure(true);
-      if (!e.touches || e.touches.length!==1) return;
-      var sy=scr.scrollTop,reach=scr.clientHeight*.95;
-      var receivingNow=typeof CHAT_RECEIVE === "object" && CHAT_RECEIVE.active;
-      /* Keep the main Home slides on the compositor's native scroll path.
-         The cancellable listener exists only within reach of the label gate,
-         where the landing animation genuinely has to hold the gesture. */
-      var nearGate=!!PILL_GATE.mode || receivingNow ||
-        (sy>=PILL_GATE.start-reach && sy<=PILL_GATE.one+reach);
-      if (!nearGate) return;
-      PILL_GATE.touchY=e.touches[0].clientY;
-      scr.addEventListener("touchmove",gateTouchMove,{passive:false});
-      gateTouchListening=true;
-    },{passive:true});
-    scr.addEventListener("touchend",stopGateTouch,{passive:true});
-    scr.addEventListener("touchcancel",stopGateTouch,{passive:true});
+    },{passive:false});
+    scr.addEventListener("touchend",function(){ PILL_GATE.touchY=null; },{passive:true});
+    scr.addEventListener("touchcancel",function(){ PILL_GATE.touchY=null; },{passive:true});
     scr.addEventListener("scroll",function(){
       if (disabled() || !hasPills() || current!=="home"){
         PILL_GATE.lastY=scr.scrollTop; return;
@@ -11242,7 +11235,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       }
       PILL_GATE.holdY=null;
       if (PILL_GATE.writing){ PILL_GATE.writing=false; PILL_GATE.lastY=scr.scrollTop; return; }
-      measure(false);
+      measure();
       var y=scr.scrollTop, dir=y>PILL_GATE.lastY?1:(y<PILL_GATE.lastY?-1:0);
       if (PILL_GATE.mode==="released-down"){
         if (dir<0) setMode("");
@@ -11258,9 +11251,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (PILL_GATE.mode==="up" && !WIND.allPillsAway && y<PILL_GATE.start){ pin(PILL_GATE.start); return; }
       PILL_GATE.lastY=y;
     },{passive:true});
-    window.addEventListener("resize",function(){ measure(true); },{passive:true});
+    window.addEventListener("resize",measure,{passive:true});
     PILL_GATE.lastY=scr.scrollTop;
-    measure(true);
+    measure();
   })();
   var DEMO_PROMPT="Build 10 residential floors above 3 commercial floors. Recess floor 3 by 3 m on every side. Footprint: 28 \u00D7 24 m.";
   var DEMO_PROMPT_2="Add one residential floor and export the 3D model.";
@@ -11271,6 +11264,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     raf:0, storyY:0, endY:0, holdY:null, holdUntil:0 };
   var PD_CHAT_SCENE={active:0,target:0,from:0,running:false,forward:true,
     phase:1,start:0,duration:1180,raf:0,storyY:0};
+  var PD_NEXT_SCROLL={active:false,raf:0,start:0,from:0,to:0,duration:640};
   var BLUE_SEND_P=0, PD_TYPED=null;
   function pdChatScene(target,storyY){
     target=Math.max(0,Math.min(2,target|0));
@@ -11309,6 +11303,66 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     return PD_CHAT_SCENE;
   }
+  function pdNextGo(){
+    var scr=$("scr-home"), button=$("pd-next");
+    if (!scr || !button || PD_NEXT_SCROLL.active || current!=="home") return;
+    if (!HOME_STORY.ready) prepareHomeDeckStory();
+    var scene=Math.max(0,Math.min(2,+(button.getAttribute("data-scene")||0)));
+    /* Each target lands just beyond the threshold that selects the next
+       exchange. The last control advances out of chat and into the blue
+       capability field. */
+    var targetP=[1.28,1.88,2.86][scene];
+    var vh=Math.max(1,scr.clientHeight);
+    var target=Math.max(0,Math.min(scr.scrollHeight-scr.clientHeight,
+      HOME_STORY.powerTop+targetP*vh*1.6));
+    var from=scr.scrollTop;
+    if (Math.abs(target-from)<1) return;
+    PD_NEXT_SCROLL.active=true;
+    PD_NEXT_SCROLL.start=0;
+    PD_NEXT_SCROLL.from=from;
+    PD_NEXT_SCROLL.to=target;
+    PD_NEXT_SCROLL.duration=(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)?1:640;
+    button.classList.remove("is-visible");
+    function step(ts){
+      if (!PD_NEXT_SCROLL.active || current!=="home"){
+        PD_NEXT_SCROLL.raf=0; return;
+      }
+      if (!PD_NEXT_SCROLL.start) PD_NEXT_SCROLL.start=ts;
+      var u=Math.max(0,Math.min(1,(ts-PD_NEXT_SCROLL.start)/PD_NEXT_SCROLL.duration));
+      var eased=.5-Math.cos(Math.PI*u)/2;
+      var y=PD_NEXT_SCROLL.from+(PD_NEXT_SCROLL.to-PD_NEXT_SCROLL.from)*eased;
+      scr.scrollTop=y;
+      if (HOME_MOTION.raf){ cancelAnimationFrame(HOME_MOTION.raf); HOME_MOTION.raf=0; }
+      HOME_MOTION.target=HOME_MOTION.value=y;
+      HOME_MOTION.velocity=0;
+      HOME_MOTION.initialized=true;
+      updateHomeDeckStory(y);
+      if (u<1) PD_NEXT_SCROLL.raf=requestAnimationFrame(step);
+      else {
+        PD_NEXT_SCROLL.raf=0;
+        PD_NEXT_SCROLL.active=false;
+        scr.scrollTop=PD_NEXT_SCROLL.to;
+        HOME_MOTION.target=HOME_MOTION.value=PD_NEXT_SCROLL.to;
+        if (typeof PILL_GATE === "object") PILL_GATE.lastY=PD_NEXT_SCROLL.to;
+        updateHomeDeckStory(PD_NEXT_SCROLL.to);
+      }
+    }
+    PD_NEXT_SCROLL.raf=requestAnimationFrame(step);
+  }
+  (function(){
+    var button=$("pd-next"),scr=$("scr-home");
+    if (!button) return;
+    button.addEventListener("click",pdNextGo);
+    function interruptNext(){
+      if (!PD_NEXT_SCROLL.active) return;
+      PD_NEXT_SCROLL.active=false;
+      if (PD_NEXT_SCROLL.raf){ cancelAnimationFrame(PD_NEXT_SCROLL.raf); PD_NEXT_SCROLL.raf=0; }
+    }
+    if (scr){
+      scr.addEventListener("wheel",interruptNext,{passive:true});
+      scr.addEventListener("touchstart",interruptNext,{passive:true});
+    }
+  })();
   function startChatReceive(st,pinP,vh){
     if (CHAT_RECEIVE.active || CHAT_RECEIVE.done) return;
     var scr=$("scr-home");
@@ -11342,6 +11396,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         CHAT_RECEIVE.done=true;
         CHAT_RECEIVE.phase=1;
         updateHomeDeckStory(CHAT_RECEIVE.endY);
+        /* Repaint once the short gesture-tail guard has expired so the
+           contextual Next control can appear without waiting for another
+           user scroll. */
+        setTimeout(function(){
+          if (current==="home" && CHAT_RECEIVE.done && !CHAT_RECEIVE.active)
+            updateHomeDeckStory(HOME_MOTION.value);
+        },190);
       }
     }
     CHAT_RECEIVE.raf=requestAnimationFrame(step);
@@ -12338,12 +12399,20 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       }
       chatHead.classList.toggle("is-compact",active>0);
       chatHead.style.transform="translateY("+topEdge.toFixed(1)+"px)";
-      topEdge+=Math.max(chatHead.offsetHeight,+(chatHead.getAttribute("data-full-height")||0))+10;
+      /* Once the first exchange is complete, mobile behaves like a normal
+         messaging app: the compact identity row owns only its visible
+         height. Keeping the vanished opening masthead's height here left a
+         large blank band above every later message. */
+      var compactMobile=active>0 && window.innerWidth<=700;
+      topEdge+=(compactMobile
+        ? chatHead.offsetHeight
+        : Math.max(chatHead.offsetHeight,+(chatHead.getAttribute("data-full-height")||0)))+10;
     }
     if (bottomEdge<topEdge+80) bottomEdge=Math.min(H-8,topEdge+80);
 
     var scenes=[$("pd-scene-1"),$("pd-scene-2"),$("pd-scene-3")];
     var states=[p1,p2,p3];
+    var currentBottom=topEdge;
     for (var i=0;i<scenes.length;i++){
       var scene=scenes[i]; if (!scene) continue;
       var sceneH=Math.max(1,scene.offsetHeight);
@@ -12351,7 +12420,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var scale=Math.min(1,available/sceneH);
       var shown=Math.max(0,Math.min(1,states[i]||0));
       var fittedH=sceneH*scale;
-      var y=topEdge+Math.max(0,(available-fittedH)/2);
+      /* Later phone exchanges begin directly below the compact chat header.
+         The opening exchange and desktop composition retain their deliberate
+         centered staging. */
+      var topAligned=window.innerWidth<=700 && i>0;
+      var y=topEdge+(topAligned?0:Math.max(0,(available-fittedH)/2));
       /* The incoming exchange rises a few pixels, but never crosses either
          safe edge. Scaling is only a last-resort guard on short viewports. */
       var leaving=(typeof PD_CHAT_SCENE === "object" && PD_CHAT_SCENE.running && i===PD_CHAT_SCENE.from);
@@ -12360,6 +12433,26 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       scene.style.opacity=String(shown);
       scene.style.visibility=shown>.004?"visible":"hidden";
       scene.classList.toggle("is-current",i===active);
+      if (i===active) currentBottom=y+fittedH;
+    }
+    var next=$("pd-next");
+    if (next){
+      var suffix=active===0?"":String(active+1);
+      var response=$("pd-abub"+suffix);
+      var responseReady=response && parseFloat(response.style.opacity||"0")>.97;
+      var now=(window.performance&&performance.now)?performance.now():Date.now();
+      if (active===0){
+        responseReady=responseReady && CHAT_RECEIVE.done && !CHAT_RECEIVE.active && now>=(CHAT_RECEIVE.holdUntil||0);
+      }
+      var free=bottomEdge-currentBottom;
+      var stable=!(PD_CHAT_SCENE.running || PD_NEXT_SCROLL.active || CHAT_HANDOFF.active || CHAT_RECEIVE.active);
+      var room=free>=62;
+      var showNext=states[active]>.97 && responseReady && stable && room;
+      var nextY=currentBottom+Math.min(28,Math.max(12,(free-42)/2));
+      next.setAttribute("data-scene",String(active));
+      next.style.transform="translate(-50%,"+nextY.toFixed(1)+"px)";
+      next.classList.toggle("is-visible",showNext);
+      next.tabIndex=showNext?0:-1;
     }
     stack.style.transform="none";
   }
@@ -12527,9 +12620,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var ctx=canvas.getContext("2d");
   if(!ctx) return;
 
-  var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0,openingRects=[];
+  var W=0,H=0,DPR=1,raf=0,lastFrame=0,lastMove=0;
   var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,edgeX=x,strength=0;
-  var active=false,touchOrigin=null,touchScrolling=false;
+  var active=false;
 
   /* On phones the hero element already contains the two full-height opening
      slides: the proposition and its explanatory text. Stop the hidden facade
@@ -12537,77 +12630,45 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function openingAreas(){ return W<=700?[hero]:[hero,story]; }
 
   function resize(){
-    var nextW=Math.max(1,window.innerWidth);
-    /* Android changes innerHeight repeatedly while its browser chrome hides
-       and returns. Reallocating a DPR canvas during that same scroll is a
-       visible hitch. Use the stable device-height canvas on narrow touch
-       screens; the viewport simply clips the unused portion. */
-    var touchNarrow=nextW<=700 && ((navigator.maxTouchPoints||0)>0);
-    var stableScreenH=(window.screen&&window.screen.height)||0;
-    var nextH=Math.max(1,touchNarrow&&stableScreenH?Math.max(window.innerHeight,stableScreenH):window.innerHeight);
-    var nextDPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
-    /* Address-bar resize events can still repeat even though the stable
-       canvas dimensions have not changed. Never clear and reallocate the
-       backing store in that case. */
-    if(nextW===W&&nextH===H&&nextDPR===DPR){ if(strength>.001) queue(); return; }
-    W=nextW; H=nextH; DPR=nextDPR;
+    W=Math.max(1,window.innerWidth); H=Math.max(1,window.innerHeight);
     edgeX=W*.5;
+    DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
     canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR);
     canvas.style.width=W+"px"; canvas.style.height=H+"px";
     ctx.setTransform(DPR,0,0,DPR,0,0);
     if(strength>.001) queue();
   }
-  function refreshOpeningRects(){
-    openingRects.length=0;
+  function inOpening(px,py){
+    if(!home.classList.contains("on")) return false;
+    var areas=openingAreas();
+    for(var i=0;i<areas.length;i++){
+      var r=areas[i].getBoundingClientRect();
+      if(px>=Math.max(0,r.left)&&px<=Math.min(W,r.right)&&
+         py>=Math.max(0,r.top)&&py<=Math.min(H,r.bottom)) return true;
+    }
+    return false;
+  }
+  function move(px,py){
+    if(!inOpening(px,py)){ active=false; queue(); return; }
+    tx=px; ty=py;
+    if(strength<.012){ x=tx; y=ty; }
+    active=true; lastMove=performance.now(); queue();
+  }
+  function pointerMove(e){ move(e.clientX,e.clientY); }
+  function touchMove(e){
+    if(e.touches&&e.touches.length) move(e.touches[0].clientX,e.touches[0].clientY);
+  }
+  function leave(){ active=false; queue(); }
+  function queue(){ if(!raf) raf=requestAnimationFrame(frame); }
+
+  function openingClip(){
+    ctx.beginPath();
     var areas=openingAreas();
     for(var i=0;i<areas.length;i++){
       var r=areas[i].getBoundingClientRect();
       var l=Math.max(0,r.left),t=Math.max(0,r.top);
       var rr=Math.min(W,r.right),bb=Math.min(H,r.bottom);
-      if(rr>l&&bb>t) openingRects.push({left:l,top:t,right:rr,bottom:bb});
-    }
-  }
-  function inOpening(px,py){
-    if(!home.classList.contains("on")) return false;
-    for(var i=0;i<openingRects.length;i++){
-      var r=openingRects[i];
-      if(px>=r.left&&px<=r.right&&py>=r.top&&py<=r.bottom) return true;
-    }
-    return false;
-  }
-  function move(px,py){
-    tx=px; ty=py;
-    if(strength<.012){ x=tx; y=ty; }
-    active=true; lastMove=performance.now(); queue();
-  }
-  /* Touch produces pointermove and touchmove on Android. Consume only the
-     dedicated touch stream so one finger never schedules the effect twice. */
-  function pointerMove(e){ if(e.pointerType==="touch") return; move(e.clientX,e.clientY); }
-  function touchStart(e){
-    if(!e.touches||e.touches.length!==1) return;
-    var p=e.touches[0];
-    touchOrigin={x:p.clientX,y:p.clientY}; touchScrolling=false;
-    move(p.clientX,p.clientY);
-  }
-  function touchMove(e){
-    if(!e.touches||e.touches.length!==1||!touchOrigin) return;
-    var p=e.touches[0],dx=p.clientX-touchOrigin.x,dy=p.clientY-touchOrigin.y;
-    if(!touchScrolling&&Math.abs(dy)>8&&Math.abs(dy)>=Math.abs(dx)){
-      /* A vertical pan belongs entirely to native page scrolling. The ghost
-         field may reveal on contact, but it must not keep repainting under a
-         moving finger. */
-      touchScrolling=true; active=false; queue(); return;
-    }
-    if(!touchScrolling) move(p.clientX,p.clientY);
-  }
-  function leave(){ active=false; touchOrigin=null; touchScrolling=false; queue(); }
-  function queue(){ if(!raf) raf=requestAnimationFrame(frame); }
-
-  function openingClip(){
-    ctx.beginPath();
-    for(var i=0;i<openingRects.length;i++){
-      var r=openingRects[i];
-      ctx.rect(r.left,r.top,r.right-r.left,r.bottom-r.top);
+      if(rr>l&&bb>t) ctx.rect(l,t,rr-l,bb-t);
     }
     ctx.clip();
   }
@@ -12627,11 +12688,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var spandrelH=bay*.56;
     var visionH=bay*1.82;
     var level=spandrelH+visionH;
+    var scrollY=home.scrollTop||0;
     var ox=((W*.5)%bay)-bay;
-    /* The ghost façade is a fixed architectural field. Coupling its module
-       origin to scroll made the wall slide under the finger and visually
-       contradicted the page movement, especially on phones. */
-    var oy=-level;
+    var oy=-(scrollY%level)-level;
     var i;
 
     ctx.save();
@@ -12746,9 +12805,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function frame(now){
     raf=0;
     var dt=Math.min(48,now-(lastFrame||now-16.7)); lastFrame=now;
-    /* Read section geometry once per display frame. Previously both the input
-       handler and the draw pass queried it, forcing redundant mobile layout. */
-    refreshOpeningRects();
     var age=lastMove?now-lastMove:9999;
     var desired=(active&&age<90)?1:Math.exp(-Math.max(0,age-90)/620);
     if(!home.classList.contains("on")||!inOpening(tx,ty)) desired=0;
@@ -12769,10 +12825,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   home.addEventListener("pointermove",pointerMove,{passive:true});
   home.addEventListener("pointerleave",leave,{passive:true});
   home.addEventListener("pointercancel",leave,{passive:true});
-  home.addEventListener("touchstart",touchStart,{passive:true});
+  home.addEventListener("touchstart",touchMove,{passive:true});
   home.addEventListener("touchmove",touchMove,{passive:true});
   home.addEventListener("touchend",leave,{passive:true});
   home.addEventListener("scroll",function(){
+    if(active&&!inOpening(tx,ty)) active=false;
     if(strength>.001) queue();
   },{passive:true});
   window.addEventListener("resize",resize,{passive:true});
