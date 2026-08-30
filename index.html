@@ -3297,9 +3297,26 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 #windlayer{position:fixed;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;opacity:0;
   transition:opacity .25s ease}
 #pilllayer{position:fixed;inset:0;z-index:74;pointer-events:none}
-.deck-tags{grid-column:2/-1;display:flex;align-items:center;gap:6px;
+.deck-tags{grid-column:2/-1;display:flex;align-items:center;gap:6px;position:relative;
   height:auto;min-height:0;padding:0 12px 7px 16px;margin-top:-2px}
 @media (max-width:700px){.deck-tags{padding-left:12px}}
+.pill-ghost-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.pill-ghost{
+  position:absolute;display:inline-flex;align-items:center;justify-content:center;
+  box-sizing:border-box;border:1px solid rgba(86,90,97,.24);border-radius:999px;
+  background:rgba(91,95,102,.085);color:rgba(65,69,76,.40);
+  font-family:var(--font-sans);font-weight:540;font-size:clamp(9px,.62vw,10.5px);
+  letter-spacing:.045em;line-height:1;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(30,34,40,.035);
+  transition:opacity .16s ease;
+  animation:pillGhostBlink 1.15s ease-in-out var(--ghost-delay,0s) infinite alternate;
+}
+@keyframes pillGhostBlink{
+  from{background:rgba(91,95,102,.045);border-color:rgba(86,90,97,.15);color:rgba(65,69,76,.27)}
+  to{background:rgba(91,95,102,.12);border-color:rgba(86,90,97,.32);color:rgba(65,69,76,.48)}
+}
+@media (max-width:700px){.pill-ghost{font-size:9.5px}}
+@media (prefers-reduced-motion:reduce){.pill-ghost{animation:none}}
 /* p1.093: one row for the line, one for the labels - so the two buttons
    can span the whole box and stand in its middle */
 #scr-home .composer #deckq{ grid-row:1 !important; }
@@ -8844,6 +8861,22 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
      exactly, so the pin lands where the flowing composer was */
   var PHONE_MQ = window.matchMedia ? window.matchMedia("(max-width:700px)") : null;
   function onPhone(){ return !!(PHONE_MQ && PHONE_MQ.matches); }
+  function homeDeckHorizontalFrame(scr){
+    /* A .screen enters with translateX(18px). While that transform is still
+       resolving, a fixed descendant uses the screen itself as its containing
+       block; after the transition it uses the viewport. Reading scr.left in
+       the first state therefore applies the entrance offset twice and leaves
+       it cached until the first scroll. Use a local zero during the transform,
+       then the stable rooms edge once the viewport is the containing block. */
+    var transformed=false;
+    try { transformed=getComputedStyle(scr).transform!=="none"; } catch(e){}
+    var rooms=$("rooms"), left=0;
+    if (!transformed && rooms){
+      var rr=rooms.getBoundingClientRect();
+      left=rr.left;
+    }
+    return {left:left,width:Math.max(1,scr.clientWidth)};
+  }
   function placeDeck(name){
     var deck = $("deck"), home = $("deck-home-anchor"), marker = $("deck-global-anchor");
     if (!deck) return;
@@ -9192,11 +9225,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var bottomW=offW+scr.clientHeight-hW-Math.max(12,Math.min(20,innerWidth*.014));
       var flowTopW=offW+HOME_STORY.naturalTop-stReal;
       if (flowTopW > bottomW+0.5){
+        var frameW=homeDeckHorizontalFrame(scr);
         deck.classList.add("deck-story-fixed","deck-story-bottom");
         deck.style.setProperty("--deck-story-y",bottomW.toFixed(2)+"px");
-        deck.style.setProperty("left",srW.left.toFixed(2)+"px","important");
+        deck.style.setProperty("left",frameW.left.toFixed(2)+"px","important");
         deck.style.setProperty("right","auto","important");
-        deck.style.setProperty("width",scr.clientWidth.toFixed(2)+"px","important");
+        deck.style.setProperty("width",frameW.width.toFixed(2)+"px","important");
       } else if (deck.classList.contains("deck-story-fixed")){
         deck.classList.remove("deck-story-fixed","deck-story-bottom");
         deck.style.removeProperty("--deck-story-y");
@@ -9292,9 +9326,10 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* THE GUTTER (p1.021): the fixed deck spans the scroller's content box,
        not the viewport - a scrollbar gutter would otherwise shift it by
        half its width the moment it pins */
-    deck.style.setProperty("left",srBox.left.toFixed(2)+"px","important");
+    var frameBox=homeDeckHorizontalFrame(scr);
+    deck.style.setProperty("left",frameBox.left.toFixed(2)+"px","important");
     deck.style.setProperty("right","auto","important");
-    deck.style.setProperty("width",scr.clientWidth+"px","important");
+    deck.style.setProperty("width",frameBox.width.toFixed(2)+"px","important");
     var visuallyDocked=moveP>=.999 && Math.abs(bottomY-y)<.8;
     deck.classList.toggle("deck-story-bottom",visuallyDocked);
     /* THE WIND (p1.038): rises as the thesis settles, presses through the
@@ -9578,6 +9613,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     }
     var tags=$("deck-tags");
     if (tags) tags.style.paddingBottom="7px";
+    pillGhostHide();
     PILL_TEMPO.value=PILL_TEMPO.target=PILL_TEMPO.pending=1;
     PILL_TEMPO.lastInput=PILL_TEMPO.lastSample=0;
     PILL_TEMPO.inputDir=0;
@@ -10086,7 +10122,31 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (WIND.dArgs) windDrive(WIND.dArgs[0], WIND.dArgs[1], WIND.dArgs[2]);
     else { windDraw(); if (WIND.p>0 && !WIND.raf) WIND.raf=requestAnimationFrame(windTick); }
   }
-  var PILLS=null, PILL_LANES=[0.22,0.78,0.40,0.64,0.30];
+  var PILLS=null, PILL_GHOSTS=null, PILL_LANES=[0.22,0.78,0.40,0.64,0.30];
+  function pillGhostBuild(tags){
+    if (!tags || !PILLS || !PILLS.length) return [];
+    if (PILL_GHOSTS && PILL_GHOSTS.layer && PILL_GHOSTS.layer.parentNode===tags) return PILL_GHOSTS.items;
+    var layer=document.createElement("div");
+    layer.className="pill-ghost-layer";
+    layer.setAttribute("aria-hidden","true");
+    var items=[];
+    for (var i=0;i<PILLS.length;i++){
+      var ghost=document.createElement("span");
+      ghost.className="pill-ghost";
+      ghost.textContent=(PILLS[i].textContent||"").replace(/\s+/g," ").trim();
+      ghost.style.setProperty("--ghost-delay",(-i*.13).toFixed(2)+"s");
+      ghost.style.opacity="0";
+      layer.appendChild(ghost);
+      items.push(ghost);
+    }
+    tags.appendChild(layer);
+    PILL_GHOSTS={layer:layer,items:items};
+    return items;
+  }
+  function pillGhostHide(){
+    if (!PILL_GHOSTS || !PILL_GHOSTS.items) return;
+    for (var i=0;i<PILL_GHOSTS.items.length;i++) PILL_GHOSTS.items[i].style.opacity="0";
+  }
   /* One clock drives the gauge and every label. Gesture strength changes its
      cruising speed, while signed velocity supplies real braking and reversal. */
   var PILL_PROGRESS_PER_MS=0.00005;   /* 0.05 scene progress / second */
@@ -10152,6 +10212,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (prog < 0){
       for (i=0; i<PILLS.length; i++) PILLS[i].style.opacity="0";
       if (tags) tags.style.paddingBottom="7px";
+      pillGhostHide();
       return;
     }
     var ps=[];
@@ -10299,6 +10360,29 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (!isReleased) allReleased=false;
       el.style.transform="translate("+tx.toFixed(1)+"px,"+ty.toFixed(1)+"px) rotate("+rot.toFixed(2)+"deg) scale("+sc.toFixed(3)+")";
     }
+    /* The prompt opens its lower rows before every label has arrived. Show
+       those true landing slots as quiet grey ghosts so the temporary room
+       reads as intentional. Each one disappears only as its own blue label
+       completes the invisible outside-to-inside portal. */
+    var ghosts=pillGhostBuild(tags);
+    if (ghosts.length && tr2){
+      var roomAlpha=need>.5?smooth01(need/Math.max(8,stepY*.62)):0;
+      var sceneAlpha=roomAlpha*(1-smooth01((outP-.55)/.35));
+      for (i=0;i<ghosts.length;i++){
+        var ghost=ghosts[i];
+        var gx=tr2.left+padL+slots[i].x;
+        if (i===0 && sr2) gx=sr2.right+gap;
+        var gy=(sr2?sr2.top:tr2.top)+slots[i].row*stepY;
+        var portal=i===0?Math.max(0,Math.min(1,WIND.gaugeP||0)):
+          Math.max(0,Math.min(1,typeof PILLS[i]._portal==="number"?PILLS[i]._portal:0));
+        var occupied=smooth01((portal-.48)/.34);
+        ghost.style.left=(gx-tr2.left).toFixed(1)+"px";
+        ghost.style.top=(gy-tr2.top).toFixed(1)+"px";
+        ghost.style.width=slots[i].w.toFixed(1)+"px";
+        ghost.style.height=slots[i].h.toFixed(1)+"px";
+        ghost.style.opacity=(sceneAlpha*(1-occupied)).toFixed(3);
+      }
+    } else pillGhostHide();
     WIND.allPillsHome=allHome;
     WIND.allPillsAway=allAway;
     WIND.allPillsReleased=allReleased;
