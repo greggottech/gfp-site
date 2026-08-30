@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.118 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.121 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3837,7 +3837,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.118</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3876,7 +3876,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.118</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3896,7 +3896,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.118</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.121</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10375,7 +10375,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   /* One clock drives the gauge and every label. Gesture strength changes its
      cruising speed, while signed velocity supplies real braking and reversal. */
   var PILL_PROGRESS_PER_MS=0.00005;   /* 0.05 scene progress / second */
-  var PILL_SPEED_PX_PER_MS=0.045;     /* 45 pixels / second */
+  var PILL_SPEED_PX_PER_MS=0.26;   /* p1.119: 0.045 could not cross even the shortened fall inside a label's own window - they queued at the edge and all entered at the end */     /* 45 pixels / second */
   var PILL_FORWARD_SPEED=1.30;        /* labels and gauge descend 30% faster */
   var PILL_MOBILE_FORWARD_BOOST=1.40; /* touch descent is another 40% quicker */
   var PILL_REVERSE_SPEED=3;           /* the complete return trip runs three times faster */
@@ -10532,7 +10532,15 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var ps=[];
     for (i=0; i<PILLS.length; i++){
       if (i===0) ps.push(Math.max(0,Math.min(1,WIND.gaugeP||0)));   /* the gauge hands its reading over only after physical contact */
-      else ps.push(Math.max(0, Math.min(1, (prog-0.26-(i-1)*0.055)/0.40)));   /* a long, unhurried fall - and they follow one another closely */
+      else {
+        /* p1.121: a small offset of its own for each label, drawn once, so
+           they neither arrive nor leave in a block */
+        if (!WIND.jit){
+          WIND.jit=[0];
+          for (var ji=1; ji<12; ji++) WIND.jit.push(Math.random()*0.038);
+        }
+        ps.push(Math.max(0, Math.min(1, (prog-0.26-(i-1)*0.055-(WIND.jit[i]||0))/0.40)));
+      }
     }
     /* the slots INSIDE the box - one after another beneath the text */
     var tr=tags?tags.getBoundingClientRect():null;
@@ -10624,14 +10632,19 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       } else {
         if (typeof el._portal!=="number") el._portal=0;
         if (typeof el._portalTarget!=="number") el._portalTarget=0;
-        if (typeof el._px !== "number"){ el._px=xL; el._py=-70; }
+        var skyY=-70;   /* p1.120: above the screen, as it always was - a live
+                           coordinate here put labels below their own slot and
+                           broke "away", which is what looped the return */
+        if (typeof el._px !== "number"){ el._px=xL; el._py=skyY; }
 
         /* Hysteresis selects the side of the prompt box. The crossing is a
            single reversible value, so changing direction cannot restart a
            timer or flash the element. */
-        if (reversingScene || p<0.69) el._portalTarget=0;
+        /* p1.121: a label leaves when its OWN schedule says so, not because
+           the direction turned - otherwise every portal closes in one frame */
+        if (p<0.69) el._portalTarget=0;
         if (el._portal<=0.001 && el._portalTarget===0){
-          if (p<=0){ tx=xL; ty=-70; rot=0; }
+          if (p<=0){ tx=xL; ty=skyY; rot=0; }
           var physicalFactor=WIND.travelFactor||0.12;
           var kP=1-Math.exp(-dtP*physicalFactor/470);   /* p1.108: the weight of honey */
           var cap=dtP*PILL_SPEED_PX_PER_MS*physicalFactor;
@@ -10644,7 +10657,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
           if (Math.abs(ty-el._py) < 0.4) el._py=ty;
 
           /* Only real physical contact opens the portal. */
-          if (!reversingScene && p>=PIN && Math.abs(el._px-sx)<0.8 && Math.abs(el._py-touchY)<0.8){
+          if (!reversingScene && p>=PIN && Math.abs(el._px-sx)<6 && Math.abs(el._py-touchY)<6){
             el._px=sx; el._py=touchY;
             el._portalTarget=1;
             if (!el._contactZapped){ el._contactZapped=true; zapBox(); }
@@ -10910,7 +10923,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         WIND.gaugeTouched=true;
         if (!WIND.zapped){ WIND.zapped=true; zapBox(); }
       }
-      var gaugePTarget=(WIND.gaugeTouched && (WIND.travelV||0)>=0 && !reverseGate)?1:0;
+      /* p1.121: going back, the pressure chip must not leave ahead of the
+         labels. It holds its place until the scene has rewound to where the
+         labels themselves start leaving - one movement, not two stages. */
+      var gaugePTarget=(WIND.gaugeTouched && !reverseGate &&
+        ((WIND.travelV||0)>=0 || prM>0.52))?1:0;
       if (typeof WIND.gaugeP!=="number") WIND.gaugeP=0;
       var gaugePortalStep=dtW/360;
       if (WIND.gaugeP<gaugePTarget) WIND.gaugeP=Math.min(gaugePTarget,WIND.gaugeP+gaugePortalStep);
@@ -11194,11 +11211,18 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         if (e && e.cancelable) e.preventDefault();
         /* Keep the quarantine alive until the inertial gesture itself goes
            quiet; Mac trackpad momentum can outlast a fixed cooldown. */
-        PILL_GATE.reverseHoldUntil=Math.max(PILL_GATE.reverseHoldUntil,gateNow+220);
+        /* p1.120: this renewed itself by 220ms on EVERY wheel event, and a
+           wheel sends one every ~60ms, so on the way back the quarantine never
+           expired and the page stood still - the loop he saw. One cap when it
+           starts; after that it must run out. */
+        if (!PILL_GATE.reverseHoldCap) PILL_GATE.reverseHoldCap=gateNow+600;
+        if (gateNow<PILL_GATE.reverseHoldCap)
+          PILL_GATE.reverseHoldUntil=Math.max(PILL_GATE.reverseHoldUntil,gateNow+220);
         if (typeof PILL_GATE.holdY==="number") pin(PILL_GATE.holdY);
         return true;
       }
       PILL_GATE.holdY=null;
+      PILL_GATE.reverseHoldCap=0;
       feedPillTempo(delta);
       measure();
       var dir=delta>0?1:-1;
