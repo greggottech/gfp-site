@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.127 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.160 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -247,6 +247,20 @@ section{padding:clamp(82px,9vw,124px) 0}
 .pills span{font-family:var(--font-mono);font-size:9px;letter-spacing:.035em;border:1px solid rgba(111,78,54,.16);padding:6px 9px;border-radius:8px;background:rgba(255,255,255,.42)}
 
 /* Contractor */
+/* ONE ENGINE, DIFFERENT DEPTH (p1.129) */
+.depthband{text-align:left;padding:clamp(26px,3.2vw,44px) clamp(22px,3vw,46px) clamp(24px,3vw,40px)}
+.depthband .eyebrow{margin-bottom:10px}
+.depthlead{margin:0 0 clamp(22px,3.4vh,38px);font-family:var(--font-sans);
+  font-size:clamp(21px,2.2vw,32px);font-weight:530;letter-spacing:-.02em;color:var(--ink)}
+.depthgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,2.6vw,40px)}
+.depthstage{border-top:1px solid rgba(30,20,10,.14);padding-top:14px}
+.depthrole{margin:0 0 8px;font-family:var(--font-sans);font-size:clamp(15px,1.2vw,18px);
+  font-weight:560;letter-spacing:-.01em;color:var(--ink)}
+.depthband .small{margin:0;font-family:var(--font-sans);font-size:clamp(13px,.95vw,14.5px);
+  line-height:1.6;color:#4a4d54}
+@media (max-width:900px){.depthgrid{grid-template-columns:1fr;gap:20px}}
+.futuregrid.futuregrid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.futuregrid.futuregrid-3{grid-template-columns:1fr}}
 .contractorband{background:#111214;color:#fff;padding:clamp(88px,10vw,132px) 0;margin-top:clamp(36px,6vw,72px)}
 .contractorgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:clamp(56px,8vw,104px);align-items:start}
 .contractorband .eyebrow{color:#8ca8ff}.contractorband h2{color:#fff;max-width:13em;font-size:var(--fs-section)}
@@ -3361,7 +3375,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 #windlayer{position:fixed;inset:0;width:100%;height:100%;z-index:58;pointer-events:none;opacity:0;
   transition:opacity .25s ease}
 #pilllayer{position:fixed;inset:0;z-index:74;pointer-events:none}
-.deck-tags{grid-column:2/-1;display:flex;align-items:center;gap:6px;position:relative;
+.deck-tags{grid-column:2/-2;display:flex;align-items:center;gap:6px;position:relative;
   height:auto;min-height:0;padding:0 12px 7px 16px;margin-top:-2px}
 @media (max-width:700px){.deck-tags{padding-left:12px}}
 .pill-ghost-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
@@ -3519,6 +3533,15 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 #windlayer .pill-trail-dot{fill:var(--blue,#0a50ff)}
 #windlayer .pill-mesh{fill:none;stroke:var(--blue,#0a50ff);stroke-width:.68;stroke-linecap:round;
   stroke-linejoin:round;vector-effect:non-scaling-stroke}
+/* p1.129: the wind field briefly resolves into the building itself. These
+   paths keep every stream's original top/bottom anchors; only the middle
+   becomes a podium + slender tower wireframe while the constraint labels fall. */
+#windlayer .wl-building-base{fill:none;stroke:var(--blue,#0a50ff);stroke-width:.78;stroke-linecap:round;
+  stroke-linejoin:round;vector-effect:non-scaling-stroke}
+#windlayer .wl-building-run{fill:none;stroke:var(--blue,#0a50ff);stroke-width:1.02;stroke-linecap:round;
+  stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:12 92}
+#windlayer .wl-building-wire{fill:none;stroke:var(--blue,#0a50ff);stroke-width:.82;stroke-linecap:round;
+  stroke-linejoin:round;vector-effect:non-scaling-stroke}
 @media (prefers-reduced-motion:reduce){#windlayer{display:none}}
 
 /* ================= THE FINGER ON THE BOX (p1.039) ================= */
@@ -3555,6 +3578,16 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 @media (prefers-reduced-motion:reduce){#windmeter{display:none}}
 
 /* ================= THE REAL WORLD (p1.044) ================= */
+.meetsay{position:fixed;left:0;right:0;top:clamp(84px,16vh,190px);z-index:58;
+  display:grid;justify-items:center;gap:2px;padding:0 var(--page-gutter,18px);
+  text-align:center;pointer-events:none;opacity:0}
+.meetsay p{margin:0;font-family:var(--font-sans);letter-spacing:-.02em;color:var(--ink)}
+.meetsay-a,.meetsay-b{font-size:clamp(24px,3.4vw,48px);font-weight:540;line-height:1.06}
+.meetsay-a{color:var(--muted)}
+.meetsay-c{max-width:min(620px,92vw);margin-top:clamp(12px,1.8vh,22px);
+  font-size:clamp(13.5px,1.05vw,16px);font-weight:420;letter-spacing:-.005em;
+  line-height:1.55;color:#4a4d54}
+@media (max-width:700px){.meetsay{top:clamp(70px,11vh,120px)}}
 .meets{min-height:230svh;display:grid;align-content:center;justify-items:center;position:relative;z-index:59;
   padding:clamp(56px,10vh,120px) var(--page-gutter,18px) clamp(160px,28vh,260px);text-align:center}
 @media (max-width:700px){.meets{padding-bottom:clamp(320px,56svh,450px)}}   /* the docked full line is tall on a phone - by the section's end the words stand clear above it */
@@ -3720,11 +3753,12 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <svg id="windlayer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
     <div id="pilllayer" aria-hidden="true">
       <span class="wind-pill" id="wind-pill-0">Wind pressure 2,900 Pa</span>
-      <span class="wind-pill">Site constraints</span>
-      <span class="wind-pill">Cost targets</span>
-      <span class="wind-pill">Fabrication limits</span>
-      <span class="wind-pill">Design rules</span>
+      <span class="wind-pill">Location + climate</span>
       <span class="wind-pill">Local codes</span>
+      <span class="wind-pill">Fire safety</span>
+      <span class="wind-pill">Fabrication limits</span>
+      <span class="wind-pill">Cost targets</span>
+      <span class="wind-pill">Assembly logic</span>
     </div>
     <div id="pill-card" hidden>
       <div class="pc-box" role="dialog" aria-modal="true" aria-labelledby="pc-title">
@@ -3764,6 +3798,11 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
 
     <!-- THE REAL WORLD (p1.044): what the prompt is answered against -->
     <section class="meets" id="meets" aria-label="What the prompt meets">
+      <div class="meetsay" id="meetsay">
+        <p class="meetsay-a" id="meetsay-a">You describe the intent.</p>
+        <p class="meetsay-b" id="meetsay-b">The building adds reality.</p>
+        <p class="meetsay-c" id="meetsay-c">GFP translates wind, codes, location, fabrication and physical constraints into a facade you can understand and change.</p>
+      </div>
       <!-- p1.064: the words left the flow - the constraints ride it as
            small blue labels instead (see #pilllayer) -->
     </section>
@@ -3847,30 +3886,35 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
     <!-- p1.081: the ticket now stands above the run (see the hero) -->
 
     <section class="wrap">
-      <div class="future">
-        <div class="futuregrid">
-          <div class="futurestage">
-            <p class="eyebrow">WORKING TODAY</p>
-            <p class="big">Generate. Revise. Engineer.</p>
-            <p class="small">Turn a brief into an editable stick curtain wall with coordinated drawings, visualisation, quantities and wind checks. Revise the building and the model updates with it.</p>
+      <div class="future depthband">
+        <p class="eyebrow">ONE ENGINE. DIFFERENT DEPTH.</p>
+        <p class="depthlead">One system, shaped around the work.</p>
+        <div class="depthgrid">
+          <div class="depthstage">
+            <p class="depthrole">Architect / Developer</p>
+            <p class="small">Explore building and facade options early. See quantities, cost direction and renders while decisions can still change the building.</p>
           </div>
-          <div class="futurestage">
-            <p class="eyebrow">COMMERCIAL WORKFLOW</p>
-            <p class="big">Price. Tender. Procure.</p>
-            <p class="small">Run costing, tender deliverables and procurement from the same construction state. No parallel model. No repeated redraws.</p>
+          <div class="depthstage">
+            <p class="depthrole">Aluminium Contractor</p>
+            <p class="small">Take the same model into technical delivery — drawings, 3D, glass and aluminium quantities, wind checks and rapid revisions. Connect your catalogue and costing logic on top.</p>
+          </div>
+          <div class="depthstage">
+            <p class="depthrole">Custom Product</p>
+            <p class="small">Use GFP as the intelligence core for another physical product. Encode its geometry, constraints, calculations and production logic into the same conversational architecture.</p>
           </div>
         </div>
-        <div class="pills"><span>NOW · GENERATE</span><span>NOW · REVISE</span><span>NOW · ENGINEER</span><span>NOW · PRICE</span><span>NOW · TENDER / PROCURE</span><span>NEXT · MANUFACTURER CATALOGUES</span></div>
       </div>
     </section>
+
+
 
     <section class="contractorband">
       <div class="wrap contractorgrid">
         <div>
           <p class="eyebrow">FOR ALUMINIUM CONTRACTORS</p>
-          <h2>From tender brief to engineered facade option.</h2>
-          <p class="contractlead">Coordinate geometry, visualisation, glass and aluminium quantities, wind checks and revisions before the conventional 5–6-person development chain completes its first option.</p>
-          <div class="heroacts"><a class="primary js-contact" href="#">Book a contractor demo</a><a class="contractquiet" href="#classroom" data-go="classroom">Open the live demo</a></div>
+          <h2>From tender brief to a coordinated facade option — before the redraw cycle is over.</h2>
+          <p class="contractlead">Geometry, visuals, quantities and wind checks live in one model. Change the design once; the rest follows.</p>
+          <div class="heroacts"><a class="primary js-contact" href="#">Book a contractor demo</a><a class="contractquiet" href="#classroom" data-go="classroom">Open Chat GFP</a></div>
         </div>
         <div class="contractproof">
           <div><b>01</b><span>Brief</span><small>floor stack · footprint · facade intent</small></div>
@@ -3881,7 +3925,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.165</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3920,7 +3964,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.165</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3940,7 +3984,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.165</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -9805,7 +9849,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }
   /* THE WIND (p1.038): streamlines drawn by code around the composer's
      real box, pressing it down to its dock */
-  var WIND={ built:false, base:[], run:[], tips:null, mesh:null, trails:[], seeds:[], raf:0, p:0, off:0,
+  var WIND={ built:false, base:[], run:[], buildBase:[], buildRun:[], buildWire:null, tips:null, mesh:null, trails:[], seeds:[], raf:0, p:0, off:0,
     allPillsHome:false, allPillsAway:true, pillsMoving:false };
   function resetWindToHero(){
     /* A navigation reset is not part of the wind animation. Clear both the
@@ -9830,6 +9874,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (layer){
       layer.style.opacity="0"; layer.dataset.prog="0.000";
       if(WIND.mesh){ WIND.mesh.setAttribute("d","M -20 -20"); WIND.mesh.setAttribute("stroke-opacity","0"); }
+      if(WIND.buildWire){ WIND.buildWire.setAttribute("d","M -20 -20"); WIND.buildWire.setAttribute("stroke-opacity","0"); }
+      for(var bi0=0;bi0<WIND.buildBase.length;bi0++){
+        WIND.buildBase[bi0].setAttribute("d","M -20 -20");
+        WIND.buildBase[bi0].setAttribute("stroke-opacity","0");
+        WIND.buildRun[bi0].setAttribute("d","M -20 -20");
+        WIND.buildRun[bi0].setAttribute("stroke-opacity","0");
+      }
       for(var ti=0;ti<WIND.trails.length;ti++){
         WIND.trails[ti].path.setAttribute("d","M -20 -20");
         WIND.trails[ti].path.setAttribute("stroke-opacity","0");
@@ -9876,6 +9927,18 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var b=document.createElementNS(SVGNS,"path"); b.setAttribute("class","wl-run"); l.appendChild(b); WIND.run.push(b);
       WIND.seeds.push({ t:(i+.5)/N, sp:.9+((i*37)%17)/17*1.1, ph:(i*53)%120 });
     }
+    /* p1.129: second copies of the SAME stream anchors. They are normally
+       invisible and cross-fade in only while the centre resolves as a building. */
+    WIND.buildBase=[]; WIND.buildRun=[];
+    for (i=0;i<N;i++){
+      var ba=document.createElementNS(SVGNS,"path"); ba.setAttribute("class","wl-building-base"); ba.setAttribute("stroke-opacity","0"); l.appendChild(ba); WIND.buildBase.push(ba);
+      var bb=document.createElementNS(SVGNS,"path"); bb.setAttribute("class","wl-building-run"); bb.setAttribute("stroke-dasharray","12 92"); bb.setAttribute("stroke-opacity","0"); l.appendChild(bb); WIND.buildRun.push(bb);
+    }
+    WIND.buildWire=document.createElementNS(SVGNS,"path");
+    WIND.buildWire.setAttribute("class","wl-building-wire");
+    WIND.buildWire.setAttribute("d","M -20 -20");
+    WIND.buildWire.setAttribute("stroke-opacity","0");
+    l.appendChild(WIND.buildWire);
     WIND.pock=[];
     for (i=0;i<2;i++){
       var pa=document.createElementNS(SVGNS,"path"); pa.setAttribute("class","wl-base"); l.appendChild(pa);
@@ -10284,6 +10347,307 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       WIND.run[i].setAttribute("d",d);
       WIND.run[i].setAttribute("stroke-dashoffset",String(-(WIND.off*WIND.seeds[i].sp+WIND.seeds[i].ph)));
     }
+
+    /* THE BUILDING IS THE WIND (p1.131).
+       The wind does not outline or flow around a separate object. A selected
+       set of the original stream paths itself becomes a clean two-point-
+       perspective rectangular tower. Only the three visible vertical edges
+       and the floor edges of the two visible faces are built: there is no
+       rear/hidden edge and no axonometric wire cage. Sky anchors and final
+       landing points stay exactly where the wind already had them. */
+    /* p1.160: the bend begins with the first constraints and takes twice as
+       long, so the lines are seen turning into the building rather than being
+       replaced by it - and it leaves a little more gently. */
+    /* p1.160: the throat decides WHEN, the scene decides HOW LONG. The moment
+       the hourglass is wide enough the building sets off, and from there it
+       takes a quarter of the scene to arrive - so the switch has a ramp of its
+       own instead of snapping with the throat. */
+    /* p1.161: the choreography. The building does not begin with the throat -
+       it begins after the pressure chip is home in the prompt line and the
+       other constraints are already on their way. */
+    if ((WIND.prS||0) < 0.04) WIND.bmStart=0;
+    if (!WIND.bmStart && WIND.gaugeTouched && (WIND.gaugeP||0) > 0.985 && (WIND.prS||0) > 0.10){
+      WIND.bmStart=(WIND.prS||0);
+    }
+    var bmIn=WIND.bmStart?smooth01(((WIND.prS||0)-WIND.bmStart)/0.26):0;
+    var bmOut=smooth01(((WIND.prS||0)-0.82)/0.16);
+    var buildingM=(!ob)?Math.max(0,Math.min(1,bmIn*(1-bmOut))):0;
+    l.dataset.building=buildingM.toFixed(3);
+    WIND.buildM=buildingM;   /* p1.160: the layer's strength reads it */
+
+    /* p1.129 had auxiliary building paths. They remain permanently dead. */
+    if (WIND.buildWire){ WIND.buildWire.setAttribute("d","M -20 -20"); WIND.buildWire.setAttribute("stroke-opacity","0"); }
+    if (WIND.buildBase){ for(var bxh=0;bxh<WIND.buildBase.length;bxh++){
+      WIND.buildBase[bxh].setAttribute("d","M -20 -20");
+      WIND.buildBase[bxh].setAttribute("stroke-opacity","0");
+      WIND.buildRun[bxh].setAttribute("d","M -20 -20");
+      WIND.buildRun[bxh].setAttribute("stroke-opacity","0");
+    } }
+
+    if (buildingM>.001){
+      var phoneB=onPhone();
+      var towerW=Math.min(phoneB?W*.58:W*.32, phoneB?285:465);
+      var nearX=cx+towerW*.11;                 /* closest vertical corner */
+      var leftX=nearX-towerW*.62;               /* visible left silhouette */
+      var rightX=nearX+towerW*.38;              /* visible right silhouette */
+      var nearTop=Math.max(phoneB?88:86,top*(phoneB?.16:.14));
+      var nearBase=Math.min(top-44,top*(phoneB?.86:.885));
+      if(nearBase-nearTop<(phoneB?300:410)) nearTop=Math.max(72,nearBase-(phoneB?300:410));
+      /* p1.135: add one extra regular floor. To keep the bay rhythm close to the
+         previous version, raise the tower slightly instead of only compressing
+         all floor heights inside the same envelope. */
+      var extraRegularFloorLift=(nearBase-nearTop)/(9+1.28);
+      nearTop=Math.max(phoneB?54:48, nearTop-extraRegularFloorLift);
+
+      /* A true two-point-perspective construction. Verticals stay vertical;
+         every horizontal floor edge converges to the same left/right horizon
+         points. The vanishing points are deliberately well outside the frame,
+         producing an architectural 3/4 view rather than a distorted diagram. */
+      var horizon=nearTop+(nearBase-nearTop)*(phoneB?.66:.64);
+      var vpL=-W*(phoneB?.95:1.18);
+      var vpR=W*(phoneB?1.90:2.10);
+      function bcl(v){ return Math.max(0,Math.min(1,v)); }
+      function fmt(v){ return Number(v).toFixed(1); }
+      function mix(a,b,m){ return a+(b-a)*m; }
+      function edgeY(x,vpX,yAtNear){
+        var den=nearX-vpX;
+        if(Math.abs(den)<1) return yAtNear;
+        return horizon+(yAtNear-horizon)*((x-vpX)/den);
+      }
+      function levelPtsAt(xL,xN,xR,yNear){
+        return [
+          [xL,edgeY(xL,vpL,yNear)],
+          [xN,yNear],
+          [xR,edgeY(xR,vpR,yNear)]
+        ];
+      }
+      function levelPts(yNear){ return levelPtsAt(leftX,nearX,rightX,yNear); }
+
+      var topPts=levelPts(nearTop), basePts=levelPts(nearBase);
+      var levels=[], levelNearYs=[];
+      var floorCount=11;
+      /* Give the first / ground floor a slightly taller bay while keeping the
+         rest of the tower calm and regular. This only shifts the lowest floor
+         line upward a little - no podium effect, just a clearer base. */
+      var floorWeights=[];
+      /* Levels are accumulated from TOP to BASE, so the ground / first floor
+         is the LAST interval, not the first one. Keep all upper floors equal
+         and make only the lowest bay slightly taller. */
+      for(var fw=0;fw<floorCount;fw++) floorWeights.push((fw===floorCount-1)?1.28:1);
+      var totalW=0;
+      for(var tw=0;tw<floorWeights.length;tw++) totalW+=floorWeights[tw];
+      var accW=0;
+      for(var fl=1;fl<floorCount;fl++){
+        accW+=floorWeights[fl-1];
+        var q=accW/totalW;
+        var yN=nearTop+(nearBase-nearTop)*q;
+        levelNearYs.push(yN);
+        levels.push(levelPts(yN));
+      }
+
+      /* p1.134: floor 3 (counted from the ground) stands back from the tower.
+         The change is expressed as a true setback in perspective rather than
+         by scaling the whole mass, so only that single floor becomes slimmer. */
+      var recessedFloor=3;
+      var recTopIdx=floorCount-recessedFloor-1;
+      var recBotIdx=recTopIdx+1;
+      var hasRecess=(recTopIdx>=0 && recBotIdx<levels.length);
+      var recLeftX=leftX+towerW*(phoneB?.060:.068);
+      var recNearX=nearX-towerW*(phoneB?.038:.045);
+      var recRightX=rightX-towerW*(phoneB?.046:.052);
+      function recessedPts(yNear){ return levelPtsAt(recLeftX,recNearX,recRightX,yNear); }
+      var recTopNormal=hasRecess?levels[recTopIdx]:null;
+      var recBotNormal=hasRecess?levels[recBotIdx]:null;
+      var recTopPts=hasRecess?recessedPts(levelNearYs[recTopIdx]):null;
+      var recBotPts=hasRecess?recessedPts(levelNearYs[recBotIdx]):null;
+
+      /* Visible geometry only:
+         - three vertical silhouette/corner lines
+         - top + ground edges
+         - floor edges across the two visible faces
+         No fourth/rear vertical, no rear roof rectangle, no hidden diagonals. */
+      /* Match each architectural stroke to a wind line on the same side of
+         the tower. A floor line is traced out and back along the same visible
+         edge so its sky tail and its landing tail never slash diagonally across
+         the building. The retraced geometry is visually one crisp edge. */
+      var leftPool=[],rightPool=[],centerIdx=0,centerDist=1e9;
+      for(var pi=0;pi<WIND.seeds.length;pi++){
+        var px0=W*(.05+.90*WIND.seeds[pi].t),pd=Math.abs(px0-nearX);
+        if(pd<centerDist){ centerDist=pd; centerIdx=pi; }
+        if(px0<nearX-8 && WIND.seeds[pi].t>.12) leftPool.push(pi);
+        if(px0>nearX+8 && WIND.seeds[pi].t<.88) rightPool.push(pi);
+      }
+      leftPool.sort(function(a,b){
+        var ax=W*(.05+.90*WIND.seeds[a].t), bx=W*(.05+.90*WIND.seeds[b].t);
+        return Math.abs(ax-leftX)-Math.abs(bx-leftX);
+      });
+      rightPool.sort(function(a,b){
+        var ax=W*(.05+.90*WIND.seeds[a].t), bx=W*(.05+.90*WIND.seeds[b].t);
+        return Math.abs(ax-rightX)-Math.abs(bx-rightX);
+      });
+      var li=0,ri=0,assign=[];
+      function traceFromLeft(pts){
+        var out=pts.slice();
+        for(var i=pts.length-2;i>=0;i--) out.push(pts[i]);
+        return out;
+      }
+      function traceFromRight(pts){
+        var out=pts.slice().reverse();
+        for(var i=1;i<pts.length;i++) out.push(pts[i]);
+        return out;
+      }
+      function takeLeft(pts){ if(li<leftPool.length) assign.push({idx:leftPool[li++],pts:pts}); }
+      function takeRight(pts){ if(ri<rightPool.length) assign.push({idx:rightPool[ri++],pts:pts}); }
+
+      if(hasRecess){
+        takeLeft([
+          [leftX,topPts[0][1]],
+          [leftX,recTopNormal[0][1]],
+          [recLeftX,recTopPts[0][1]],
+          [recLeftX,recBotPts[0][1]],
+          [leftX,recBotNormal[0][1]],
+          [leftX,basePts[0][1]]
+        ]);
+        takeRight([
+          [rightX,topPts[2][1]],
+          [rightX,recTopNormal[2][1]],
+          [recRightX,recTopPts[2][1]],
+          [recRightX,recBotPts[2][1]],
+          [rightX,recBotNormal[2][1]],
+          [rightX,basePts[2][1]]
+        ]);
+        assign.push({idx:centerIdx,pts:[
+          [nearX,nearTop],
+          [nearX,levelNearYs[recTopIdx]],
+          [recNearX,levelNearYs[recTopIdx]],
+          [recNearX,levelNearYs[recBotIdx]],
+          [nearX,levelNearYs[recBotIdx]],
+          [nearX,nearBase]
+        ]});
+      } else {
+        takeLeft([[leftX,topPts[0][1]],[leftX,basePts[0][1]]]);
+        takeRight([[rightX,topPts[2][1]],[rightX,basePts[2][1]]]);
+        assign.push({idx:centerIdx,pts:[[nearX,nearTop],[nearX,nearBase]]});
+      }
+      takeLeft(traceFromLeft(topPts));
+      takeRight(traceFromRight(basePts));
+      for(var lf=0;lf<levels.length;lf++){
+        var floorPts=levels[lf];
+        if(hasRecess && lf===recTopIdx){
+          floorPts=[recTopNormal[0],recTopPts[0],recTopPts[1],recTopPts[2],recTopNormal[2]];
+        } else if(hasRecess && lf===recBotIdx){
+          floorPts=[recBotNormal[0],recBotPts[0],recBotPts[1],recBotPts[2],recBotNormal[2]];
+        }
+        if(lf%2===0) takeLeft(traceFromLeft(floorPts));
+        else takeRight(traceFromRight(floorPts));
+      }
+
+      var used={};
+      function normalXAt(x0,endX,endY,y,wxB){
+        /* p1.160: the hourglass, not a straight run.
+           p1.160: and the lane's OWN hourglass, passed in by the caller. */
+        if (wxB===undefined) wxB=cx+(x0-cx)*(.20+.42*(WIND.widen||0));
+        var wyB=top*.55;
+        if (y<=wyB) return mix(x0,wxB,smooth01(bcl((y+30)/Math.max(1,wyB+30))));
+        return mix(wxB,endX,smooth01(bcl((y-wyB)/Math.max(1,endY-wyB))));
+      }
+      function routedPath(idx,targetPts){
+        var bt=WIND.seeds[idx].t, x0=W*(.05+.90*bt), brel=x0-cx;
+        var bInner=Math.abs(brel)<half*.86;
+        var bxt=cx+brel*.86;
+        var bsg=brel<0?-1:1;
+        var bk=Math.min(1,Math.max(0,(Math.abs(brel)-half*.86)/(W*.28)));
+        var bxe=cx+bsg*(half+14+34*bk);
+        var bye=top+r.height*.58+26*bk;
+        var endX=bInner?bxt:bxe, endY=bInner?(top-11):bye;
+        var pts=[];
+        for(var q=0;q<targetPts.length;q++){
+          var tx=targetPts[q][0], ty=targetPts[q][1];
+          var nx=normalXAt(x0,endX,endY,ty);
+          pts.push([mix(nx,tx,buildingM),ty]);
+        }
+        /* p1.160: the lane's own waist - an outer lane squeezes only to
+           .34+.34, an inner one to .20+.42; without this an outer lane snapped
+           from its flank bend to a straight rod the moment it was taken. */
+        var wxOwn=cx+brel*(bInner?(.20+.42*(WIND.widen||0)):(.34+.34*(WIND.widen||0)));
+        var dense=[];
+        for(var qd=0;qd<pts.length-1;qd++){
+          var A=pts[qd], B=pts[qd+1], N=8;
+          for(var kd=0;kd<N;kd++){
+            var fd=kd/N;
+            var yD=A[1]+(B[1]-A[1])*fd;
+            var xStraight=A[0]+(B[0]-A[0])*fd;
+            /* p1.160: no dead straight rods. The line stays on the building at
+               its own nodes - the floors and the corners - and keeps a breath
+               of its own curve between them, so what stands there is a broken
+               curve rather than a stick. */
+            /* p1.160: the bow belongs to the MORPH, not to the finished
+               building. It is strongest while the line is still turning and
+               gone by the time the building stands, so the built edges are
+               straight segments, as they should be. */
+            var wD=1-0.17*Math.sin(Math.PI*fd)*(1-buildingM);
+            dense.push([ mix(normalXAt(x0,endX,endY,yD,wxOwn), xStraight, buildingM*wD), yD ]);
+          }
+        }
+        dense.push(pts[pts.length-1]);
+        pts=dense;
+        var p0=pts[0], pn=pts[pts.length-1];
+        var dB="M "+fmt(x0)+" -30";
+        var c1y=Math.max(0,p0[1]*.34), c2y=Math.max(0,p0[1]*.72);
+        dB+=" C "+fmt(x0)+" "+fmt(c1y)+", "+fmt(p0[0])+" "+fmt(c2y)+", "+fmt(p0[0])+" "+fmt(p0[1]);
+        for(var qq=1;qq<pts.length;qq++) dB+=" L "+fmt(pts[qq][0])+" "+fmt(pts[qq][1]);
+        var leaveY=Math.min(endY-18,pn[1]+Math.max(22,(endY-pn[1])*.42));
+        dB+=" C "+fmt(pn[0])+" "+fmt(leaveY)+", "+fmt(endX)+" "+fmt(endY-30)+", "+fmt(endX)+" "+fmt(endY);
+        return dB;
+      }
+
+      if (WIND.buildWire){
+        var wireD="", sMull=15, sSide=9, sq;   /* p1.160: more of them, finer */
+        for (sq=1; sq<sMull; sq++){
+          var xw1=leftX+(nearX-leftX)*(sq/sMull);
+          wireD+="M "+fmt(xw1)+" "+fmt(edgeY(xw1,vpL,nearTop))+" L "+fmt(xw1)+" "+fmt(edgeY(xw1,vpL,nearBase));
+        }
+        for (sq=1; sq<sSide; sq++){
+          var xw2=nearX+(rightX-nearX)*(sq/sSide);
+          wireD+="M "+fmt(xw2)+" "+fmt(edgeY(xw2,vpR,nearTop))+" L "+fmt(xw2)+" "+fmt(edgeY(xw2,vpR,nearBase));
+        }
+        WIND.buildWire.setAttribute("d", wireD);
+        WIND.buildWire.setAttribute("stroke-opacity", (0.16*buildingM).toFixed(3));
+        WIND.buildWire.setAttribute("stroke-width", "0.8");
+      }
+      for(var br=0;br<assign.length;br++){
+        var idx=assign[br].idx;
+        if(idx<0 || idx>=WIND.seeds.length || used[idx]) continue;
+        used[idx]=1;
+        var pathB=routedPath(idx,assign[br].pts);
+        WIND.base[idx].setAttribute("d",pathB);
+        WIND.run[idx].setAttribute("d",pathB);
+        WIND.run[idx].setAttribute("stroke-dashoffset",String(-(WIND.off*WIND.seeds[idx].sp+WIND.seeds[idx].ph)));
+      }
+
+      /* Perspective lines become the visual subject; untouched streams recede
+         but remain visible enough to preserve the wind-to-building continuity. */
+      for(var bo=0;bo<WIND.base.length;bo++){
+        if(used[bo]){
+          WIND.base[bo].style.strokeOpacity=(.16+.10*buildingM).toFixed(3);
+          WIND.run[bo].style.strokeOpacity=(.46+.10*buildingM).toFixed(3);
+          WIND.run[bo].style.strokeWidth="1";   /* p1.160: exactly the wind's own line */
+        } else {
+          WIND.base[bo].style.strokeOpacity=(.16*(1-.66*buildingM)).toFixed(3);
+          WIND.run[bo].style.strokeOpacity=(.46*(1-.66*buildingM)).toFixed(3);
+          WIND.run[bo].style.strokeWidth="1";
+        }
+      }
+      if(WIND.tips) WIND.tips.style.strokeOpacity=(.55*(1-.72*buildingM)).toFixed(3);
+    } else {
+      for(var bro=0;bro<WIND.base.length;bro++){
+        WIND.base[bro].style.strokeOpacity=".16";
+        WIND.run[bro].style.strokeOpacity=".46";
+        WIND.run[bro].style.strokeWidth="1";
+      }
+      if(WIND.tips) WIND.tips.style.strokeOpacity=".55";
+    }
+
     /* THE LOW-PRESSURE POCKETS (p1.061): the blob lives BETWEEN LINE AND
        LINE - the widest gap between two adjacent stream lines on one side
        of the text earns an enclosed softly-curved pocket; where the pair
@@ -10383,8 +10747,45 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     l.dataset.hug=String(hug);
     WIND.tips.setAttribute("d",tips);
   }
+  function meetSay(prog){
+    var box=$("meetsay");
+    if (!box) return;
+    var back=smooth01((prog-0.34)/0.30);
+    /* p1.164: WIND.lastP belongs to another engine and is always 0 here, so the
+       thought never left - it rode all the way onto the blue. Its exit is the
+       scene's own progress: gone well before the prompt is sent. */
+    var out=smooth01((prog-0.56)/0.16);
+    var vis=(prog>0.002?1:0)*(1-out);
+    box.style.opacity=String((vis*(1-0.82*back)).toFixed(3));
+    box.style.transform="translateY("+(-18*back).toFixed(1)+"px)";
+    var line=function(el, from, span){
+      var e=$(el); if (!e) return;
+      var k=smooth01((prog-from)/span);
+      e.style.opacity=String(k.toFixed(3));
+      e.style.transform="translateY("+(14*(1-k)).toFixed(1)+"px)";
+      e.style.filter="blur("+(3*(1-k)).toFixed(2)+"px)";
+    };
+    line("meetsay-a", 0.005, 0.05);
+    line("meetsay-b", 0.05,  0.06);
+    line("meetsay-c", 0.13,  0.08);
+  }
   function windTick(){
     WIND.raf=0;
+    (function(){
+      /* above the scene the hand-over forgets everything, or the second walk
+         down finds the chat already done and the page stops at the pin */
+      var wlR=document.getElementById("windlayer");
+      var prR=wlR?(+wlR.dataset.prog||0):0;
+      if (prR > 0.04){ WIND._armed=1; return; }
+      if (!WIND._armed) return;
+      WIND._armed=0;
+      if (typeof PILL_GATE==="object"){ PILL_GATE.homeSince=0; PILL_GATE.reverseHoldCap=0; }
+      if (typeof CHAT_RECEIVE==="object"){
+        CHAT_RECEIVE.done=false; CHAT_RECEIVE.active=false; CHAT_RECEIVE.phase=0;
+        CHAT_RECEIVE.holdUntil=0; CHAT_RECEIVE.holdY=null; CHAT_RECEIVE.tailCap=0;
+      }
+      if (typeof CHAT_HANDOFF==="object"){ CHAT_HANDOFF.active=false; CHAT_HANDOFF.phase=0; }
+    })();
     if (WIND.p<=0 && !WIND.pillsMoving && typeof PILL_GATE.progress!=="number") return;
     WIND.off+=2.6;
     /* p1.106: every frame the scene creeps toward the scroll's target */
@@ -10927,15 +11328,17 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     else if (pEff > WIND.p) WIND.p=pEff;
     var dim=1-0.55*smooth01((prM-0.30)/0.22);   /* less shiny, still curvy */
     WIND.labelForce=pEff*.95*dim;   /* exactly the strength the viewer can see in the wind field */
-    l.style.opacity=String((pEff*.95*dim).toFixed(3));
+    /* p1.160: while the building stands, the sheet does not dilute it */
+    l.style.opacity=String(Math.min(1,pEff*.95*dim*1.25).toFixed(3));   /* p1.162: every line a quarter stronger */
     l.dataset.prog=prM.toFixed(3);
+    meetSay(prM);
     if (m){
       /* THE GAUGE: it is now the first member of the same timeline. There is
          no independent entrance progress and no second direction decision. */
       var eP=Math.max(0,Math.min(1,prM/0.10));
       var ent=smooth01(eP);
       var g=Math.max(0, Math.min(1, (prM-0.06)/0.44));
-      WIND.widen=smooth01(g);   /* the throat opens with the same progress */
+      WIND.widen=smooth01(Math.min(1,g*1.55));   /* p1.160: the throat opens faster */   /* the throat opens with the same progress */
       WIND.g=g;
       var dyM=0;
       var mi2=m.querySelector(".wm-i");
@@ -11056,6 +11459,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (!PILL_GATE.homeSince) PILL_GATE.homeSince=homeNow;
       if (homeNow-PILL_GATE.homeSince < 380) return;
       PILL_GATE.finishForward();
+      if (typeof CHAT_RECEIVE === "object"){
+        var scrQ=document.getElementById("scr-home");
+        CHAT_RECEIVE.holdY=scrQ?scrQ.scrollTop:0;
+        CHAT_RECEIVE.holdUntil=((window.performance&&performance.now)?performance.now():Date.now())+700;
+        CHAT_RECEIVE.tailCap=0;
+      }
       return;
     }
     /* Reverse completion is animation-driven. Do not leave an empty cream
@@ -12993,6 +13402,17 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     b.addEventListener("click",function(e){ e.stopPropagation(); e.preventDefault(); open(i); });
     pill.appendChild(b);
   });
+  var layerB=document.getElementById("pilllayer");
+  if (layerB){
+    [].slice.call(layerB.querySelectorAll(".wind-pill")).forEach(function(pill,bi){
+      if (pill.querySelector(".pill-b")) return;
+      var b=document.createElement("button");
+      b.type="button"; b.className="pill-b"; b.textContent="i";
+      b.setAttribute("aria-label","About this constraint");
+      b.addEventListener("click",function(e){ e.stopPropagation(); e.preventDefault(); open(bi); });
+      pill.appendChild(b);
+    });
+  }
   document.getElementById("pc-x").addEventListener("click",close);
   document.getElementById("pc-prev").addEventListener("click",function(){ step(-1); });
   document.getElementById("pc-next").addEventListener("click",function(){ step(1); });
@@ -13037,6 +13457,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }, {passive:false});
   /* p1.126: the same for a finger. On a phone the line covers the middle of
      the screen, so most swipes land on it and the page never moved. */
+  scr.addEventListener("wheel", function(e){
+    if (e.defaultPrevented) return;
+    if (!onLine(e.target)) return;
+    var before=scr.scrollTop;
+    scr.scrollTop=before+e.deltaY;
+    if (scr.scrollTop!==before) e.preventDefault();
+  }, {passive:false});
   var tY=null;
   scr.addEventListener("touchstart", function(e){
     tY=(e.touches && e.touches.length===1 && onLine(e.target))?e.touches[0].clientY:null;
