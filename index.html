@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.126 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.127 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3881,7 +3881,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3920,7 +3920,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3940,7 +3940,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.127</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -9292,9 +9292,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       /* Sending and receiving are one chat beat. Once the sent prompt has
          settled, start the reply clock here; do not ask for another scroll
          gesture merely to move from "sent" to "typing". */
-      if (!CHAT_RECEIVE.active && !CHAT_RECEIVE.done && CHAT_HANDOFF.phase>=1 && pinP>=.58){
+      if (!CHAT_RECEIVE.active && !CHAT_RECEIVE.done && CHAT_HANDOFF.phase>=1 && pinP>=.16){
         startChatReceive(st,pinP,vh);
-      } else if (!CHAT_RECEIVE.active && CHAT_RECEIVE.done && pinP<.48){
+      } else if (!CHAT_RECEIVE.active && CHAT_RECEIVE.done && pinP<.08){
         CHAT_RECEIVE.done=false;
         CHAT_RECEIVE.phase=0;
       }
@@ -9333,7 +9333,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var x0=Math.max(baseX,receivedW)*out;
     /* Scroll only chooses the exchange. Forward changes then run on their
        own clock: question, assistant identity, typing bubble, received card. */
-    var targetSlide=pinP<1.20?0:(pinP<1.80?1:2);
+    var targetSlide=pinP<0.80?0:(pinP<1.30?1:2);   /* p1.127: one scale for the three */
     var sceneState=pdChatScene(targetSlide,storyScroll);
     var phase=sceneState.phase;
     var sceneP=[0,0,0];
