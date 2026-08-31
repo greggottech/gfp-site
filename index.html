@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.125 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.126 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -3881,7 +3881,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -3920,7 +3920,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -3940,7 +3940,7 @@ header .bar nav a.nav-try:hover,header .bar nav a.nav-try.here{
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.125</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.126</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10917,7 +10917,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var forwardTail=WIND.prS>=0.999 && WIND.allPillsHome!==true &&
       (PILL_GATE.progress===1 || WIND.landed===true);
     var reverseTail=PILL_GATE.progress===0 && WIND.prS<=0.0004 && Math.abs(WIND.travelV||0)<0.0000001;
-    var settleFloor=forwardTail?Math.max(0.06,WIND.motionTempo*pillForwardSpeed()):(reverseTail?0.65:0.06);
+    var settleFloor=forwardTail?Math.max(0.06,WIND.motionTempo*pillForwardSpeed()):(reverseTail?0.65:(PILL_TOUCH?0.26:0.06));
     WIND.travelFactor=Math.max(settleFloor,Math.min(PILL_REVERSE_SPEED,Math.abs(WIND.travelV||0)/PILL_PROGRESS_PER_MS));
     prM=WIND.prS;
     var reverseGate=PILL_GATE.progress===0;
@@ -11309,6 +11309,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     scr.addEventListener("touchmove",function(e){
       if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
       var y=e.touches[0].clientY, delta=(PILL_GATE.touchY-y)*1.9;   /* p1.125 */
+      if (delta) feedPillTempo(delta);   /* p1.126: the pinned scene must still hear the swipe */
       blockDelta(delta,e); PILL_GATE.touchY=y;
     },{passive:false});
     scr.addEventListener("touchend",function(){ PILL_GATE.touchY=null; },{passive:true});
@@ -13023,14 +13024,34 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 (function(){
   var scr=document.getElementById("scr-home");
   if (!scr) return;
+  function onLine(t){
+    var deck=document.getElementById("deck");
+    return !!(deck && t && deck.contains(t));
+  }
   scr.addEventListener("wheel", function(e){
     if (e.defaultPrevented) return;
-    var deck=document.getElementById("deck");
-    if (!deck || !e.target || !deck.contains(e.target)) return;
+    if (!onLine(e.target)) return;
     var before=scr.scrollTop;
     scr.scrollTop=before+e.deltaY;
     if (scr.scrollTop!==before) e.preventDefault();
   }, {passive:false});
+  /* p1.126: the same for a finger. On a phone the line covers the middle of
+     the screen, so most swipes land on it and the page never moved. */
+  var tY=null;
+  scr.addEventListener("touchstart", function(e){
+    tY=(e.touches && e.touches.length===1 && onLine(e.target))?e.touches[0].clientY:null;
+  }, {passive:true});
+  scr.addEventListener("touchmove", function(e){
+    if (tY===null || e.defaultPrevented || !e.touches || e.touches.length!==1) return;
+    var y=e.touches[0].clientY, d=tY-y; tY=y;
+    if (!d) return;
+    var before=scr.scrollTop;
+    scr.scrollTop=before+d;
+    if (scr.scrollTop!==before && e.cancelable) e.preventDefault();
+  }, {passive:false});
+  function endTouch(){ tY=null; }
+  scr.addEventListener("touchend", endTouch, {passive:true});
+  scr.addEventListener("touchcancel", endTouch, {passive:true});
 })();
 </script>
 
