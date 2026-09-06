@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.160 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.506 (v85 unbroken base + compact full-width mobile facade reply + top-aligned mobile chat + contextual next controls + continuous blue exit + the idle nudge + the count dies with the prompt + the phone side line) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -25,7 +25,7 @@ var GFP_TRIAL_URL = "https://app.globalfacade.ai";  /* the ENGINE address;
 </script>
 <style>
 /* ==================================================================================
-   Global Facade Project - showcase stylesheet (p1.349)
+   Global Facade Project - showcase stylesheet (p1.506)
    Refactored from p1.267 with a proof of the cascade, not a minifier:
    - dead rules removed (classes that exist nowhere in the HTML/JS), the legacy reveal block cut with its HTML/JS
    - duplicate selector blocks merged per property, only where no rule between them declares that property
@@ -639,6 +639,24 @@ header .bar nav a.nav-try::before {
     height: 38vh;
   }
 }
+/* p1.506 THE SIDE LINE (his: "in mobile the scroll line is not appreciated - it has to be
+   the most standard side line"): on a phone the page bar is a plain scrollbar. One thin
+   rounded thumb at the right edge, running the full height of the screen, its length the
+   share of the page in view; it shows while the page moves and fades at rest. No ticks,
+   no dot, no fill - those stay for the wide screen. */
+#pagebar.pb-side {
+  right: 3px; top: 4px; bottom: calc(4px + env(safe-area-inset-bottom));
+  height: auto; width: 3px; transform: none; background: transparent; border-radius: 2px;
+  opacity: 0; transition: opacity .45s ease .1s;
+}
+#pagebar.pb-side.pb-live { opacity: 1; transition: opacity .12s ease; }
+#pagebar.pb-side #pagebar-fill, #pagebar.pb-side .pb-tick { display: none; }
+#pagebar.pb-side #pagebar-dot {
+  left: 0; top: 0; width: 100%; height: 40px; border-radius: 2px;
+  background: rgba(17, 18, 20, 0.34); box-shadow: none; transform: none; transition: none;
+}
+#pagebar.pb-side.pb-strain #pagebar-dot { transform: none; }
+#pagebar.pb-side.pb-blue #pagebar-dot { background: rgba(255, 255, 255, 0.62); box-shadow: none; }
 /*   ========== Home hero ==========   */
 .hero {
   display: grid;
@@ -934,6 +952,9 @@ header .bar nav a.nav-try {
     width: 94vw;
   }
 }
+.hero-statement.gfp-handoff .hero-reflect::after {
+  content: none !important;   /* the mirror belongs to the hero pose only - it expires with it */
+}
 .hero-reflect::after {
   background: linear-gradient(
     to bottom,
@@ -994,6 +1015,10 @@ header .bar nav a.nav-try {
 .hero-context-copy {
   margin: 0;
   font-size: clamp(19px, 1.48vw, 25px);
+}
+/* p1.350: the closing line of the hero copy stands on its own */
+.hero-context-close {
+  margin-top: clamp(12px, 1.1vw, 18px);
 }
 .hero-context-kicker {
   color: rgba(17, 18, 20, 0.46);
@@ -2039,7 +2064,343 @@ body.skeleton #skel { display: block; }
   opacity: 0;
   pointer-events: none;
 }
-/* p1.327 THE CORE: the engine's circular scheme, white on the blue */
+/* p1.388 THE SECOND TECH BLOCK: beside the line on a wide screen, under the first
+   tech block on a phone. It belongs to the second screen, so it starts hidden. */
+#herotech2 {
+  opacity: 0;
+  will-change: opacity;
+}
+/* p1.429 THE PRESS (his: "at this stage make a short pause and emulate the animation
+   of a hit on the send arrow"): the page sends the example itself, so the send button
+   is shown being pressed - a beat of stillness, then the press, then the answer. */
+#deckgo.gfp-hit {
+  position: relative;   /* p1.501 (his: "a circle appearing at the edge of the scenes"): the ring was anchored to the box, not the button */
+  animation: gfphit .42s cubic-bezier(.3,.7,.3,1) 1;
+}
+#deckgo.gfp-hit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+  opacity: .55;
+  animation: gfpring .55s ease-out 1;
+  pointer-events: none;
+}
+@keyframes gfphit {
+  0%   { transform: scale(1); }
+  38%  { transform: scale(0.82); }
+  100% { transform: scale(1); }
+}
+@keyframes gfpring {
+  0%   { width: 8px; height: 8px; margin: -4px 0 0 -4px; opacity: .5; }
+  100% { width: 46px; height: 46px; margin: -23px 0 0 -23px; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #deckgo.gfp-hit, #deckgo.gfp-hit::after { animation: none; }
+}
+/* p1.445 THE SECOND QUESTION (his: "add a second question - the distance from mullion
+   to mullion - and the choice is not a questionnaire but a slider from 300 mm to 1500 mm;
+   above the prompt a 3D model of two mullions that move apart and together; the answer
+   is 1400; all automatic"). */
+#gfpask2 {
+  position: fixed; left: 0; top: 0; z-index: 62; opacity: 0; pointer-events: none; text-align: left;
+}
+#gfpask2 .ask-kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; color: var(--gfp-ink); opacity: 0; margin: 0 0 6px; }
+#gfpask2 .ask-q { font-family: var(--font-sans); font-size: clamp(15px, 1.05vw, 18px); line-height: 1.4; letter-spacing: 0; color: var(--gfp-ink); opacity: 0; margin: 0 0 16px; }
+#gfpask2 .sl { position: relative; height: 34px; opacity: 0; }
+#gfpask2 .sl-track { position: absolute; left: 0; right: 34px; top: 16px; height: 1.5px; background: rgba(20,20,20,.28); }
+/* p1.482 (his: "the approval thingy is missing"): the same filled mark with a check as the
+   chosen answer above, at the end of the slider once the handle has reached the answer */
+#gfpask2 .sl-ok { position: absolute; right: 0; top: 9px; width: 16px; height: 16px; border-radius: 999px; background: var(--gfp-ink); background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M3.6 7.3l2.2 2.2 4.6-4.8' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-size: 100% 100%; opacity: 0; transform: scale(.7); transition: opacity .3s ease, transform .35s cubic-bezier(.2,.8,.3,1.2); }
+#gfpask2 .sl-ok.on { opacity: 1; transform: scale(1); }
+#gfpask2 .sl-fill { position: absolute; left: 0; top: 16px; height: 1.5px; width: 0; background: rgba(20,20,20,.9); }
+#gfpask2 .sl-knob { position: absolute; top: 9px; left: 0; width: 16px; height: 16px; margin-left: -8px; border-radius: 999px; background: #fff; border: 1.5px solid rgba(20,20,20,.9); box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+#gfpask2 .sl-min, #gfpask2 .sl-max, #gfpask2 .sl-val { position: absolute; top: 24px; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0; color: var(--gfp-ink); opacity: .75; }
+#gfpask2 .sl-min { left: 0; } #gfpask2 .sl-max { right: 34px; }
+#gfpask2 .sl-val { top: -16px; margin-left: -22px; font-size: 13px; opacity: 1; }
+/* p1.452 THE FRAME (his mark-up: "a small outline so it all reads together"): one thin
+   rounded line around the prompt box and the exchange under it, so the two are one thing. */
+#gfpframe {
+  position: fixed; left: 0; top: 0; z-index: 60; opacity: 0; pointer-events: none;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  border-radius: 26px;
+  box-sizing: border-box;
+}
+/* p1.462 THE COUNT (his: "after the answer, nail a +1 to the prompt - the prompt has
+   received more information; after the mullions it is +2"). A small dark mark at the end
+   of the written prompt, counting what the exchange has added to it. */
+#gfpplus {
+  /* p1.463 (his: "neater - smaller and not that heavy black"): a quiet grey mark */
+  position: fixed; left: 0; top: 0; z-index: 63; opacity: 0; pointer-events: none;
+  font-family: var(--font-sans); font-size: 10.5px; line-height: 1; font-weight: 500; letter-spacing: .02em;
+  color: rgba(20, 20, 20, 0.72); background: rgba(20, 20, 20, 0.08); border-radius: 999px; padding: 3px 6px;
+  transform: translateY(-1px) scale(.85); transition: transform .35s cubic-bezier(.2,.8,.3,1.2), opacity .3s ease;
+}
+#gfpplus.on { opacity: 1; transform: translateY(-1px) scale(1); }
+#gfpplus.in-box { position: absolute; left: auto; right: 56px; top: 14px; z-index: 3; }
+#deck .composer:has(> #gfpplus.in-box), #deck .composer:has(> #gfpshine) { position: relative; }
+/* p1.467 THE FORK (his: "turn this scene into a fork or a continuation of the intro:
+   first time - recommended, or try this prompt - go to Try"). The calm scene with the
+   risen box becomes the place to choose. */
+#gfpfork { position: fixed; left: 0; top: 0; z-index: 62; opacity: 0; pointer-events: none; }
+#gfpfork.on { pointer-events: auto; }
+/* p1.469 (his: "this part more centred, like the first Claude appearance - serif text and
+   the logo on the side"): the greeting stands centred over the box, in the site's serif,
+   with the mark beside it. */
+#gfpfork .fk-head { display: flex; align-items: center; justify-content: center; gap: 26px; margin-bottom: 18px; text-align: left; }
+#gfpfork .fk-mark { font-family: var(--font-sans); font-size: 11px; line-height: 1.15; letter-spacing: .14em; color: rgba(20,20,20,.62); white-space: pre; }
+#gfpfork .fk-title { font-family: var(--font-serif); font-weight: 400; font-size: clamp(26px, 2.4vw, 38px); line-height: 1.15; letter-spacing: -.02em; color: var(--gfp-ink); margin: 0; }
+/* p1.468 (his: "the question regarding the demo styled as a standard questionnaire"):
+   the same quiet list as the first question - rows under a hairline, a hollow mark - but
+   these rows are live and can be chosen by hand. */
+#gfpfork .fk-q { font-family: var(--font-sans); font-size: clamp(15px, 1.05vw, 18px); line-height: 1.4; color: var(--gfp-ink); margin: 0 0 10px; }
+/* p1.484 (his: "more minimalist - spread the two options, no question, just concise
+   options") */
+#gfpfork .fk-row { display: flex; flex-direction: row; justify-content: space-between; gap: 40px; border-top: 0; padding-top: 0; }
+/* p1.488 (his: "in mobile the options one after the other") */
+@media (max-width: 760px) { #gfpfork .fk-row { flex-direction: column; gap: 4px; } #gfpfork .fk-opt { white-space: normal; } }
+#gfpfork .fk-opt { display: flex; align-items: center; gap: 12px; font-family: var(--font-sans); font-size: clamp(14px, 1.05vw, 17px); line-height: 1.35; color: var(--gfp-ink); padding: 9px 0; border-bottom: 0; text-decoration: none; cursor: pointer; white-space: nowrap; }
+#gfpfork .fk-opt::before { content: ""; flex: 0 0 auto; width: 14px; height: 14px; border-radius: 999px; border: 1.5px solid rgba(20,20,20,.55); box-sizing: border-box; transition: background-color .2s ease; }
+#gfpfork .fk-opt:hover::before { background: rgba(20,20,20,.18); }
+#gfpfork .fk-opt small { font-size: .82em; color: rgba(20,20,20,.5); margin-left: 4px; }
+/* p1.500 THE SHINE (his: "a gleam on the text and on the prompt box, like a new car,
+   when we land on this scene"): one pass of light, left to right, over the greeting and
+   over the box, the moment the scene arrives. */
+#gfpfork .fk-title.shine {
+  background: linear-gradient(105deg, var(--gfp-ink) 0%, var(--gfp-ink) 38%, rgba(20,20,20,.42) 50%, var(--gfp-ink) 62%, var(--gfp-ink) 100%);   /* p1.501: a soft lift, not a flash */
+  background-size: 260% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: gfpshinetext 1.9s cubic-bezier(.4,.1,.3,1) 1;
+}
+@keyframes gfpshinetext { 0% { background-position: 120% 0; } 100% { background-position: -40% 0; } }
+#gfpshine {
+  position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; z-index: 4; opacity: 0;
+}
+#gfpshine::before {
+  content: ""; position: absolute; top: -40%; bottom: -40%; width: 38%; left: -50%;
+  /* the box is white, so the gleam is a cool reflection rather than a white band */
+  background: linear-gradient(100deg, rgba(196,210,238,0) 0%, rgba(196,210,238,.28) 50%, rgba(196,210,238,0) 100%);
+  mix-blend-mode: multiply;
+  transform: skewX(-18deg);
+}
+#gfpshine.on { opacity: 1; }
+#gfpshine.on::before { animation: gfpshinebox 1.8s cubic-bezier(.4,.1,.3,1) 1 forwards; }
+@keyframes gfpshinebox { 0% { left: -50%; } 100% { left: 130%; } }
+@media (prefers-reduced-motion: reduce) { #gfpfork .fk-title.shine, #gfpshine.on::before { animation: none; } }
+/* the cookie panel, shown in the same scene */
+#gfpcookies {
+  /* p1.468 (his: "cookies as a modest strip, transparent glass, plain tech text, modest
+     buttons"): one strip across the foot of the page */
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 64; opacity: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding: 10px 28px; border-top: 1px solid rgba(20,20,20,.12);
+  background: rgba(255,255,255,.42); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  font-family: var(--font-sans); font-size: 12.5px; letter-spacing: .01em; color: rgba(20,20,20,.78);
+  transform: translateY(6px); transition: opacity .35s ease, transform .35s ease; }
+#gfpcookies.on { opacity: 1; pointer-events: auto; transform: none; }
+#gfpcookies .ck-btns { display: flex; gap: 8px; flex: 0 0 auto; }
+#gfpcookies button { font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 999px; background: transparent; color: var(--gfp-ink); border: 1px solid rgba(20,20,20,.55); cursor: pointer; }
+#gfpcookies button.alt { border-color: rgba(20,20,20,.22); color: rgba(20,20,20,.7); }
+#gfpcookies button:hover { background: rgba(20,20,20,.06); }
+@media (max-width: 760px) { #gfpcookies { flex-wrap: wrap; padding: 10px 16px; } }
+#gfpmull { position: fixed; left: 0; top: 0; z-index: 61; opacity: 0; pointer-events: none; overflow: visible; }
+#gfpmull path, #gfpmull line, #gfpmull rect { fill: none; stroke: var(--gfp-ink); stroke-linejoin: round; stroke-linecap: round; }
+@media (prefers-reduced-motion: reduce) { #gfpask2, #gfpmull { display: none; } }
+/* p1.505 THE NUDGE (his: "add a swipe-down, very subtle animation if the user does not
+   understand what to do during the intro"). Every beat of the intro ends in a stop that
+   waits for a gesture, and a first visitor may not know that. When a stop has stood
+   untouched for a while - the hero, or any stop of the exchange - a small chevron sinks
+   and fades near the foot of the screen, with the word for the gesture this device
+   knows. Any gesture puts it away; a stop shows it once. It never stands on anything:
+   where the composer is docked at the foot (phones), it steps up above it. */
+#gfphint {
+  position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); top: auto;
+  z-index: 63; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  pointer-events: none; opacity: 0; transition: opacity 1.2s ease;
+  color: var(--gfp-ink);
+}
+#gfphint.on { opacity: 1; }
+#gfphint span { font-family: var(--font-mono); font-size: var(--gfp-micro); letter-spacing: .16em; text-transform: uppercase; color: rgba(17,18,20,.4); line-height: 1; }
+#gfphint svg { display: block; overflow: visible; opacity: .5; }
+#gfphint svg polyline { fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+#gfphint.on svg { animation: gfphintsink 2.8s cubic-bezier(.45,.05,.4,1) infinite; }
+@keyframes gfphintsink { 0% { transform: translateY(-7px); opacity: 0; } 35% { opacity: .55; } 70% { opacity: .5; } 100% { transform: translateY(7px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #gfphint.on svg { animation: none; } }
+/* p1.423 THE POINTER (his: "put a small triangle near this text that points at the
+   first line; when the prompt is written it drops to the second; when the question
+   appears it drops to the third"). It is the reader's place in the three steps. */
+.hero-tech2 {
+  position: relative;
+}
+.hero-tech2 .tl {
+  display: block;
+  font-weight: inherit;
+}
+/* p1.446: two sentences with a small gap between them */
+.hero-tech2 .tl-2 { margin-top: 0.55em; }
+.hero-tech2 .tech-tri {
+  position: absolute;
+  left: -22px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 9px solid var(--gfp-ink);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .4s ease;
+}
+@media (max-width: 760px) {
+  /* p1.504 (his: "the triangle on mobile is too close to the edge"): it stands inside the
+     block, and the block keeps room for it */
+  .hero-tech2 { padding-left: 22px; padding-right: 22px; }
+  .hero-tech2 .tech-tri { left: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-tech2 .tech-tri { transition: none; }
+}
+/* p1.420 THE AUTOMATIC EXCHANGE (his: "we add an animation with an automatic
+   follow-up question about the prompt, and an automatic answer - all animated, no
+   hands"). It plays under the composer once the example has finished writing: the
+   building asks one thing, three answers appear, one of them lights up and is taken.
+   Nothing here is clickable - it is a demonstration, not a control. */
+#gfpask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 62;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+}
+#gfpask .ask-kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--gfp-ink);
+  opacity: 0;
+  margin: 0 0 6px;
+}
+#gfpask .ask-q {
+  /* p1.454 (his: "too many fonts - make the scene neater"): the exchange speaks in the
+     same sans as the box and the tech copy, at their size. One family on the screen. */
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.05vw, 18px);
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--gfp-ink);
+  opacity: 0;
+  margin: 0 0 14px;
+}
+#gfpask .ask-row {
+  /* p1.455 (his: "the pills are nice but not professional - what is your suggestion for a
+     high-quality experience?"): a quiet, typographic list. Three rows of plain text under
+     a hairline, each with a small hollow mark; the chosen one gets a filled mark with a
+     check, the others step back to grey. No pills, no boxes - the words carry it. */
+  display: flex;
+  flex-direction: column;
+  border-top: 0;   /* p1.490 (his: "no stripes needed") */
+  margin-top: 6px;
+}
+#gfpask .ask-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 1vw, 17px);
+  line-height: 1.35;
+  color: var(--gfp-ink);
+  padding: 8px 0;
+  border-bottom: 0;
+  opacity: 0;
+  transition: opacity .45s ease, color .35s ease;
+}
+#gfpask .ask-opt::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(20, 20, 20, 0.55);
+  box-sizing: border-box;
+  transition: background-color .3s ease, border-color .3s ease;
+}
+#gfpask .ask-opt.is-taken::before {
+  background: var(--gfp-ink);
+  border-color: var(--gfp-ink);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path d='M3.6 7.3l2.2 2.2 4.6-4.8' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-size: 100% 100%;
+}
+#gfpask .ask-opt.is-taken { color: var(--gfp-ink); }
+#gfpask .ask-opt.is-dim { color: rgba(20, 20, 20, 0.38); }
+#gfpask .ask-opt.is-dim::before { border-color: rgba(20, 20, 20, 0.22); }
+@media (max-width: 760px) {
+  /* p1.491 (his: "for mobile we still need lines") */
+  #gfpask .ask-row { border-top: 1px solid rgba(20, 20, 20, 0.14); }
+  #gfpask .ask-opt { font-size: 13px; padding: 9px 0; border-bottom: 1px solid rgba(20, 20, 20, 0.10); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #gfpask { display: none; }
+}
+/* p1.399: the block NEVER leaves the page - a twin is what stands on the screen,
+   so the hero keeps its height and nothing below it jumps */
+#herotech2fx {
+  position: fixed;
+  margin: 0;
+  z-index: 61;
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  #herotech2 { opacity: 1; }
+  #herotech2.gfp-park {
+  /* p1.398: while parked the block is simply fixed on the screen - the browser
+     holds it and JS writes nothing per frame, so native scrolling cannot shake it */
+  position: fixed;
+  margin: 0;
+  z-index: 61;
+  pointer-events: none;
+}
+#herotech2.gfp-beside { position: static; }
+}
+/* p1.364 THE OPENING (his sequence: Promise -> Handoff -> Intent): the serif line
+   leaves the hero and travels to the upper centre, where it turns into the next
+   thought. One sheet, two lines, crossfading in place - same serif, one voice. */
+#heroline {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 61;   /* p1.368: above every cream surface - nothing may crawl across the line */
+  opacity: 0;
+  pointer-events: none;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.039em;
+  color: var(--gfp-ink);
+  text-align: left;
+  will-change: transform;
+}
+#heroline b {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  font-weight: 400;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #heroline { display: none; }
+}
+/* p1.352 THE CORE: the drum - one drawn mechanism, white on the blue */
 #corelayer {
   position: fixed;
   inset: 0;
@@ -2049,39 +2410,31 @@ body.skeleton #skel { display: block; }
   opacity: 0;
   pointer-events: none;
 }
-#corelayer circle,
-#corelayer path,
-#corelayer rect {
-  stroke-width: var(--cr-sw, 1.4);
+#corelayer path {
+  fill: none;
+  stroke: #fff;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-#corelayer text {
-  font-family: var(--font-sans);
-  fill: rgba(255, 255, 255, 0.92);
-  letter-spacing: 0.01em;
+/*  three levels and no more: the strike, the object, the machine words  */
+#corelayer .cr-strike {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  fill: #fff;
 }
-#corelayer .cr-big { font-size: var(--cr-big, 22px); font-weight: 600; letter-spacing: 0.16em; }
-#corelayer .cr-key { font-size: var(--cr-key, 11px); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
-#corelayer .cr-sub,
-#corelayer .cr-lab { font-size: var(--cr-lab, 12px); font-weight: 450; fill: rgba(255, 255, 255, 0.8); }
-#corelayer .cr-tiny { font-size: 4px; font-weight: 600; fill: #fff; }
-#corelayer .cr-tiny2 { font-size: 2.9px; fill: rgba(255, 255, 255, 0.78); }
-#corelayer .cr-ring { fill: none; stroke: rgba(255, 255, 255, 0.6); }
-#corelayer .cr-core { fill: rgba(255, 255, 255, 0.06); stroke: #fff; }
-#corelayer .cr-core2 { fill: none; stroke: rgba(255, 255, 255, 0.35); }
-#corelayer .cr-port { fill: rgba(255, 255, 255, 0); stroke: #fff; }
-#corelayer .cr-full { fill: rgba(255, 255, 255, 0.9); }
-#corelayer .cr-state { fill: none; stroke: rgba(255, 255, 255, 0.6); }
-#corelayer .cr-arrow { fill: none; stroke: rgba(255, 255, 255, 0.85); }
-#corelayer .cr-node { fill: rgba(255, 255, 255, 0.12); stroke: #fff; }
-#corelayer .cr-bldbox { fill: none; stroke: #fff; }
-#corelayer .cr-cell { fill: #fff; stroke: none; opacity: 0.16; }
-#corelayer .cr-wave { fill: none; stroke: rgba(255, 255, 255, 0.75); }
-#corelayer .cr-dot { fill: #fff; stroke: none; }
-#corelayer .cr-dotx { fill: none; stroke: #fff; stroke-width: 0.5; }
-#corelayer .cr-src, #corelayer .cr-bld, #corelayer .cr-inner, #corelayer .cr-layer { opacity: 0; }
-#corelayer .cr-ghost { opacity: 0; }
+#corelayer .cr-word {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  fill: #fff;
+}
+#corelayer .cr-mono,
+#corelayer .cr-band {
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  fill: #fff;
+}
 /* p1.329 THE RENDER: the picture the zoom-out lands on */
 #renderlayer {
   position: fixed;
@@ -2394,7 +2747,7 @@ body.skeleton #skel { display: block; }
 }
 @media (max-width: 900px) {
   .power-reveal-stage {
-    min-height: 1133svh;
+    min-height: 1913svh;
   }
   .power-reveal-copy {
     width: min(820px, 90vw);
@@ -3710,6 +4063,9 @@ header .bar nav a:hover {
     font-size: 17px;
     line-height: 1.48;
   }
+  .hero-context-close {
+    margin-top: 10px;
+  }
 }
 .hero h1,
 .hero-minimal h1 {
@@ -3847,7 +4203,7 @@ header .bar nav a:hover {
     min-width: 0;
   }
   .power-reveal-stage {
-    min-height: 1173svh;
+    min-height: 1923svh;
   }
   .power-reveal-inner {
     padding: clamp(54px, 7vh, 72px) 18px calc(var(--home-composer-h) + clamp(96px, 14vh, 132px));
@@ -4125,17 +4481,17 @@ header .bar nav a:hover {
 /*   ========== Blue scene (the power reveal) (continued - the rules below must stay in this cascade position) ==========   */
 @media (max-width: 1120px) {
   .power-reveal-stage {
-    min-height: 1298svh;
+    min-height: 1953svh;
   }
 }
 @media (max-width: 760px) {
   .power-reveal-stage {
-    min-height: 1273svh;
+    min-height: 1943svh;
   }
 }
 @media (max-width: 560px) {
   .power-reveal-stage {
-    min-height: 1258svh;
+    min-height: 1933svh;
   }
 }
 .power-reveal-close {
@@ -4165,7 +4521,7 @@ header .bar nav a:hover {
   overflow: visible;
 }
 .power-reveal-stage {
-  min-height: 1473svh;
+  min-height: 2033svh;
 }
 .contractorband {
   padding-block: clamp(72px, 8vw, 126px);
@@ -4727,8 +5083,14 @@ html::-webkit-scrollbar {
       </div>
       <div class="hero-context" aria-label="What Global Facade Project does">
         <p class="hero-context-kicker">AI FOR THE PHYSICAL WORLD</p>
-        <p class="hero-context-copy">Turn a plain-language brief into a live, coordinated facade model—in minutes. Change the design once, and the entire system follows.</p>
+        <!-- p1.350: his hero copy -->
+        <p class="hero-context-copy">GFP uses AI to create and continuously update one coordinated facade model &mdash; proposing architectural ideas and developing technical solutions at every scale, from the whole building to the last bolt.</p>
+        <p class="hero-context-copy hero-context-close">Change the design once, and the entire system follows &mdash; in minutes.</p>
       </div>
+        <!-- p1.388 (his: "add on the right of Ask your building an additional textbook
+             for small font tech text on the second screen; in mobile it appears after
+             the first tech text but above the prompt box"). His copy, p1.393. -->
+      <p class="hero-context-copy hero-tech2" id="herotech2"><i class="tech-tri" aria-hidden="true"></i><b class="tl">You describe the intent in plain words.</b><b class="tl tl-2">GFP checks the intent against the model, then asks only what is still missing.</b></p>
     </div>
 
     <div id="home-foot-veil" aria-hidden="true"></div>
@@ -4790,10 +5152,12 @@ html::-webkit-scrollbar {
     <!-- THE REAL WORLD (p1.044): what the prompt is answered against -->
     <section class="meets" id="meets" aria-label="What the prompt meets">
       <div class="meetsay" id="meetsay">
-        <p class="meetsay-a" id="meetsay-a">You describe<br class="ms-br"> the intent to AI.</p>
-        <p class="meetsay-b" id="meetsay-b">You expect<br class="ms-br"> an answer.</p>
-        <p class="meetsay-e" id="meetsay-e">But GFP does not answer with words alone.<br>It carries your intent into a live building model.</p>
-        <p class="meetsay-g" id="meetsay-g">There, your brief meets the forces, codes and construction logic that shape a real facade.</p>
+        <!-- p1.372 (his: "you don't need it in the further scene"): the wind scene
+             no longer opens with "You describe the intent to AI." - the hero's own
+             line and the typed prompt have already said it. -->
+        <p class="meetsay-b" id="meetsay-b">A facade answers<br class="ms-br"> in many dimensions.</p>
+        <p class="meetsay-e" id="meetsay-e">GFP turns the brief into a building model.</p>
+        <p class="meetsay-g" id="meetsay-g">Wind, safety, movement, fire and construction logic become part of the facade.</p>
 
       </div>
       <!-- p1.064: the words left the flow - the constraints ride it as
@@ -4906,7 +5270,7 @@ html::-webkit-scrollbar {
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.349</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.506</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -4947,7 +5311,7 @@ html::-webkit-scrollbar {
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.349</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.506</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -4967,7 +5331,7 @@ html::-webkit-scrollbar {
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.349</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.506</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -10150,7 +10514,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     deck.style.removeProperty("--deck-story-y");
     var sr=scr.getBoundingClientRect(), dr=deck.getBoundingClientRect();
     HOME_STORY.h=Math.max(1,dr.height);
-    HOME_STORY.sceneLift=window.innerHeight*.03;
+    HOME_STORY.sceneLift=window.innerHeight*SCENE_LIFT_VH;
     HOME_STORY.naturalTop=scr.scrollTop + (dr.top-sr.top);
     var powerStage=$("power-reveal-stage");
     if (powerStage){
@@ -10298,15 +10662,15 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var scopesOut=0;   /* p1.036: the words stay until the field lets go */
     /* Longer, overlapping dissolves. Nothing travels into frame: each scope
        condenses gently from soft focus while the previous words remain. */
-    var scopeStarts=[7.25,7.37,7.49,7.61,7.73,7.85];   /* p1.174: the six words follow the screens; p1.325: after the dive's texts; p1.327: after the core's scheme (+1.45); p1.328: after the turn (+0.95); p1.329: after the blender and the zoom-out (+1.90) */
+    var scopeStarts=[10.50,10.62,10.74,10.86,10.98,11.10];   /* p1.174: the six words follow the screens; p1.325: after the dive's texts; p1.327: after the core's scheme (+1.45); p1.328: after the turn (+0.95); p1.329: after the blender and the zoom-out (+1.90) */
     var fadeSpan=.175;
     for (var i=0;i<scopes.length;i++){
       var startP=scopeStarts[i] !== undefined ? scopeStarts[i] : (.025+i*.13);
       var scopeP=smooth01((pinP-startP)/fadeSpan);
       /* THE CLOSING LINE (p1.024): once the line has arrived the six words
          step back to a third and stay there through the hold */
-      var goneP=smooth01((pinP-9.63)/.25);   /* p1.321: +1.25 for the dive pose; p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* a safety only - the field lets go first */
-      var dimP=smooth01((pinP-8.43)/.22);    /* the words step back to a third under the closing line (p1.325: +1.20; p1.327: +1.45; p1.328: +0.95; p1.329: +1.90) */
+      var goneP=smooth01((pinP-12.88)/.25);   /* p1.321: +1.25 for the dive pose; p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* a safety only - the field lets go first */
+      var dimP=smooth01((pinP-11.68)/.22);    /* the words step back to a third under the closing line (p1.325: +1.20; p1.327: +1.45; p1.328: +0.95; p1.329: +1.90) */
       scopes[i].style.opacity=String(scopeP*.98*(1-.66*dimP)*(1-scopesOut)*(1-goneP));
       scopes[i].style.transform="none";
       scopes[i].style.filter="blur("+(7.5*(1-scopeP)).toFixed(2)+"px)";
@@ -10321,20 +10685,26 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        the runway below is long enough for all of it */
     /* THE SEQUENCE (p1.034): on the blue, the filled line sends - the arrow
        blinks blue, the words lift, the box shrinks empty */
-    var closeIn=smooth01((pinP-8.13)/.26);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.325: +1.20, after the dive's texts */
+    var closeIn=smooth01((pinP-11.38)/.26);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.325: +1.20, after the dive's texts */
     /* The white copy and blue field leave as one surface at the sticky
        boundary. Separating those exits created a full cream-looking stop. */
-    var textOut=smooth01((pinP-10.13)/.25);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.321: +1.25 for the dive pose */   /* p1.118: the last word is held to the end */
+    var textOut=smooth01((pinP-13.38)/.25);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.321: +1.25 for the dive pose */   /* p1.118: the last word is held to the end */
     /* p1.077: the blue is ONE slide - it rises for the closing line and
        leaves with it; the wind ride and the chat stay on cream */
     var blueOn=smooth01((pinP+0.05)/.17);   /* p1.168: the dissolve completes inside the automatic glide - full blue at its landing, no scroll tail */
-    var blueOut=smooth01((pinP-9.03)/.25);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.321: +1.25 for the dive pose */
+    var blueOut=smooth01((pinP-12.28)/.25);   /* p1.327: +1.45 the core; p1.328: +0.95 the turn; p1.329: +1.90 */   /* p1.321: +1.25 for the dive pose */
     var blueP=blueIn*blueOn*(1-blueOut);
     BLUE_VEIL_P=blueP;   /* p1.174: the wind scene reads the veil to stand down */
     HOME_STORY.blueOutP=blueOut;   /* p1.296: the wind's building leaves with the blue */
     /* p1.321 THE SLUICE: after the closing line has dimmed, the scroll dives into the joint */
     var diveP=smooth01((pinP-DIVE_IN)/DIVE_LEN);   /* p1.325: the dive follows the bubble (DIVE_IN .60) */
-    var coreP=smooth01((pinP-CORE_IN)/CORE_LEN);   /* p1.327: after the row, the nut dissolves into the engine's scheme */
+    /* p1.357 THE STORY'S CLOCK IS LINEAR (his: "why do i have to stop here, scroll
+       the animation further"): coreP used to run through a smootherstep across the
+       WHOLE window, so the first quarter of the scroll produced a tenth of the story
+       and the middle raced - which is why the handoff crawled and every later beat
+       flashed past. The scene's own beats each ease on their own window, and the
+       sluice already eases the drive, so this must be a plain ruler. */
+    var coreP=clamp01((pinP-CORE_IN)/CORE_LEN);
     var turnP=smooth01((pinP-DIVE_TURN_IN)/DIVE_TURN_LEN);   /* p1.328: the turn to the nut */
     HOME_STORY.diveP=diveP; window.GFP_DIVE_P=diveP; HOME_STORY.coreP=coreP; window.GFP_CORE_P=coreP; HOME_STORY.turnP=turnP; window.GFP_TURN_P=turnP;
     if (typeof diveStory==="function"){ try{ diveStory(diveP, blueOut, turnP); }catch(errD){} }
@@ -10437,6 +10807,471 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       close.style.transform="none";
       close.style.filter="none";
     }
+  }
+  window.GFP_POWER=function(st){ updatePowerReveal(st); };   /* for the benches: drive the pinned story at a given scroll */
+  /* p1.364 THE OPENING HANDOFF (his sequence).
+     State 1 Promise: the hero as it is.
+     Handoff: on the box's own rise to the centre the big sans question and the
+     right-hand paragraph go first; "Ask your building." holds a beat longer, then
+     lifts to the upper centre and crossfades, in place and in the same serif, into
+     "You describe the intent to AI."
+     State 2 Intent: that line is already standing when the example prompt starts
+     typing under it - the typing has always waited for stillness, so it always is.
+     State 3 Commit is what we have: nothing below this line was touched. */
+  var HERO_GAP_BOXES=1.5;   /* p1.380: the air between the line and the box, measured in box heights (was 2) */
+  function heroSeg(t,a,b){ return smooth01((t-a)/(b-a)); }
+  var HERO_PH_HOME="Ask your building.";
+  function heroPlaceholder(on){
+    /* p1.381 (his: "in mobile and portrait 'Ask your building' is inconvenient -
+       put it in the grey dummy text instead"): on a narrow or portrait screen the
+       line does not stand above the box at all; the box's own grey prompt says it. */
+    var q=$("deckq"); if (!q) return;
+    if (typeof HOME_STORY.phWas!=="string") HOME_STORY.phWas=q.getAttribute("placeholder")||"";
+    var want=on?HERO_PH_HOME:HOME_STORY.phWas;
+    if (q.getAttribute("placeholder")!==want) q.setAttribute("placeholder", want);
+  }
+  function heroTwin(src, host){
+    /* p1.399 (his: "the text changed its alignment from centred to left, and the
+       movement behind is jerky with bugs"): moving the block out of the hero made the
+       page shorter, so everything below jumped - and out there it lost the hero's own
+       centring. Now the block stays where it is, hidden but still taking its space,
+       and a twin carries it on the screen with the same type and the same alignment. */
+    var c=$("herotech2fx");
+    if (!c){ c=src.cloneNode(true); c.id="herotech2fx"; c.setAttribute("aria-hidden","true"); host.appendChild(c); }
+    var cs=window.getComputedStyle(src);
+    c.style.fontFamily=cs.fontFamily; c.style.fontSize=cs.fontSize; c.style.fontWeight=cs.fontWeight;
+    c.style.lineHeight=cs.lineHeight; c.style.letterSpacing=cs.letterSpacing;
+    c.style.color=cs.color; c.style.textAlign=cs.textAlign;
+    return c;
+  }
+  function heroDismiss(){
+    var sh=$("heroline"); if (sh) sh.style.opacity="0";
+    var tw=$("herotech2fx"); if (tw){ tw.style.opacity="0"; tw.style.display="none"; }
+    var src=$("herotech2"); if (src){ src.style.removeProperty("visibility"); src.style.opacity="0"; }
+  }
+  window.GFP_WIND_GO=function(){ if (!HOME_STORY.autoWind){ HOME_STORY.autoWind=true; heroToWind(); } };
+  function heroToWind(){
+    /* p1.404 (his: "after the rise, into the wind automatically, without hands"):
+       once the second screen has finished playing itself out, the page carries the
+       visitor into the next scene on its own. Any touch cancels it - a hand always
+       wins over the automation. */
+    var sc=document.getElementById("scr-home"); if (!sc) return;
+    /* p1.404b: the deck pins the scroll to its own resting line, so a raw glide is
+       pulled straight back. The page has a door for exactly this - the sluice drive -
+       and the first rest of the pinned story lies past the wind's line. */
+    /* p1.408 (his: "some other logic is stopping this phase from entering the next
+       automatically"). Two things were stopping it. First, the sluice door returns
+       FALSE before the blue scene is armed - I ignored the answer and gave up as if
+       it had worked. Second, the page has its own gate that pulls the scroll back to
+       the full box; the site sets a lock when IT moves forward on purpose, and the
+       automatic entry must set the same lock. */
+    if (typeof window.GFP_SX_GO==="function"){ try{ if (window.GFP_SX_GO(0.125)===true) return; }catch(e){} }
+    var from=sc.scrollTop, to=(HOME_STORY.windStart||0)+window.innerHeight*0.30;
+    if (!(to>from+8)) return;
+    var t0=(window.performance&&performance.now)?performance.now():Date.now(), dur=1500, dead=false;
+    var hadLock=false;
+    try{ if (typeof PILL_GATE!=="undefined"){ hadLock=true; PILL_GATE.jumpingForward=true; PILL_GATE.jumpUntil=t0+dur+400; } }catch(e){}
+    function releaseLock(){ try{ if (hadLock){ PILL_GATE.jumpingForward=false; PILL_GATE.jumpUntil=0; } }catch(e){} }
+    function stop(){ dead=true; releaseLock(); }
+    var evs=["touchstart","wheel","pointerdown","keydown"];
+    function unbind(){ for (var i=0;i<evs.length;i++) window.removeEventListener(evs[i], stop); }
+    for (var i=0;i<evs.length;i++) window.addEventListener(evs[i], stop, {passive:true});
+    var last=from;
+    (function step(){
+      if (dead){ unbind(); return; }
+      /* if the page pulls the scroll back, the deck is holding its own line: give up
+         quietly rather than fight it into a bounce */
+      if (sc.scrollTop<last-4){ unbind(); releaseLock(); return; }
+      var now=(window.performance&&performance.now)?performance.now():Date.now();
+      var u=Math.min(1,(now-t0)/dur);
+      last=from+(to-from)*smooth01(u);
+      sc.scrollTop=last;
+      if (u<1) requestAnimationFrame(step); else { unbind(); releaseLock(); }
+    })();
+  }
+  function heroTwinOff(src){
+    var c=$("herotech2fx");
+    if (c){ c.style.display="none"; c.style.removeProperty("transform"); }
+    if (src) src.style.removeProperty("visibility");
+  }
+  function heroPortrait(){
+    try{ if (typeof onPhone==="function" && onPhone()) return true; }catch(e){}
+    return window.innerHeight>window.innerWidth;
+  }
+  function heroOpening(tC, centreY, boxH, outP){
+    /* p1.487 (his: "you cut the scenes"): the handoff clock was published only on the
+       wide-screen road, so on a phone the chain read it as zero and kept itself reset -
+       every stop was cut. It is published first thing, for both roads. */
+    window.GFP_HERO_TC=tC;
+    var stmt=document.querySelector("#scr-home .hero-statement");
+    if (!stmt) return;
+    /* p1.385: at the very top the deck's painter can stop being called at all, so a
+       return to the top would leave the hero half undone. One listener watches the
+       real scroll and puts the hero back whenever the page is home. */
+    if (!HOME_STORY.hlBound){
+      HOME_STORY.hlBound=true;
+      /* p1.407: once the example has been written the closing beat must play even if
+         the visitor's hand is still - and the deck's painter only wakes on movement.
+         A light tick wakes it while the beat is due. */
+      HOME_STORY.hlTick=setInterval(function(){
+        try{
+          var need=(typeof GHOST!=="undefined") && (GHOST.sent || (GHOST.shown||0)>=Math.max(1,((GHOST.txt||DEMO_PROMPT)||"x").length)*0.96);
+          if (need && typeof queueHomeStoryMotion==="function") queueHomeStoryMotion();
+        }catch(e){}
+      }, 120);
+      var sc1=document.getElementById("scr-home");
+      if (sc1) sc1.addEventListener("scroll", function(){
+        var y=sc1.scrollTop;
+        if (y<=2){ heroOpening(0,0,0,0); return; }
+        /* p1.400: past the wind's line the deck's painter may stop being called at
+           all, and the opening would hang on the screen over the blue. The same
+           listener closes it - the opening never survives into the next scene. */
+        var wS=HOME_STORY.windStart;
+        if (typeof wS==="number" && y>=wS-window.innerHeight*0.05) heroDismiss();
+      }, {passive:true});
+    }
+    var first=stmt.querySelector(".hero-first"), serif=stmt.querySelector(".hero-second");
+    var ctx=document.querySelector("#scr-home .hero-context");
+    var sheet=$("heroline");
+    if (!sheet){
+      sheet=document.createElement("div"); sheet.id="heroline"; sheet.setAttribute("aria-hidden","true");
+      sheet.innerHTML='<b class="l1"></b>';   /* p1.369 (his: "no need on this, the scene is self explanatory"): one line only */
+      (document.getElementById("scr-home")||document.body).appendChild(sheet);
+      HOME_STORY.hlA=sheet.querySelector(".l1");
+    }
+    var A=HOME_STORY.hlA;
+    if (!A) return;
+
+    /* the sans question and the paragraph leave first; the serif holds */
+    /* p1.378 (his: "all texts surrounding the scene vanish without graceful
+       animation"): they used to lose opacity over a short window and nothing else,
+       which on a tall hero is a switch, not an exit. Now each one drifts up and
+       softens as it goes, over a longer stretch, and they leave in turn: the
+       question first, the paragraph a beat behind it. */
+    /* p1.382 (his: "in mobile the small tech text expires too fast, I barely can
+       read the beginning of it"): in portrait the hero is read one block under the
+       other, so each block needs its own stretch of scroll. The small paragraph now
+       leaves LAST and over twice the distance; on a wide screen the pair still goes
+       together, as before. */
+    var pt0=heroPortrait();
+    /* p1.448 (his beat 2: "a calm transition down, without intermediate stages"): the
+       hero's parts used to leave one after another; they leave together now, on one
+       window, and the box rises on the same road. */
+    var goQ=heroSeg(tC, pt0?0.24:0.08, pt0?0.60:0.50);
+    var goP=heroSeg(tC, pt0?0.52:0.08, pt0?0.94:0.50);
+    var leave=function(el,g,rise){
+      if (!el) return;
+      el.style.opacity=(1-g).toFixed(3);
+      el.style.transform="translateY("+(-rise*g).toFixed(1)+"px)";
+      /* p1.383 (his: "does it look OK that the text went to blur in the middle of
+         the screen?"): no - a text that softens while it is still the only thing on
+         the screen reads as a fault, not as an exit. The blur is gone in portrait,
+         and on a wide screen it only starts in the last third, when the text is
+         already leaving. */
+      var bl=pt0?0:Math.max(0,(g-0.62)/0.38)*2.0;
+      el.style.filter=bl>0.02?("blur("+bl.toFixed(2)+"px)"):"";
+      el.style.willChange=g>0.002&&g<0.998?"opacity, transform":"";
+    };
+    leave(first, goQ, 26);
+    leave(ctx, goP, 18);
+    /* p1.367 (his: "there is a mismatching and double appearance - it is the same
+       item in reality, and the mirror expires as well"): no clone and no crossfade
+       of two copies. The hero's own serif line is the thing that moves, and its
+       mirrored reflection leaves with the rest of the hero. */
+    stmt.classList.toggle("gfp-handoff", tC>0.26);   /* p1.368: the mirror lives as long as the line stands in the hero */
+    if (tC<=0.02){
+      sheet.style.opacity="0";   /* p1.384: a hair-trigger reset could be stepped over on the way back - the door is wider now */
+      HOME_STORY.hlFrom=null; HOME_STORY.hlDy=0; HOME_STORY.hlSeatY=null; HOME_STORY.hlBoxTop=null; HOME_STORY.hlAdj=null; HOME_STORY.hlBH=null; HOME_STORY.hlFullT=null; HOME_STORY.autoWind=false; HOME_STORY.hlPortraitBox=false; HOME_STORY.t2Delta=0; HOME_STORY.t2Park=null; HOME_STORY.t2Stick=null; HOME_STORY.t2BH=null; HOME_STORY.t2FullT=null; HOME_STORY.autoWind=false; sheet.style.removeProperty("width");
+      /* p1.405 (his: "in desktop, scene 2's right text box is not aligned with the
+         right text in scene 1"): the column is measured HERE, at the top of the page,
+         where the hero is untouched - measuring it later caught it mid-transform and
+         the block landed in the wrong place. */
+      if (ctx){ var cR0=ctx.getBoundingClientRect(); if (cR0.width>40) HOME_STORY.hlCol={x:cR0.left, w:cR0.width}; }
+      /* p1.412: the line's place in the page, taken at rest where it is certain */
+      if (serif){ var sR0=serif.getBoundingClientRect(); var sc0=document.getElementById("scr-home");
+        if (sR0.height>0) HOME_STORY.hlDocY=sR0.top+((sc0&&sc0.scrollTop)||0); }
+      if (first){ first.style.removeProperty("opacity"); first.style.removeProperty("transform"); first.style.removeProperty("filter"); first.style.removeProperty("will-change"); }
+      if (ctx){ ctx.style.removeProperty("opacity"); ctx.style.removeProperty("transform"); ctx.style.removeProperty("filter"); ctx.style.removeProperty("will-change"); }
+      if (serif){ serif.style.removeProperty("opacity"); serif.style.removeProperty("transform"); serif.style.removeProperty("filter"); }
+      heroPlaceholder(false);
+      var t2r=$("herotech2");
+      if (t2r){ if (HOME_STORY.t2Home && t2r.parentNode!==HOME_STORY.t2Home) HOME_STORY.t2Home.insertBefore(t2r, HOME_STORY.t2Next||null);
+        t2r.classList.remove("gfp-beside"); t2r.classList.remove("gfp-park"); t2r.style.removeProperty("transform"); t2r.style.removeProperty("top"); t2r.style.opacity="0"; t2r.style.removeProperty("left"); t2r.style.removeProperty("top"); t2r.style.removeProperty("width"); t2r.style.removeProperty("max-width"); }
+      return;
+    }
+    /* p1.365 (his: "this layout is ok, no need to straighten it as a string"):
+       the line keeps the hero's own block - same size, same width, same wrap, same
+       left edge. It does not become one centred string; it only rises. */
+    if (!HOME_STORY.hlFrom && serif){
+      var r=serif.getBoundingClientRect();
+      if (r.width>0){
+        HOME_STORY.hlFrom={x:r.left, y:r.top, w:r.width, h:r.height};
+        var colR=ctx?ctx.getBoundingClientRect():null;
+        if (colR&&colR.width>0) HOME_STORY.hlCol={x:colR.left, w:colR.width};   /* p1.388: the hero's own right column, where tech text lives */
+        var cs=window.getComputedStyle(serif);
+        sheet.style.fontSize=cs.fontSize; sheet.style.lineHeight=cs.lineHeight;
+        sheet.style.width=Math.ceil(r.width)+"px";
+        A.style.width=Math.ceil(r.width)+"px";
+        A.textContent=(serif.textContent||"").replace(/\s+/g," ").trim();
+      }
+    }
+    var from=HOME_STORY.hlFrom;
+    if (!from||!serif){ sheet.style.opacity="0"; return; }
+    /* p1.368 ONE ITEM, ONE HANDOVER. Until the line starts to move it is the hero's
+       own element, mirror and all. At the instant it starts, the sheet takes over -
+       same serif, same size, same width, measured in place, so the swap has nothing
+       to see. It happens in one frame: the two are never both on the screen. */
+    var SWAP=0.045;   /* p1.412: the sheet takes over within the first breath of scroll, so the line is still almost at once */
+    var bh=Math.max(24, boxH||0);
+    if (!heroPortrait()) HOME_STORY.hlPortraitBox=false;
+    if (heroPortrait()){
+      /* p1.386 (his: "text is in opacity fade out in the most centred position"):
+         in portrait nothing fades on the story's clock any more. Each block fades by
+         its OWN place on the screen: full while it is still in the reading half,
+         and only as its last line rises past the top third does it go. Standing in
+         the middle it is always at full strength. */
+      var vhP=window.innerHeight, topLine=vhP*0.36, span=vhP*0.30;
+      var byPlace=function(el){
+        if (!el) return;
+        var r=el.getBoundingClientRect();
+        var mid=r.top+r.height/2;   /* a tall block is judged by its middle, not its foot */
+        var g=(r.height>0)?Math.max(0,Math.min(1,(topLine-mid)/span)):0;
+        el.style.opacity=(1-g).toFixed(3);
+        el.style.transform=""; el.style.filter="";
+        el.style.willChange=(g>0.002&&g<0.998)?"opacity":"";
+      };
+      byPlace(first); byPlace(ctx); byPlace(serif);
+      /* p1.394 (his: "in mobile the text must stop, and the prompt line under it -
+         first the text parks, then the box is pulled up to it"): the block scrolls
+         plainly until it reaches its parking line, then it holds there, and only
+         then does the box come up to sit under it. */
+      /* p1.395 (his: "the text parks too high; we can release the rule of two prompt
+         heights so there is no contradiction at the end"): the parking line is no
+         longer a number of its own. The box has one place - the deck's own - and the
+         text parks just above it, a small gap away. Nothing to contradict. */
+      var t2p=$("herotech2");
+      /* p1.401: once the composition has settled, the box height in force is frozen -
+         when the example types and the box grows, the parked text must not jump */
+      if (!window.GFP_ASK_HOLD) HOME_STORY.hEmpty=bh;
+      if (window.GFP_ASK_HOLD && typeof HOME_STORY.hEmpty==="number"){ HOME_STORY.t2BH=HOME_STORY.hEmpty; }
+      else if (typeof HOME_STORY.t2Stick==="number"){ if (typeof HOME_STORY.t2BH!=="number") HOME_STORY.t2BH=bh; }
+      else HOME_STORY.t2BH=null;
+      var bhS=(typeof HOME_STORY.t2BH==="number")?HOME_STORY.t2BH:bh;
+      var boxSeat=Math.min(centreY+window.innerHeight*0.05, window.innerHeight-bhS-8);
+      var parkD=0, t2h=0, parkTop=window.innerHeight*0.10;
+      if (t2p){
+        t2p.classList.remove("gfp-beside");
+        t2p.style.removeProperty("left"); t2p.style.removeProperty("top"); t2p.style.removeProperty("width"); t2p.style.removeProperty("max-width"); t2p.style.removeProperty("transform");
+        /* p1.397 (his: "terrible shaking"). Two clocks were fighting: I derived the
+           text's natural place from the raw scroll, while the page itself is moved by
+           the deck's own smoothed motion - and on a phone the address bar changes the
+           viewport height on top of that. Now nothing is derived: the transform is
+           lifted for the measurement, the element is read where it truly is in this
+           frame, and the hold is put back. One clock, the page's own. */
+        /* p1.399: the hold is the twin's - fixed on the screen, written once */
+        var scEl2=document.getElementById("scr-home");
+        var sTop2=(scEl2&&scEl2.scrollTop)||0;
+        var parked=(typeof HOME_STORY.t2Stick==="number");
+        var rr=t2p.getBoundingClientRect();
+        if (!parked){
+          t2h=rr.height;
+          var wantPark=Math.max(window.innerHeight*0.10, boxSeat-0.75*bhS-t2h);
+          if (typeof HOME_STORY.t2Park!=="number" || Math.abs(wantPark-HOME_STORY.t2Park)>6) HOME_STORY.t2Park=Math.round(wantPark);
+          parkTop=HOME_STORY.t2Park;
+          if (rr.top<=parkTop){
+            HOME_STORY.t2Stick=sTop2; HOME_STORY.t2H=rr.height;
+            var tw=heroTwin(t2p, sheet.parentNode);
+            tw.style.display="block";
+            tw.style.left=Math.round(rr.left)+"px";
+            tw.style.top=parkTop+"px";
+            tw.style.width=Math.round(rr.width)+"px";
+            tw.style.maxWidth="none";
+            tw.style.opacity="1";
+            t2p.style.visibility="hidden";   /* it keeps its space in the page */
+            parked=true;
+          }
+        } else {
+          parkTop=HOME_STORY.t2Park; t2h=HOME_STORY.t2H||rr.height;
+          if (sTop2<(HOME_STORY.t2Stick||0)-1){ heroTwinOff(t2p); HOME_STORY.t2Stick=null; parked=false; }
+          else { var tw2=$("herotech2fx"); if (tw2){ var o2=(1-(outP||0))*(window.GFP_TEXT_OFF?0:1); tw2.style.opacity=o2.toFixed(3); tw2.style.display=(o2<=0.004&&!window.GFP_TEXT_OFF)?"none":"block"; } }
+        }
+        parkD=parked?Math.max(0, sTop2-(HOME_STORY.t2Stick||0)):0;
+        t2p.style.filter="";
+        t2p.style.opacity=(parked?0:(1-(outP||0))*(window.GFP_TEXT_OFF?0:1)).toFixed(3);   /* while parked the twin carries it */
+      }
+      sheet.style.opacity="0";
+      HOME_STORY.hlSeatY=null; HOME_STORY.hlAdj=null;
+      /* p1.387 (his: "going back there is a large gap between the text and the hero"):
+         the box had a SECOND clock in portrait - I parked it by my own number while
+         the deck moved it by its own - and on the way back the two disagreed, so the
+         box hung over the text with a hole above it. In portrait the box is left to
+         the deck alone; the only thing kept is a little more air (see the painter). */
+      /* p1.390 (his: "first this column of text passes UNDER the prompt box, same as
+         the first one; only when it has passed and a gap of three box heights has
+         formed does the box rise"): the box stays at its own place while the text
+         goes by, and starts to rise only once that gap is there. */
+      var natural=(typeof HOME_STORY.pinY0==="number")?HOME_STORY.pinY0:centreY;
+      if (t2p){
+        var riseP=Math.max(0, Math.min(1, parkD/(1.2*bhS)));
+        /* p1.402 (his: "in mobile, after the prompt box is full, slowly raise it to
+           the centre and fade out the text - a slight rise and vanishing - then enter
+           the animation"): the beat begins when the example has finished typing and
+           runs on the wall clock, so a still finger does not stop it. */
+        /* p1.403 (his: "no change at all"): I read the input's value, but the example
+           is not typed into the input at all - a ghost writer paints it. The beat now
+           watches that writer, and the input only as a fallback for a real typist. */
+        var qEl=$("deckq");
+        var gLen=Math.max(1,((GHOST&&(GHOST.txt||DEMO_PROMPT))||"x").length);
+        var typed=Math.max(
+          (GHOST?Math.min(1,(GHOST.shown||0)/gLen):0),
+          (qEl&&qEl.value)?Math.min(1,(qEl.value||"").length/gLen):0);
+        if (GHOST&&GHOST.sent) typed=1;
+        var nowL=(window.performance&&performance.now)?performance.now():Date.now();
+        if (typed>=0.96 && riseP>=0.98 && !window.GFP_ASK_HOLD){ if (typeof HOME_STORY.t2FullT!=="number") HOME_STORY.t2FullT=nowL; }
+        else HOME_STORY.t2FullT=null;
+        var lift=(typeof HOME_STORY.t2FullT==="number")?smooth01((nowL-HOME_STORY.t2FullT)/1500):0;
+        window.GFP_HERO_LIFT=lift;
+        if (lift>0 && lift<1 && typeof queueHomeStoryMotion==="function") queueHomeStoryMotion();
+        /* p1.461: the risen box is a STOP - the wind comes on the next gesture, not by itself */
+        var seatMid=(window.innerHeight-bh)/2;   /* the live height: the box grew under the example, and the centre is the centre for the box as it now is */
+        HOME_STORY.hlBoxTop=natural+((boxSeat+(seatMid-boxSeat)*lift)-natural)*riseP;
+        if (lift>0){
+          var twL=$("herotech2fx");
+          if (twL && twL.style.display==="block"){
+            /* p1.492 (his: "in mobile, before the box rises, this text block rises in the
+               background - a bug"): it does not move. It only fades - and if the mullions
+               have already taken its place it stays away. */
+            twL.style.transform="";
+            twL.style.opacity=(window.GFP_TEXT_OFF?0:((1-lift)*(1-(outP||0)))).toFixed(3);
+          }
+        }
+      } else HOME_STORY.hlBoxTop=null;
+      HOME_STORY.hlPortraitBox=true;
+      heroPlaceholder(tC>0.72);   /* the grey text takes the phrase only once the line has gone */
+      return;
+    }
+    heroPlaceholder(false);
+    if (tC<SWAP){
+      var rLive=serif.getBoundingClientRect();
+      if (rLive.width>0){ from.x=rLive.left; from.y=rLive.top; from.h=rLive.height; from.w=rLive.width; }
+      serif.style.opacity=String((1-(outP||0)).toFixed(3));
+      sheet.style.opacity="0";
+      sheet.style.transform="translate("+from.x.toFixed(1)+"px,"+from.y.toFixed(1)+"px)";
+      /* p1.379 (his: "when the prompt box starts to rise it jumps down abruptly and
+         proceeds rising from the low position again"): the box's target used to
+         appear out of nowhere at the handover, so the target itself leapt. The line
+         holds the target from the first frame - before the handover it is read live,
+         after it, from the held place - so the target never jumps, only moves. */
+      HOME_STORY.hlBoxTop=from.y+from.h+HERO_GAP_BOXES*bh;
+      /* p1.384 (his: "go forward and go back is fucked up"): nothing may be latched
+         once and kept. The line's place in the PAGE is stable, so it is stored in
+         page coordinates and the screen place is derived from the scroll every
+         frame - the road back is then exactly the road forward, reversed. */
+      var scEl=document.getElementById("scr-home");
+      HOME_STORY.hlDocY=rLive.top+((scEl&&scEl.scrollTop)||0);
+      return;
+    }
+    serif.style.opacity="0";
+    /* the seat: the same left edge, lifted to stand above the box at its centre pose */
+    /* p1.375 (his: "don't push the text up - push the prompt box down"): the line
+       does not travel any more. At the handover it holds the place it already had
+       on the screen, and the box comes DOWN to sit two box heights under it. */
+    if (typeof HOME_STORY.hlAdj!=="number"){
+      /* p1.388: measure the block-vs-inline offset against a KNOWN transform, not
+         against whatever the sheet happened to carry - a stale one made the line
+         land far from its seat. */
+      sheet.style.transform="translate("+from.x.toFixed(1)+"px,"+from.y.toFixed(1)+"px)";
+      var bR=A.getBoundingClientRect();
+      HOME_STORY.hlAdj=(bR.height>0)?(from.y-bR.top):0;
+    }
+    /* the place the line held at the handover, derived - not remembered */
+    /* p1.412 (his: "it jumps - first it rides with the screen, then it is nailed back
+       into place; it should be almost static, like in a jar of honey"): the seat was
+       derived from the OLD road length while the clock had been stretched to a new
+       one, so at the handover the line was yanked to a place that no longer matched.
+       Same length on both sides now - and the sheet takes over almost at once, so the
+       line hardly rides the page at all. */
+    var pinS=Math.max(1, HOME_STORY.hlLen||HOME_STORY.pinStart||1);
+    var seatStart=(typeof HOME_STORY.hlDocY==="number")
+      ? (HOME_STORY.hlDocY-SWAP*pinS)
+      : (window.innerHeight*0.30);
+    seatStart=Math.min(Math.max(seatStart, window.innerHeight*0.06), window.innerHeight*0.62);
+    /* p1.377 (his mark-up: the whole block glides up until its centre meets the
+       screen's centre): the line and the box are one block - the line's height, two
+       box heights of air, then the box. The block's middle lands on the screen's
+       middle, and the pair travels there together, softly, on the scroll. */
+    /* p1.406 (his: "when a row is added the whole block changes height and rises -
+       the upper part must stay, and the box's bottom slide down instead"): the
+       composition is laid out from the box height it had when it arrived. The box
+       then grows under the typing - downward, since its top no longer moves. */
+    var glide=heroSeg(tC,SWAP,0.94);
+    /* p1.441 (his: "after the prompt fills there is always a jump of the box upward -
+       it is not wanted"): the composition was laid out from the box's LIVE height, and
+       the box grows the moment the example lands in it - so the whole block was recomputed
+       taller and its top went up. The empty height is remembered while nothing is written
+       and used from then on: the box grows downward, the top stays. */
+    if (!window.GFP_ASK_HOLD) HOME_STORY.hEmpty=bh;
+    if (window.GFP_ASK_HOLD && typeof HOME_STORY.hEmpty==="number"){ HOME_STORY.hlBH=HOME_STORY.hEmpty; }
+    else if (glide>=0.999){ if (typeof HOME_STORY.hlBH!=="number") HOME_STORY.hlBH=bh; }
+    else HOME_STORY.hlBH=null;
+    var bhD=(typeof HOME_STORY.hlBH==="number")?HOME_STORY.hlBH:bh;
+    var blockH=from.h+(1+HERO_GAP_BOXES)*bhD;
+    var aim=Math.max(window.innerHeight*0.04, window.innerHeight/2-blockH/2);
+    var seatY=seatStart+(aim-seatStart)*glide;
+    /* p1.407 (his: "after the text is fully written the box rises to the centre and is
+       pushed by the wind - one automatic animation, no hands"): the same closing beat
+       the phone already plays. It starts when the example has finished writing and
+       runs on the wall clock, so a still mouse does not stop it. */
+    var qElD=$("deckq");
+    var gLenD=Math.max(1,((GHOST&&(GHOST.txt||DEMO_PROMPT))||"x").length);
+    var typedD=Math.max((GHOST?Math.min(1,(GHOST.shown||0)/gLenD):0),
+                        (qElD&&qElD.value)?Math.min(1,(qElD.value||"").length/gLenD):0);
+    if (GHOST&&GHOST.sent) typedD=1;
+    var nowD=(window.performance&&performance.now)?performance.now():Date.now();
+    /* p1.421 (his order: the line fills, THEN the question and its answer, and only
+       then the prompt and the block rise): the closing beat waits for the exchange. */
+    if (typedD>=0.96 && glide>=0.98 && !window.GFP_ASK_HOLD){   /* p1.436: the exchange holds the rise from the moment the prompt is written */ if (typeof HOME_STORY.hlFullT!=="number") HOME_STORY.hlFullT=nowD; }
+    else HOME_STORY.hlFullT=null;
+    var liftD=(typeof HOME_STORY.hlFullT==="number")?smooth01((nowD-HOME_STORY.hlFullT)/1500):0;
+    window.GFP_HERO_LIFT=liftD; window.GFP_HERO_TC=tC; window.GFP_HERO_OUT=(outP||0);
+    if (liftD>0 && liftD<1 && typeof queueHomeStoryMotion==="function") queueHomeStoryMotion();
+    /* p1.461 (his: "there is no pause of the ready prompt box in a calm centred scene"):
+       the wind used to follow the rise at once. The risen box is a stop now; the chain
+       calls the wind on the next gesture through the door below. */
+    var y=seatY+(HOME_STORY.hlAdj||0)-22*liftD;
+    var boxRest=seatY+from.h+HERO_GAP_BOXES*bhD;   /* the box hangs HERO_GAP_BOXES box heights under the line - measured from the height it arrived with */
+    HOME_STORY.hlBoxTop=boxRest+((window.innerHeight-bh)/2-boxRest)*liftD;
+    sheet.style.transform="translate("+from.x.toFixed(1)+"px,"+y.toFixed(1)+"px)";
+    sheet.style.opacity=String(((1-(outP||0))*(1-liftD)).toFixed(3));
+    /* p1.388: the second tech block rides beside the line, on the same seat */
+    var t2=$("herotech2");
+    if (t2){
+      var tw3=heroTwin(t2, sheet.parentNode);
+      t2.style.visibility="hidden"; t2.style.opacity="0";
+      tw3.style.display="block";
+      var vwT=window.innerWidth, lx, wid;
+      if (HOME_STORY.hlCol && HOME_STORY.hlCol.w>40){
+        /* the hero's own right column, exactly - scene 2 stands on scene 1's grid */
+        lx=HOME_STORY.hlCol.x; wid=HOME_STORY.hlCol.w;
+      } else {
+        var aLeft=A.getBoundingClientRect().left;
+        var gut=Math.max(24, (aLeft>0?aLeft:from.x));
+        var rightEdge=vwT-gut;
+        var minGap=from.x+Math.min(from.w, 380)+48;
+        wid=Math.max(260, Math.min(520, rightEdge-minGap));
+        lx=Math.max(minGap, rightEdge-wid);
+      }
+      tw3.style.maxWidth="none";
+      tw3.style.width=wid.toFixed(1)+"px";
+      tw3.style.left=lx.toFixed(1)+"px";
+      tw3.style.top=(y+Math.max(6, from.h*0.10)).toFixed(1)+"px";   /* it rides the line, so it rises with it */
+      tw3.style.textAlign="left";
+      window.GFP_TEXT_RECT={left:lx, top:(y+Math.max(6, from.h*0.10)), width:wid, height:tw3.getBoundingClientRect().height||90};   /* p1.446: the seat the mullions will take */
+      var o3=heroSeg(tC,0.52,0.84)*(1-(outP||0))*(1-liftD)*(window.GFP_TEXT_OFF?0:1);   /* p1.446: it steps aside for the mullions */
+      tw3.style.opacity=o3.toFixed(3);
+      tw3.style.display=(o3<=0.004)?"none":"block";
+    }
+    A.style.opacity="1";
   }
   function updateHomeDeckStory(storyScroll){
     if (current !== "home") return;
@@ -10549,7 +11384,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (moveP>=.999 && Math.abs(hRaw-HOME_STORY.hSm)>4) tauH=150;
     HOME_STORY.hSm+=(hRaw-HOME_STORY.hSm)*Math.min(1, dtH/tauH);
     var hNow=HOME_STORY.hSm;
-    var centreY=(window.innerHeight-hNow)/2-(HOME_STORY.sceneLift||window.innerHeight*.03);   /* the whole second-scene composition sits 3vh above centre */
+    var centreY=(window.innerHeight-hNow)/2-(HOME_STORY.sceneLift||window.innerHeight*SCENE_LIFT_VH);   /* the second-scene composition's height above centre - SCENE_LIFT_VH */
     var typeP=smooth01((st-HOME_STORY.typeStart)/(HOME_STORY.typeEnd-HOME_STORY.typeStart));
     /* p1.258: bursts + micro-pauses - typing that breathes like a hand */
     typeP=Math.max(0,Math.min(1, typeP-0.045*Math.sin(typeP*19)*(1-typeP)*typeP*4));
@@ -10583,7 +11418,56 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var wC=Math.max(40, HOME_STORY.pinStart-((typeof HOME_STORY.catchSt === "number")?HOME_STORY.catchSt:(HOME_STORY.pinStart - vh*0.55)));   /* p1.251 */
     var tC=Math.max(0, Math.min(1, (st-(HOME_STORY.pinStart-wC))/wC));
     var hC=(-tC*tC*tC)+(tC*tC)+tC;   /* slope 1 at the take-over, slope 0 at the centre - the box decelerates into the middle */
-    var baseC=(typeof HOME_STORY.pinY0 === "number")?(HOME_STORY.pinY0+(centreY-HOME_STORY.pinY0)*hC):centreY;
+    /* p1.371 (his: "still the old text appears at the end - it is from the next
+       scene probably"): the wind scene has its own first sentence, "You describe
+       the intent to AI.", and it arrives while the hero's line is still standing -
+       so the two overlapped. The hero's line now leaves ON that sentence's own
+       clock: one hands over to the other, they are never both on the screen. */
+    /* p1.376 (his: "there is a jump of the text and a shitty transition between the
+       two states"): the handoff used the box's catch window, which on many screens
+       starts ABOVE the top of the page - so at load the hero was already a third of
+       the way handed over, and the first scroll looked like a jump. The handoff has
+       its own clock now: the top of the page to the moment the box parks. */
+    /* p1.385 (his: "going back, the position is compromised in the hero"): the clock
+       read the STORY scroll, which the deck holds at its own resting line - so at the
+       very top it never came back to zero and the hero stayed half undone. It reads
+       the real scroll of the page now: at the top it is 0, and the hero is whole. */
+    var scEl0=document.getElementById("scr-home");
+    var stReal0=(scEl0&&scEl0.scrollTop)||0;
+    /* p1.411 (his: "the transition from the hero to section 2 is kinda too snappy"):
+       the handoff ran over the hero's own catch distance, which on a wide screen is
+       only a couple of hundred pixels - the whole change happened in a flick. It now
+       runs over at least four fifths of a screen, so it reads as a move, not a cut.
+       In portrait that distance is already long, and nothing changes there. */
+    var handoffLen=Math.max(1, HOME_STORY.pinStart||1);
+    if (!(window.innerHeight>window.innerWidth)) handoffLen=Math.max(handoffLen, vh*0.80);
+    HOME_STORY.hlLen=handoffLen;   /* p1.412: the same road length the seat is derived from */
+    var tH=Math.max(0, Math.min(1, stReal0/handoffLen));
+    heroOpening(tH, centreY, hNow, Math.max(
+      smooth01((stReal0-HOME_STORY.windStart)/Math.max(1,vh*0.10)),   /* p1.400: the SAME real scroll the handoff runs on - the story scroll is held by the deck and never reached the wind, so the opening never left */
+      /* p1.451 (his: "this is unacceptable - where is the text?"): the top texts were
+         leaving on the wind sentence's clock, a hook from the days when the wind came
+         right after the writing. With the exchange in between, that clock ran while the
+         question was still on the screen and took the texts with it. They leave only on
+         the rise now, or with the wind itself. */
+      smooth01((HOME_STORY.riseP||0)/0.22)));   /* p1.400: and, above all, on the wind's own rise - whatever the scroll numbers say, when the next scene begins the opening is gone */
+    /* p1.375: the line has the first word on where the box parks - two box heights
+       under it - and the screen only sets the floor and the ceiling */
+    if (typeof HOME_STORY.hlBoxTop==="number"){
+      var floorY=HOME_STORY.hlPortraitBox?(vh-hNow-4):(vh-hNow-vh*0.06);   /* p1.390: in portrait the box must be able to stand at its own natural place */
+      centreY=Math.max(vh*0.16, Math.min(HOME_STORY.hlBoxTop, floorY));
+    } else if (heroPortrait()){
+      /* p1.387: in portrait the deck parks the box; this only adds the extra air he
+         asked for, on the deck's own clock, so nothing can disagree */
+      centreY=Math.min(centreY+vh*0.05, vh-hNow-vh*0.08);
+    }
+    /* p1.411: the box's own rise used the deck's catch window, which begins ABOVE the
+       top of the page - so on arrival the box was already a third of the way up and
+       the rest happened in a flick. On a wide screen it now rides the same handoff
+       clock as the words: it starts at the top of the page and takes the same road. */
+    var hRise=hC;
+    if (!(window.innerHeight>window.innerWidth)) hRise=smooth01((tH-0.06)/0.80);
+    var baseC=(typeof HOME_STORY.pinY0 === "number")?(HOME_STORY.pinY0+(centreY-HOME_STORY.pinY0)*hRise):centreY;
     /* p1.175: the whole stretch is an animation. Once the wind has begun,
        the box is blown ALL THE WAY to its natural bottom on the wind's own
        clock - scroll or no scroll; the px/s limit below IS the blowing
@@ -10674,7 +11558,19 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var riseNow=(window.performance&&performance.now)?performance.now():Date.now();
     var riseDt=Math.max(0,Math.min(80,riseNow-(WIND.riseT||riseNow)));
     WIND.riseT=riseNow;
-    var riseTarget=(st>=HOME_STORY.windStart)?1:0;
+    /* p1.401 (his: "it happens once, when the text starts typing - the wind appeared
+       and vanished"): when the example starts typing the box grows, the page is
+       measured again and the wind's own line moves with it. For a frame or two the
+       test flips true and the wind lights up for nothing. The answer must HOLD for a
+       breath before it counts - a real crossing holds for far longer. */
+    /* p1.465 (his: "the mullion scene disappeared again"): every gesture that moves the
+       chain is also a wheel the page feels - a strong flick could push the scroll past the
+       wind's line for a moment, the wind lit, and the chain, seeing real wind, wiped the
+       scene. While the exchange holds the page, the wind is not allowed to start at all;
+       it may only come after the risen box. */
+    var wantW=(st>=HOME_STORY.windStart && !window.GFP_WIND_LOCK)?1:0;   /* p1.466: the lock is the chain's, released only by its last stop */
+    if (wantW!==WIND.wantW){ WIND.wantW=wantW; WIND.wantT=riseNow; }
+    var riseTarget=((riseNow-(WIND.wantT||0))>=140)?wantW:((WIND.riseS>0.5)?1:0);
     if (typeof WIND.riseS!=="number") WIND.riseS=0;
     var riseStep=Math.min(Math.abs(riseTarget-WIND.riseS), riseDt/(riseTarget>WIND.riseS?900:500));
     WIND.riseS+=(riseTarget>WIND.riseS?1:-1)*riseStep;
@@ -11422,8 +12318,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     gl.uniform2f(D3.u.WH,W,H);
     gl.uniform3f(D3.u.dv,d[0],d[1],d[2]); gl.uniform1f(D3.u.dsc,1/3600);
     gl.uniform3f(D3.u.cmin,DIVE_CLIP[0]-0.5,DIVE_CLIP[1]-0.5,DIVE_CLIP[2]-0.5); gl.uniform3f(D3.u.cmax,DIVE_CLIP[3]+0.5,DIVE_CLIP[4]+0.5,DIVE_CLIP[5]+0.5);
-    /* p1.337: the lines fade with their distance from the bracket, the slab has a body */
-    gl.uniform3f(D3.u.focus,0,150,-300); gl.uniform2f(D3.u.fade,280,760);
+    /* p1.337: the lines fade with their distance from the bracket, the slab has a body.
+       p1.351: as the turn brings the nut forward, the focus walks to the nut and the reach closes in, so the
+       nut's own rest is the nut, its bolt and its plate - not a screenful of slab. */
+    var tw=smooth01(((window.GFP_TURN_P||0)-0.15)/0.75);
+    var fmid=[(DIVE_CLIP[0]+DIVE_CLIP[3])/2,150,(DIVE_CLIP[2]+DIVE_CLIP[5])/2];
+    gl.uniform3f(D3.u.focus, fmid[0]+(DIVE_NUT[0]-fmid[0])*tw, fmid[1]+(DIVE_NUT[1]-fmid[1])*tw, fmid[2]+(DIVE_NUT[2]-fmid[2])*tw);
+    gl.uniform2f(D3.u.fade, 280+(52-280)*tw, 760+(150-760)*tw);
     gl.enableVertexAttribArray(D3.ap);
     gl.enable(gl.DEPTH_TEST);
     /* 1. the solids, depth only, pushed back a hair so lines on their faces win */
@@ -11435,7 +12336,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (D3.nPlug){
       gl.colorMask(true,true,true,true); gl.depthFunc(gl.LESS); gl.depthMask(true);
       gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-      var plugO=0.13*smooth01((p-0.4)/0.3);
+      var plugO=0.13*smooth01((p-0.4)/0.3)*(1-0.9*tw);   /* p1.351: at the nut the washes step aside */
       gl.uniform4f(D3.u.col,plugO,plugO,plugO,plugO);
       gl.bindBuffer(gl.ARRAY_BUFFER,D3.pvb); gl.vertexAttribPointer(D3.ap,3,gl.FLOAT,false,0,0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,D3.pib); gl.drawElements(gl.TRIANGLES,D3.nPlug,gl.UNSIGNED_SHORT,0);
@@ -11446,7 +12347,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (DIVE_OCC.slab && DIVE_OCC.slab[1]>DIVE_OCC.slab[0]){
       gl.colorMask(true,true,true,true); gl.depthFunc(gl.LEQUAL); gl.depthMask(false);
       gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-      var bodyO=0.10*smooth01((p-0.5)/0.3);
+      var bodyO=0.10*smooth01((p-0.5)/0.3)*(1-tw);   /* p1.351: the concrete's wash leaves as the nut comes forward */
       gl.uniform4f(D3.u.col,bodyO,bodyO,bodyO,bodyO);
       gl.drawElements(gl.TRIANGLES,(DIVE_OCC.slab[1]-DIVE_OCC.slab[0])*3,gl.UNSIGNED_SHORT,DIVE_OCC.slab[0]*3*2);
       gl.depthMask(true);
@@ -11584,8 +12485,12 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        depth - a cabinet-style third axis, half the face's scale, leaning
        the way the real depth vector leans - so the nut reads as a solid */
     /* p1.336: the joint's depth axis is the building's own; p1.344: re-measured every frame (diveCamAt) */
-    DIVE.kMax=Math.max(4, Math.min(220, (onPhone()?0.30:0.50)/mmpx));   /* p1.332: the whole detail fits at rest; p1.336: the frame cuts it smaller */
-    DIVE.nutZoom=Math.max(6, (onPhone()?52:72)/(DIVE_NUT_R*mmpx*DIVE.kMax));   /* the nut ends ~70 px across */
+    var FIT=diveFit();   /* p1.351 */
+    DIVE.kMax=Math.max(4, Math.min(220, FIT.pxmm/mmpx));
+    /* the nut is seen ALONG its axis, so its diameter on screen is set by the vertical scale (which the turn
+       does not foreshorten), never by the along-face one (which goes to nothing when the face is edge-on) */
+    var zpx=Math.max(1e-6, Math.sqrt(ez[0]*ez[0]+ez[1]*ez[1]));
+    DIVE.nutZoom=Math.max(6, FIT.nutPx/(2*DIVE_NUT_R*zpx*DIVE.kMax));
     DIVE.pan=[0,0];
     var lb=$("windbuild"); if (lb) lb.style.transition="none";
     var sheet=diveEls(); if (sheet) sheet.style.opacity="0";
@@ -11646,6 +12551,24 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
      place, so it turns exactly as the building's face turns under the mouse; the turn is clamped so the face
      is never seen from behind (frontal +-92 degrees); the scripted turn to the nut drives the same turntable
      to the angle where the nut's axis points at the eye. */
+  /* p1.351 THE FRAMING (his: "prepare a right centralised framing for landscape, desktop and mobile"):
+     one table decides, per format, how much of the screen the joint may use and where its centre sits -
+     the header at the top, the FROM THIS POINT row and the composer at the bottom are kept clear, and the
+     nut's diameter at its rest is a fixed share of the smaller side, clamped. Nothing here guesses at a
+     device: it reads the viewport. */
+  function diveFit(){
+    var W=window.innerWidth, H=window.innerHeight;
+    var portrait=H>=W, phone=W<620, landscape=H<560;
+    var topKeep=phone?76:96;                                  /* the header */
+    var botKeep=landscape?176:(phone?214:176);                 /* the FROM THIS POINT row, its buttons and the composer */
+    var usableH=Math.max(110,H-topKeep-botKeep), usableW=W*(phone?0.86:0.70);
+    /* the frame's own size in millimetres, with room for what the turn and the depth add on screen */
+    var mmH=(DIVE_CLIP[5]-DIVE_CLIP[2])*1.42, mmW=(DIVE_CLIP[3]-DIVE_CLIP[0])*1.30;
+    var pxmm=Math.min(usableH/mmH, usableW/mmW);
+    var cy=(topKeep+usableH*0.5)/H;
+    var nutPx=Math.max(46, Math.min(104, Math.min(W,H)*(phone?0.20:0.15)));
+    return { pxmm:pxmm, cx:0.5, cy:cy, nutPx:nutPx };
+  }
   function diveWrap(a){ while (a>Math.PI) a-=Math.PI*2; while (a<-Math.PI) a+=Math.PI*2; return a; }
   function diveClampTurn(t){
     if (!DIVE.armed || DIVE.tFront===undefined) return t;
@@ -11684,30 +12607,34 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     diveCamAt();   /* p1.344: the joint sees what the building's face sees, this frame */
     var e=p;   /* the story's smooth01 already eases the scroll */
     var k=Math.exp(Math.log(DIVE.kMax)*e);
-    var Wv=window.innerWidth, Hv=window.innerHeight, euA=DIVE.cam.eu, enA=DIVE.cam.en, ezA=DIVE.cam.ez, KM=DIVE.kMax, mid=[0,160,-190];
+    var Wv=window.innerWidth, Hv=window.innerHeight, euA=DIVE.cam.eu, enA=DIVE.cam.en, ezA=DIVE.cam.ez, KM=DIVE.kMax, FITn=diveFit();
+    /* the frame's own middle, so the whole cut detail sits inside the space the format allows */
+    var mid=[(DIVE_CLIP[0]+DIVE_CLIP[3])/2,(DIVE_CLIP[1]+DIVE_CLIP[4])/2,(DIVE_CLIP[2]+DIVE_CLIP[5])/2];
     var fin=[ DIVE.J[0]+KM*(mid[0]*euA[0]+mid[1]*enA[0]+mid[2]*ezA[0]), DIVE.J[1]+KM*(mid[0]*euA[1]+mid[1]*enA[1]+mid[2]*ezA[1]) ];
-    DIVE.panFin=[ Wv*0.5-fin[0], Hv*0.46-fin[1] ];
+    DIVE.panFin=[ Wv*FITn.cx-fin[0], Hv*FITn.cy-fin[1] ];
     var pf=DIVE.panFin; DIVE.pan=[pf[0]*e, pf[1]*e];
     /* p1.328: the turn zooms on the nut and pans it to the screen's centre */
     var tP=turnP||0, C2=DIVE.cam, theta=0;
     /* p1.344: the scripted turn drives the building's own turntable to the nut's angle; between, the hand rests */
-    var scriptOn=tP>0.02 && tP<0.98 && (leave||0)<0.5;
+    /* p1.351 (his: "in the blue scene the nut zoom-in won't be moved with a mouse or touch"): from the moment
+       the turn to the nut begins until the scheme takes over, the script owns the angle - the hand turns
+       nothing, and a sideways stroke is absorbed rather than scrolling the page. */
+    var scriptOn=tP>0.02 && (leave||0)<0.5;
     if (scriptOn && !DIVE.scriptOn){ DIVE.t0=WIND.turn||0; }
     DIVE.scriptOn=scriptOn;
-    if (tP>0.02 && (leave||0)<0.5 && DIVE.tNut!==undefined){
+    if (scriptOn && DIVE.tNut!==undefined){
       var want=DIVE.t0+(DIVE.tNut-DIVE.t0)*tP;
-      if (scriptOn || Math.abs((WIND.turnTarget||0)-want)>1e-4 && tP>=0.98 && !DIVE.nutSeated){ WIND.turnTarget=want; WIND.turnCoast=false; if (typeof turnKick==="function") turnKick(); }
-      if (tP>=0.98 && !DIVE.nutSeated){ DIVE.nutSeated=true; WIND.turnMx0=WIND.mouseX; }
-    } else DIVE.nutSeated=false;
+      if (Math.abs((WIND.turnTarget||0)-want)>1e-5){ WIND.turnTarget=want; WIND.turnCoast=false; if (typeof turnKick==="function") turnKick(); }
+    }
     if (tP>0 && C2){
       k*=1+((DIVE.nutZoom||DIVE_NUT_ZOOM)-1)*tP;
       var nx=DIVE.J[0]+k*(DIVE_NUT[0]*C2.eu[0]+DIVE_NUT[1]*C2.en[0]+DIVE_NUT[2]*C2.ez[0]);
       var ny=DIVE.J[1]+k*(DIVE_NUT[0]*C2.eu[1]+DIVE_NUT[1]*C2.en[1]+DIVE_NUT[2]*C2.ez[1]);
-      var tx=window.innerWidth*0.5-nx, ty=window.innerHeight*0.46-ny;
+      var tx=Wv*FITn.cx-nx, ty=Hv*FITn.cy-ny;   /* p1.351 */
       DIVE.pan=[DIVE.pan[0]+(tx-DIVE.pan[0])*tP, DIVE.pan[1]+(ty-DIVE.pan[1])*tP];
       /* the nut's place and size on the screen, for the scheme that grows out of it */
-      var mmpx2=Math.sqrt(C2.eu[0]*C2.eu[0]+C2.eu[1]*C2.eu[1]);
-      window.GFP_NUT_PX={ x:nx+DIVE.pan[0], y:ny+DIVE.pan[1], r:DIVE_NUT_R*mmpx2*k, p:tP };
+      var zpx2=Math.sqrt(C2.ez[0]*C2.ez[0]+C2.ez[1]*C2.ez[1]);
+      window.GFP_NUT_PX={ x:nx+DIVE.pan[0], y:ny+DIVE.pan[1], r:DIVE_NUT_R*zpx2*k, p:tP };
     } else window.GFP_NUT_PX=null;
     var lb=$("windbuild");
     WIND.diveFade=smooth01((k-4)/14);
@@ -11720,7 +12647,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       lb.style.opacity=String((0.96*smooth01(WIND.buildM||0)*(1-WIND.diveFade)).toFixed(3));
     }
     var sheet=diveEls();
-    if (sheet) sheet.style.opacity=String((smooth01((k-2)/6)*(1-smooth01(leave||0))*(1-smooth01(((window.GFP_CORE_P||0)-0.04)/0.22))).toFixed(3));   /* p1.327: the nut dissolves into the scheme; p1.328: a beat later, so the hex hands over to the ring */
+    if (sheet) sheet.style.opacity=String((smooth01((k-2)/6)*(1-smooth01(leave||0))*(1-smooth01(((window.GFP_CORE_P||0)-0.027)/0.012))).toFixed(3));   /* p1.327: the nut dissolves into the scheme; p1.328: a beat later, so the hex hands over to the ring; p1.353: the joint leaves exactly while the drum stands in its place as a ring, so the two scenes cross at the same circle */
     var cv3=$("winddive3d"); if (cv3 && sheet) cv3.style.opacity=sheet.style.opacity;   /* p1.333 */
     diveDraw(k, smooth01((e-0.2)/0.75), theta);
     if (document.body.classList.contains("skeleton")){ try{ skelDraw(); }catch(errK2){} }
@@ -11744,6 +12671,14 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
      measured from where the hand was when the joint arrived, so nothing
      jumps; when the scheme begins the hand's angle eases back to zero so the
      hex is face-on for the handoff. */
+  window.addEventListener("resize", function(){   /* p1.351: turning the phone re-frames the joint */
+    if (!DIVE.armed) return;
+    var mmpxR=Math.max(1e-6, Math.sqrt(DIVE.cam.eu[0]*DIVE.cam.eu[0]+DIVE.cam.eu[1]*DIVE.cam.eu[1]));
+    var zpxR=Math.max(1e-6, Math.sqrt(DIVE.cam.ez[0]*DIVE.cam.ez[0]+DIVE.cam.ez[1]*DIVE.cam.ez[1]));
+    var F=diveFit(); DIVE.kMax=Math.max(4, Math.min(220, F.pxmm/mmpxR));
+    DIVE.nutZoom=Math.max(6, F.nutPx/(2*DIVE_NUT_R*zpxR*DIVE.kMax));
+    if (DIVE.lastArgs){ try{ diveStory(DIVE.lastArgs[0],DIVE.lastArgs[1],DIVE.lastArgs[2]); }catch(err){} }
+  });
   function diveHandLoop(){
     DIVE.handRaf=0; DIVE.inHandLoop=true;
     var now=(window.performance&&performance.now)?performance.now():Date.now();
@@ -11775,161 +12710,128 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     document.addEventListener("keydown", function(e){ if (e.key==="Escape") diveBack(); });
   }
   window.GFP_DIVE=DIVE; window.GFP_DIVE_KICK=function(){ diveHandKick(); }; window.GFP_WINDDRAW=function(){ windDraw(); }; window.GFP_DIVESTORY=function(){ if (DIVE.lastArgs) diveStory(DIVE.lastArgs[0],DIVE.lastArgs[1],DIVE.lastArgs[2]); };   /* for the benches */
-  /* p1.327 THE CORE (his: "now make, using the same zoom-in effect, a zoom
-     on a circular scheme of the GFP engine core - a core and a query
-     transformer shell"; "Ok" to: on the blue right after the nut, one
-     continuous dive; down to the launch). After the joint has rested on
-     its nut and the caption and the FROM THIS POINT row have passed, the
-     next stretch of scroll (pinP 2.85 → 3.90) lets the nut
-     dissolve and grows a dot into the CIRCULAR SCHEME of the engine: the
-     core at the centre (calculates, never guesses), the ring of ports
-     around it - the query transformer: filled ports are what the building
-     already knows (fed by the confirmed state), empty ports are what this
-     request must learn - the sources outside (you through the interpreter,
-     site documents, codes and standards) with their arrows in, the
-     building leaving on the right and its loop back as a new question
-     (calculation); then the same zoom dives into ONE empty port to show
-     the three answers - you / a standard, visible as provisional / no
-     answer, no launch - pulls back, the last port fills, and the core
-     fires: ten rings run out to the boundary carrying the layers, and the
-     building's cells fill. The scheme is drawn in units of a 1000-box,
-     scaled to the screen; type is sized in screen pixels so phones read
-     it. Same sheet family as the joint (#corelayer, z 58, white on the
-     blue), same scroll driving (HOME_STORY.coreP), leaves with the blue. */
-  var CORE={ built:false, els:{}, S:1, W:0, H:0, cx:0, cy:0 };
-  var CORE_IN=3.80, CORE_LEN=1.05, CORE_REST=4.90;   /* pinP units; on the p1.325 line: after the turn to the nut (2.85-3.65), before the six scopes */
-  var CORE_R=300, CORE_RC=110, CORE_PORT_R=22;
-  var CORE_EMPTY=[200,230,270,300,330], CORE_FULL=[0,30,60,90,120,150,180], CORE_ASK=270;
-  var CORE_LAYERS=["contour","floors","axes","fields","glass","corners","water","wind","count","picture"];
-  function corePol(a,r){ var t=a*Math.PI/180; return [r*Math.cos(t), r*Math.sin(t)]; }
-  /* p1.328: the boundary between a hexagon (m=0, a vertex at the right like the nut's) and a circle (m=1) */
-  function coreRingPath(R,m){
-    var d="", N=72, ap=Math.cos(Math.PI/6);
-    for (var i=0;i<=N;i++){
-      var ph=i/N*Math.PI*2, loc=((ph%(Math.PI/3))+Math.PI/3)%(Math.PI/3)-Math.PI/6;
-      var rh=R*ap/Math.cos(loc), r=rh+(R-rh)*m;
-      d+=(i?" L":"M")+(r*Math.cos(ph)).toFixed(1)+" "+(r*Math.sin(ph)).toFixed(1);
-    }
-    return d+" Z";
+  /* p1.352 THE CORE: THE DRUM (his: the ring-of-ports scheme "looks totaly
+     uncool"; "keep core + shell as the idea but redraw it as one drawn
+     mechanism, a real part"; "2.5D cool on brand looking, core and
+     transforming shell"; "we are missing the labels from the scene before -
+     presumably they live in the core"). The nut hands over to a round rim; a
+     shell of vertical plates opens like louvers and closes; inside stands the
+     CORE - a drum of nine bands, the nine decisions the wind scene named, so
+     the labels of the bubble's tag row have a home. Then his sent prompt goes
+     in piece by piece through the plates that open for it, lighting the bands
+     it touches; one precise question comes back out through a plate; his
+     answer goes in through the same one; the drum spins and the picture
+     follows. Three levels of hierarchy, always the same: THE STRIKE (one big
+     serif line at a time, one seat), THE OBJECT (hairlines, the subject fills
+     the screen, everything else dims) and THE MACHINE WORDS (small mono, on
+     the object). Same sheet as before (#corelayer, z 58, white on the blue),
+     same driving (HOME_STORY.coreP -> q; spinP the blender; zoomP the
+     zoom-out onto the render), same handoff (window.GFP_NUT_PX). */
+  var CORE={ built:false, S:1, W:0, H:0, cx:0, cy:0, paths:[], texts:[], q:0, spinP:0, zoomP:0, leave:0, angle:0, raf:0 };
+  /* p1.370 (his: "you shall stop the prompt box a bit lower then now"): how far
+     above the middle the whole second-scene composition parks - a negative number
+     puts it BELOW the middle. One number moves the box, and the line above it
+     follows. Was 0.03 (3% above centre), then 0.005, now -0.055. */
+  var SCENE_LIFT_VH=-0.055;   /* p1.373: negative = BELOW the middle - his "still in the center, not slightly lower" */
+  var CORE_IN=3.66, CORE_LEN=4.44, CORE_REST=8.60;   /* p1.356: 1.90 was still too tight - the louvers opened and the core arrived inside a fraction of one drive; every beat now owns real scroll */   /* p1.355: four hundredths before the sluice rest at 3.70, so the ring is already standing on the nut when the scroll parks there */   /* pinP units; p1.354: the handoff needed real scroll - the window grew from 1.05 and everything downstream moved +0.75 */
+  /* the part, in its own millimetres */
+  var CD_N=24, CD_RS=150, CD_RC=96, CD_HZ=88, CD_HC=78, CD_TH=3, CD_E=0.36, CD_PHI=70*Math.PI/180, CD_NB=9;
+  /* p1.353 THE SWING (his: "the nut view to dive so the nut perspective and the core perspective align,
+     and visibly proceed one another"): the drum arrives seen STRAIGHT DOWN ITS OWN AXIS - which is the
+     nut's axis - so its first frame is the nut's ring at the nut's place and size, a circle over a
+     circle. Then the camera swings down to the resting elevation and the flat disc opens into the drum.
+     CD_A1 = looking down the axis (a circle, no height); CD_A0 = the rest, whose sine is the old CD_E. */
+  var CD_A0=Math.asin(CD_E), CD_A1=84*Math.PI/180;   /* 84 deg, not 90: the nut is seen a touch oblique, and the drum arrives exactly as oblique */
+  /* the beats, on q 0..1 */
+  var CQ={
+    /* p1.356 (his: the closed drum "is not efficient stop, the next stop i even
+       cant make a photo of it cause it is too fast"): every beat that the eye must
+       catch - the louvers opening, the shell closing, the nine bands building, each
+       piece of the prompt - now owns a real stretch of the story, and the story
+       itself grew to 4.44 units so nothing had to be squeezed to make room. */
+    grow:[0.025,0.128], tilt:[0.052,0.180], plates:[0.086,0.171], travel:[0.095,0.207],
+    open:[0.207,0.257], s1:[0.216,0.239], s1out:[0.302,0.324], close:[0.279,0.329],
+    hint:[0.215,0.262], names:[0.228,0.252], namesOut:[0.285,0.315],
+    ghost:[0.302,0.336], dive:[0.302,0.365], bands:[0.324,0.441], s2:[0.381,0.403], s2out:[0.527,0.550], diveOut:[0.516,0.572], unghost:[0.527,0.572],
+    prompt:[0.572,0.599], aOpen:[0.608,0.622], aSuck:[0.613,0.653], aClose:[0.653,0.667],
+    bOpen:[0.676,0.689], bSuck:[0.680,0.743], bClose:[0.743,0.757],
+    camQ:[0.770,0.797], qOpen:[0.775,0.788], qOut:[0.775,0.824], qFade:[0.914,0.932],
+    answer:[0.851,0.869], ansIn:[0.874,0.928], qClose:[0.932,0.950], camQout:[0.932,0.959],
+    allLit:[0.955,0.988]
+  };
+  var CD_SET_A=[4,5], CD_SET_B=[22,23,0], CD_SET_Q=[21];   /* the plates that take the first part, the rest, and the one the question uses */
+  /* the nine decisions of the wind scene, in the deck's order, bottom to top */
+  var CD_BANDS=["Wind pressure","Location","Safety","Fire safety","Drainage","Movement + tolerances","Fabrication limits","Cost targets","System logic"];
+  var CD_S1={ lines:["Every intent","enters here."], mono:["read against what the building already knows","only the missing few get in"] };
+  var CD_S2={ lines:["The core."], mono:["calculates \u00b7 never guesses"] };
+  var CD_S3={ lines:["What comes back","is not a sentence."], mono:["it is the whole building, rebuilt to the last bolt"] };   /* p1.416: "answer" belongs to the wind's opening line; the finale says the same thing without borrowing it */   /* p1.362, his: "the answer is not an answer, answer is a whole building" */
+  var CD_NAME_SHELL="AI SHELL", CD_NAME_CORE="CORE";   /* p1.360: his mark-up on the open-shell stop - name the two parts there */
+  /* his own sent prompt, split into the lines the plates take in */
+  var CD_PROMPT=["Design a 10-storey residential tower","above a three-floor commercial base.","Recess the third floor by 3 m on every side.","Use a 28 \u00D7 24 m footprint."];
+  var CD_CHUNK_A=[2], CD_CHUNK_B=[0,1,3];
+  var CD_TOUCH={0:[0,3,7],1:[2,3],2:[4,5],3:[6,1]};   /* a prompt line -> the decisions it lights */
+  var CD_QMONO="one precise question";
+  var CD_QLINES=["Floor 3 steps back 3 m \u2014","do floors 4 to 13 follow it,","or return to the base line?"];
+  var CD_AMONO="your answer";
+  var CD_ATEXT="They return to the base line.";
+  var CD_ABAND=5;
+  function cdSeg(p,ab){ return smooth01((p-ab[0])/(ab[1]-ab[0])); }
+  function cdSnap(p,ab){ var t=clamp01((p-ab[0])/(ab[1]-ab[0])); return 1-Math.pow(1-t,3); }
+  function cdMix(a,b,t){ return a+(b-a)*t; }
+  function cdPath(pts,closed){ var d="",i; for (i=0;i<pts.length;i++) d+=(i?"L":"M")+pts[i][0].toFixed(1)+" "+pts[i][1].toFixed(1); return closed?d+"Z":d; }
+  function cdBez(a,b,c,t){ var u=1-t; return [u*u*a[0]+2*u*t*b[0]+t*t*c[0], u*u*a[1]+2*u*t*b[1]+t*t*c[1]]; }
+  function cdTheta(i,rot,hand){ return (i/CD_N)*Math.PI*2+Math.PI/2+rot+hand; }
+  function cdSetAngle(set,rot,hand){ var s=0,j; for (j=0;j<set.length;j++) s+=cdTheta(set[j],rot,hand); return s/set.length; }
+  function cdOpen(i,p){
+    var o=cdSnap(p,CQ.open)*(1-cdSnap(p,CQ.close));
+    if (CD_SET_A.indexOf(i)>=0) o=Math.max(o, cdSnap(p,CQ.aOpen)*(1-cdSnap(p,CQ.aClose)));
+    if (CD_SET_B.indexOf(i)>=0) o=Math.max(o, cdSnap(p,CQ.bOpen)*(1-cdSnap(p,CQ.bClose)));
+    if (CD_SET_Q.indexOf(i)>=0) o=Math.max(o, cdSnap(p,CQ.qOpen)*(1-cdSnap(p,CQ.qClose)));
+    return o;
   }
-  function coreMk(tag,attrs,parent){ var e=document.createElementNS(SVGNS,tag); for (var k in attrs) e.setAttribute(k,attrs[k]); (parent||CORE.root).appendChild(e); return e; }
-  function coreText(x,y,txt,cls,anchor,parent){ var t=coreMk("text",{x:x,y:y,"text-anchor":anchor||"middle","class":cls||"cr-lab"},parent); t.textContent=txt; return t; }
-  function coreArrow(id,d,parent){ return coreMk("path",{d:d,"class":"cr-arrow","marker-end":"url(#cr-head)",pathLength:"1000"},parent); }
+  /* when each line of the prompt lands inside the core */
+  function cdLands(){
+    var L={}, span=(CQ.bSuck[1]-CQ.bSuck[0])/CD_CHUNK_B.length, j;
+    L[CD_CHUNK_A[0]]=CQ.aSuck[1];
+    for (j=0;j<CD_CHUNK_B.length;j++) L[CD_CHUNK_B[j]]=Math.min(CQ.bSuck[0]+j*span+span*1.4, CQ.bSuck[1]+0.02);
+    return L;
+  }
+  function cdLit(b,p,L){
+    var lit=0, flash=0, line;
+    function hit(t){ if (p>=t){ var f=1-smooth01((p-t)/0.05); lit=Math.max(lit,0.45+0.55*f); flash=Math.max(flash, Math.min(smooth01((p-t)/0.01), 1-smooth01((p-t-0.035)/0.04))); } }
+    for (line in CD_TOUCH) if (CD_TOUCH[line].indexOf(b)>=0) hit(L[line]);
+    if (b===CD_ABAND) hit(CQ.ansIn[1]);
+    lit=Math.max(lit, cdSeg(p,CQ.allLit));
+    return { lit:lit, flash:flash };
+  }
   function coreBuild(){
     var sheet=$("corelayer"); if (!sheet || CORE.built) return sheet;
     CORE.built=true;
-    var defs=coreMk("defs",{},sheet);
-    var mk=coreMk("marker",{id:"cr-head",viewBox:"0 0 10 10",refX:"8",refY:"5",markerWidth:"7",markerHeight:"7",orient:"auto",markerUnits:"userSpaceOnUse"},defs);
-    coreMk("path",{d:"M1 1 L8 5 L1 9",fill:"none",stroke:"#fff","stroke-width":"1.2","stroke-linecap":"round","stroke-linejoin":"round"},mk);
-    CORE.root=coreMk("g",{id:"cr-root"},sheet);
-    CORE.zoom=coreMk("g",{id:"cr-zoom"},CORE.root);
-    var E=CORE.els, Z=CORE.zoom, i, p;
-    /* the boundary and the core */
-    E.ring=coreMk("path",{d:coreRingPath(CORE_R,1),"class":"cr-ring",pathLength:"1000"},Z);   /* p1.328: a path - the hex of the nut rounding into the circle */
-    E.core=coreMk("circle",{cx:0,cy:0,r:CORE_RC,"class":"cr-core",pathLength:"1000"},Z);
-    E.core2=coreMk("circle",{cx:0,cy:0,r:CORE_RC-14,"class":"cr-core2"},Z);
-    E.coreT=coreText(0,-6,"CORE","cr-big","middle",Z);
-    E.coreS=coreText(0,22,"calculates \u00b7 never guesses","cr-sub","middle",Z);
-    E.ringT=coreText(0,-CORE_R-30,"QUERY TRANSFORMER","cr-key","middle",Z);
-    /* the confirmed state: an arc under the filled ports */
-    var a0=corePol(-8,CORE_R-62), a1=corePol(188,CORE_R-62);
-    E.state=coreMk("path",{d:"M"+a0[0].toFixed(1)+" "+a0[1].toFixed(1)+" A"+(CORE_R-62)+" "+(CORE_R-62)+" 0 1 1 "+a1[0].toFixed(1)+" "+a1[1].toFixed(1),"class":"cr-state",pathLength:"1000"},Z);
-    E.stateT=coreText(0,CORE_R-90,"confirmed state \u00b7 what the building already knows","cr-lab","middle",Z);
-    E.learnT=coreText(-CORE_R-24,-CORE_R+40,"what this request must learn","cr-lab","end",Z);
-    /* the ports */
-    E.ports=[];
-    var all=CORE_FULL.map(function(a){ return {a:a,full:true}; }).concat(CORE_EMPTY.map(function(a){ return {a:a,full:false}; }));
-    for (i=0;i<all.length;i++){
-      p=corePol(all[i].a,CORE_R);
-      var c=coreMk("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:CORE_PORT_R,"class":all[i].full?"cr-port cr-full":"cr-port"},Z);
-      E.ports.push({el:c,a:all[i].a,full:all[i].full,x:p[0],y:p[1]});
-      if (all[i].a===CORE_ASK) E.ask=E.ports[E.ports.length-1];
-    }
-    /* the sources and their arrows */
-    E.src=[];
-    function source(a, lines, portA, viaR){
-      var s=corePol(a,CORE_R+150), g=coreMk("g",{"class":"cr-src"},Z);
-      for (var k=0;k<lines.length;k++) coreText(s[0].toFixed(1),(s[1]+(k-(lines.length-1)/2)*16).toFixed(1),lines[k],k?"cr-lab":"cr-key","middle",g);
-      var from=corePol(a,CORE_R+150-30), to=corePol(portA,CORE_R+CORE_PORT_R+6);
-      var d="M"+from[0].toFixed(1)+" "+from[1].toFixed(1)+" L"+to[0].toFixed(1)+" "+to[1].toFixed(1);
-      if (viaR){
-        var v=corePol(a,viaR);
-        d="M"+from[0].toFixed(1)+" "+from[1].toFixed(1)+" L"+(v[0]).toFixed(1)+" "+(v[1]+18).toFixed(1)+" M"+v[0].toFixed(1)+" "+(v[1]-18).toFixed(1)+" L"+to[0].toFixed(1)+" "+to[1].toFixed(1);
-        coreMk("circle",{cx:v[0].toFixed(1),cy:v[1].toFixed(1),r:16,"class":"cr-node"},g);
-        coreText((v[0]+26).toFixed(1),(v[1]+4).toFixed(1),"interpreter","cr-lab","start",g);
-      }
-      var ar=coreArrow(null,d,g);
-      E.src.push({g:g,ar:ar});
-      var ts=g.querySelectorAll("text"); for (var q2=0;q2<ts.length;q2++) E.clamp.push(ts[q2]);
-    }
-    E.clamp=[];
-    source(300,["YOU","your words"],300,CORE_R+72);
-    source(230,["SITE DOCUMENTS","wind \u00b7 climate"],230);
-    source(200,["CODES & STANDARDS"],200);
-    /* the building that leaves, and its loop back */
-    var bx=CORE_R+120, by=-10;
-    E.out=coreArrow(null,"M"+(CORE_R+CORE_PORT_R+6)+" 0 L"+(bx-40)+" 0",Z);
-    E.bld=coreMk("g",{"class":"cr-bld"},Z);
-    coreMk("rect",{x:bx-30,y:by-46,width:60,height:92,"class":"cr-bldbox",pathLength:"1000"},E.bld);
-    E.cells=[];
-    for (var r=0;r<6;r++) for (var cc=0;cc<3;cc++) E.cells.push(coreMk("rect",{x:bx-30+4+cc*18,y:by-46+4+r*14.5,width:14,height:10.5,"class":"cr-cell"},E.bld));
-    E.bldT=coreText(bx,by+66,"the building","cr-lab","middle",Z);
-    var lp0=[bx,by-52], lp1=corePol(330,CORE_R+CORE_PORT_R+8);
-    E.loop=coreArrow(null,"M"+lp0[0]+" "+lp0[1]+" Q "+(bx+10)+" "+(-CORE_R-20)+" "+lp1[0].toFixed(1)+" "+lp1[1].toFixed(1),Z);
-    E.loopT=coreText(bx+40,-CORE_R+40,"calculation \u00b7 a new question","cr-lab","end",Z);
-    E.clamp.push(E.learnT); E.clamp.push(E.loopT); E.clamp.push(E.stateT); E.clamp.push(E.bldT);
-    /* inside the asked port: the three answers (visible only in the port zoom) */
-    E.inner=coreMk("g",{"class":"cr-inner"},Z);
-    var ax=E.ask.x, ay=E.ask.y;
-    E.innerRows=[];
-    var rows=[["you",""],["a standard","visible as provisional"],["no answer","no launch"]];
-    for (i=0;i<3;i++){
-      var g2=coreMk("g",{},E.inner), yy=ay-9+i*8.5;
-      coreMk("circle",{cx:(ax-13).toFixed(1),cy:yy.toFixed(1),r:1.3,"class":i<2?"cr-dot":"cr-dotx"},g2);
-      coreText((ax-9.5).toFixed(1),(yy+1.3).toFixed(1),rows[i][0],"cr-tiny","start",g2);
-      if (rows[i][1]) coreText((ax-9.5).toFixed(1),(yy+5.2).toFixed(1),rows[i][1],"cr-tiny2","start",g2);
-      E.innerRows.push(g2);
-    }
-    /* p1.329 THE BLENDER: the boundary, the ports, the state arc and the core disc
-       move into one spinning group; two faint clones of the boundary+ports trail
-       behind it as the blur of the blades */
-    E.spin=coreMk("g",{"class":"cr-spin"},Z);
-    var movers=[E.ring,E.state].concat(E.ports.map(function(pp){ return pp.el; })).concat([E.core,E.core2]);
-    for (i=0;i<movers.length;i++) E.spin.appendChild(movers[i]);
-    Z.appendChild(E.spin);
-    E.ghosts=[];
-    for (i=0;i<2;i++){
-      var gh=coreMk("g",{"class":"cr-ghost"},Z);
-      for (var pi=0; pi<E.ports.length; pi++){ var cl=E.ports[pi].el.cloneNode(false); cl.removeAttribute("style"); gh.appendChild(cl); }
-      var rc0=E.ring.cloneNode(false); rc0.removeAttribute("style"); gh.appendChild(rc0);
-      Z.insertBefore(gh, E.spin);
-      E.ghosts.push(gh);
-    }
-    /* the launch: the layers running out to the boundary */
-    E.rings=[];
-    for (i=0;i<CORE_LAYERS.length;i++){
-      var g3=coreMk("g",{"class":"cr-layer"},Z);
-      var rc=coreMk("circle",{cx:0,cy:0,r:CORE_RC,"class":"cr-wave"},g3);
-      var tl=coreText(0,0,CORE_LAYERS[i],"cr-tiny","start",g3);
-      E.rings.push({g:g3,c:rc,t:tl});
-    }
+    CORE.root=document.createElementNS(SVGNS,"g"); sheet.appendChild(CORE.root);
     return sheet;
   }
   function coreFit(){
-    var W=window.innerWidth, H=window.innerHeight;
-    CORE.W=W; CORE.H=H; CORE.cx=W*0.5; CORE.cy=H*0.46;
-    CORE.S=Math.min(W*0.92, H*0.80)/1000;
+    var W=window.innerWidth, H=window.innerHeight, ph=onPhone();
+    CORE.W=W; CORE.H=H; CORE.ph=ph;
+    CORE.cx=W*(ph?0.50:0.42); CORE.cy=H*(ph?0.42:0.46);
+    CORE.S=Math.min(W*(ph?0.62:0.42), H*(ph?0.34:0.52))/(2*CD_RS);   /* px per mm at rest */
+  }
+  /* the pools: paths and texts are made once and re-aimed every frame */
+  function cdPool(np,nt){
+    var i,e;
+    for (i=CORE.paths.length;i<np;i++){ e=document.createElementNS(SVGNS,"path"); e.setAttribute("fill","none"); e.setAttribute("stroke","#fff"); e.setAttribute("stroke-linecap","round"); e.setAttribute("stroke-linejoin","round"); CORE.root.appendChild(e); CORE.paths.push(e); }
+    for (i=CORE.texts.length;i<nt;i++){ e=document.createElementNS(SVGNS,"text"); CORE.root.appendChild(e); CORE.texts.push(e); }
   }
   function coreEnd(){
     var sheet=$("corelayer"); if (sheet) sheet.style.opacity="0";
-    CORE.q=0; CORE.spinP=0; CORE.zoomP=0; CORE.angle=0;
+    CORE.q=0; CORE.spinP=0; CORE.zoomP=0; CORE.angle=0; CORE.nut=null;
     if (CORE.raf){ cancelAnimationFrame(CORE.raf); CORE.raf=0; }
-    var rl=$("renderlayer"); if (rl){ rl.style.opacity="0"; }
+    var rl=$("renderlayer"); if (rl) rl.style.opacity="0";
   }
-  /* p1.329 THE BLENDER + THE ZOOM-OUT: spinP spins the scheme on its own clock
-     (a blender does not wait for the hand), zoomP pulls the camera back from the
-     spinning core onto the render of the building GFP built */
-  var CORE_SPIN_IN=4.95, CORE_SPIN_LEN=0.60, CORE_ZOOM_IN=5.55, CORE_ZOOM_LEN=0.90, CORE_SPIN_RATE=34;   /* rad/s at full spin */
+  /* p1.329 THE BLENDER + THE ZOOM-OUT: spinP spins the drum on its own clock
+     (a blender does not wait for the hand), zoomP pulls the camera back from
+     the spinning core onto the render of the building GFP built */
+  var CORE_SPIN_IN=8.20, CORE_SPIN_LEN=0.60, CORE_ZOOM_IN=8.80, CORE_ZOOM_LEN=0.90, CORE_SPIN_RATE=34;   /* p1.354: +0.75 with the longer handoff */   /* rad/s at full spin */
   function coreSpinLoop(){
     CORE.raf=0;
     var now=(window.performance&&performance.now)?performance.now():Date.now();
@@ -11937,17 +12839,8 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var sp=CORE.spinP||0;
     if (sp<=0.001 || (CORE.leave||0)>0.98) return;
     CORE.angle=((CORE.angle||0)+CORE_SPIN_RATE*sp*sp*dt)%(Math.PI*2);
-    coreSpinPaint();
+    corePaint(CORE.q, CORE.leave);
     CORE.raf=requestAnimationFrame(coreSpinLoop);
-  }
-  function coreSpinPaint(){
-    var E=CORE.els; if (!E.spin) return;
-    var sp=CORE.spinP||0, deg=CORE.angle*180/Math.PI;
-    E.spin.setAttribute("transform","rotate("+deg.toFixed(2)+")");
-    for (var i=0;i<E.ghosts.length;i++){
-      E.ghosts[i].setAttribute("transform","rotate("+(deg-9*(i+1)*sp).toFixed(2)+")");
-      E.ghosts[i].style.opacity=(sp*sp*(i?0.16:0.34)).toFixed(3);
-    }
   }
   function coreKick(){ if (!CORE.raf){ CORE.t=(window.performance&&performance.now)?performance.now():Date.now(); CORE.raf=requestAnimationFrame(coreSpinLoop); } }
   function renderStory(zoomP, leave){
@@ -11966,109 +12859,248 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       if (Math.abs((vid.currentTime||0)-tt)>0.03){ try{ vid.currentTime=tt; }catch(err){} }
     }
   }
-  function coreReveal(el,p){ el.style.strokeDasharray="1000"; el.style.strokeDashoffset=(1000*(1-Math.max(0,Math.min(1,p)))).toFixed(1); }
+  /* THE DRAWING: strokes and words for a story position q, the hand's angle and
+     the spin. Returns plain arrays, so the same function serves the bench. */
+  function coreModel(q, hand){
+    var st=[], tx=[], i, j, b;
+    var W=CORE.W, H=CORE.H, ph=CORE.ph;
+    var sp=CORE.spinP||0, rot=12*sp*sp+(CORE.angle||0);
+    /* the camera: out of the nut, into the core, aside for the question */
+    var NP=window.GFP_NUT_PX;
+    /* p1.359: latch the nut's place and size at the handover - the joint's turn is
+       still on its spring for a beat after, and a live read drifts the ring off it */
+    if (q<=0.02) CORE.nut=null;
+    if (!CORE.nut && NP && NP.x) CORE.nut={x:NP.x,y:NP.y,r:NP.r};
+    if (CORE.nut) NP=CORE.nut;
+    var grow=cdSeg(q,CQ.grow);
+    var k0=(NP&&NP.r)?Math.max(0.004,NP.r/CD_RS):CORE.S*0.03;   /* px per mm that puts the rim exactly on the nut's ring */
+    var dive=cdSeg(q,CQ.dive)*(1-cdSeg(q,CQ.diveOut));
+    var qcam=cdSeg(q,CQ.camQ)*(1-cdSeg(q,CQ.camQout));
+    var kRest=CORE.S*cdMix(1,ph?1.45:1.62,dive)*cdMix(1,ph?0.86:0.78,qcam);
+    var k=cdMix(k0,kRest,grow);
+    var cx=CORE.cx-(ph?0:W*0.05)*dive-(ph?0:W*0.13)*qcam;
+    var cy=CORE.cy+(ph?H*0.02:0)*dive;
+    var trav=cdSeg(q,CQ.travel);   /* the drum keeps the nut's place while it swings, then walks to its seat */
+    if (NP && NP.x){ cx=NP.x+(cx-NP.x)*trav; cy=NP.y+(cy-NP.y)*trav; }
+    /* the camera's elevation: straight down the axis at the handoff (the nut's own view), the resting 2.5D after the swing */
+    var alpha=cdMix(CD_A1,CD_A0,cdSeg(q,CQ.tilt)), EY=Math.sin(alpha), EZ=Math.cos(alpha);
+    function pr(px,py,z){ return [cx+k*px, cy-k*z*EZ+k*EY*py]; }
+    var qhl=cdSnap(q,CQ.qOpen)*(1-cdSnap(q,CQ.qClose));   /* p1.361: how open the question's own plate stands */
+    var ghost=cdSeg(q,CQ.ghost)*(1-cdSeg(q,CQ.unghost));
+    var shellA=1-0.85*ghost, drumA=1-0.72*qcam, coreDim=1-0.30*qcam;   /* the shell steps back for the question; the core, which answers it, stays */
+    /* the seats: the strike right of the drum, the prompt left; on the phone above and below */
+    var seatX=ph?W*0.5:W*0.665, seatY=ph?H*0.13:H*0.34, seatAnc=ph?"middle":"start";
+    var fsS=ph?23:33, lhS=ph?27:39, fsM=ph?11:12.5, lhM=ph?15:17;
+    var pbX=ph?16:W*0.055, pbY=ph?H*0.70:CORE.cy-H*0.10, pbStep=ph?19:25, fsW=ph?13.5:15.5;
+    /* 1 - the rim: round from the first stroke, out of the nut */
+    var rimA=1-cdSeg(q,[CQ.plates[0]+0.03,CQ.plates[1]+0.02]);
+    if (rimA>0.004){
+      var rp=[]; for (j=0;j<=72;j++){ var t=j/72*Math.PI*2+hand; rp.push(pr(CD_RS*Math.cos(t),CD_RS*Math.sin(t),CD_HZ)); }
+      st.push({d:cdPath(rp),w:1.4,a:rimA*drumA});   /* no reveal: the ring is already on screen - it is the nut's own outline */
+    }
+    /* 1b - the nut's hole hands over too: while the drum is still a disc, one ring
+       stands where the nut's bore was and eases onto the core's own radius */
+    var boreA=1-cdSeg(q,CQ.tilt);
+    if (boreA>0.004){
+      var rIn=cdMix(CD_RS*0.75, CD_RC, cdSeg(q,CQ.tilt)), bp=[];
+      for (j=0;j<=60;j++){ var bt=j/60*Math.PI*2+hand; bp.push(pr(rIn*Math.cos(bt),rIn*Math.sin(bt),CD_HZ)); }
+      st.push({d:cdPath(bp),w:1.0,a:boreA*0.85*drumA});   /* the nut's bore, likewise already there */
+    }
+    /* 2 - the shell: the plates, closed edge to edge, opening like louvers */
+    function plates(rotOff,aMul){
+      for (i=0;i<CD_N;i++){
+        var th=cdTheta(i,rot+rotOff,hand), phi=cdOpen(i,q)*CD_PHI;
+        var c=[CD_RS*Math.cos(th), CD_RS*Math.sin(th)];
+        var tt=[-Math.sin(th),Math.cos(th)], nn=[Math.cos(th),Math.sin(th)];
+        var d=[tt[0]*Math.cos(phi)+nn[0]*Math.sin(phi), tt[1]*Math.cos(phi)+nn[1]*Math.sin(phi)];
+        var qq=[-d[1]*CD_TH/2, d[0]*CD_TH/2], hw=Math.PI*CD_RS/CD_N*0.97;
+        var A=[c[0]-hw*d[0]+qq[0], c[1]-hw*d[1]+qq[1]], B=[c[0]+hw*d[0]+qq[0], c[1]+hw*d[1]+qq[1]];
+        var A2=[A[0]-2*qq[0],A[1]-2*qq[1]], B2=[B[0]-2*qq[0],B[1]-2*qq[1]];
+        var facing=Math.sin(th), a=cdMix(0.3,1,(facing+1)/2)*aMul*shellA*drumA, w=cdMix(0.7,1.05,(facing+1)/2);
+        a*=1-0.42*cdOpen(i,q);   /* p1.360: an open plate whispers - his "shell to be presented subtle" */
+        /* p1.361 (his mark-up on the question stop): the ONE plate still standing open
+           because the story is not closed yet is the bright thing on the screen */
+        if (qhl>0.01 && CD_SET_Q.indexOf(i)>=0){ a=Math.min(1,a+0.8*qhl)*(aMul>=1?1:aMul); w*=1+0.6*qhl; }
+        var dist=Math.min(i,CD_N-i)/(CD_N/2);
+        var rev=cdSeg(q,[CQ.plates[0]+0.055*dist, CQ.plates[0]+0.055*dist+0.045]);
+        if (rev<=0.004) continue;
+        var At=pr(A[0],A[1],CD_HZ),Bt=pr(B[0],B[1],CD_HZ),Ab=pr(A[0],A[1],-CD_HZ),Bb=pr(B[0],B[1],-CD_HZ);
+        var A2t=pr(A2[0],A2[1],CD_HZ),B2t=pr(B2[0],B2[1],CD_HZ),A2b=pr(A2[0],A2[1],-CD_HZ),B2b=pr(B2[0],B2[1],-CD_HZ);
+        a*=rev;   /* p1.356: the plate fades in where it stands - no self-drawing scribble */
+        st.push({d:cdPath([At,Bt,Bb,Ab],true),w:w,a:a});
+        st.push({d:cdPath([A2t,B2t]),w:w*0.8,a:a*0.7});
+        st.push({d:cdPath([At,A2t]),w:w*0.8,a:a*0.7});
+        st.push({d:cdPath([Bt,B2t]),w:w*0.8,a:a*0.7});
+        st.push({d:cdPath([A2t,A2b]),w:w*0.7,a:a*0.22});
+        st.push({d:cdPath([B2t,B2b]),w:w*0.7,a:a*0.22});
+        st.push({d:cdPath([A2b,B2b]),w:w*0.7,a:a*0.22});
+      }
+    }
+    if (sp>0.02){ plates(-0.30*sp,0.15); plates(-0.15*sp,0.35); }
+    plates(0,1);
+    /* p1.360 THE CORE THROUGH THE OPEN SHELL (his mark-up: a cylinder drawn inside
+       the opened plates, named CORE, and the plates named AI SHELL): a plain quiet
+       cylinder stands inside from the moment the louvers part, so the stop shows
+       both parts. It hands over to the built core when the bands start. */
+    var hintA=cdSeg(q,CQ.hint)*(1-cdSeg(q,[CQ.bands[0],CQ.bands[0]+0.02]))*drumA;
+    if (hintA>0.004){
+      var hp=[], hb=[];
+      for (j=0;j<=60;j++){ var ht=j/60*Math.PI*2+hand; hp.push(pr(CD_RC*Math.cos(ht),CD_RC*Math.sin(ht),CD_HC)); hb.push(pr(CD_RC*Math.cos(ht),CD_RC*Math.sin(ht),-CD_HC)); }
+      st.push({d:cdPath(hp),w:1.0,a:hintA*0.75});
+      st.push({d:cdPath(hb),w:0.8,a:hintA*0.4});
+      st.push({d:cdPath([pr(CD_RC,0,CD_HC),pr(CD_RC,0,-CD_HC)]),w:0.9,a:hintA*0.6});
+      st.push({d:cdPath([pr(-CD_RC,0,CD_HC),pr(-CD_RC,0,-CD_HC)]),w:0.9,a:hintA*0.6});
+    }
+    /* the two names, with a leader each, while the shell stands open */
+    var nmA=Math.min(cdSeg(q,CQ.names),1-cdSeg(q,CQ.namesOut));
+    if (nmA>0.004){
+      var shTh=Math.PI*1.16+hand, shP=pr(CD_RS*Math.cos(shTh),CD_RS*Math.sin(shTh),CD_HZ*0.45);   /* a plate on the NEAR side, so the leader never crosses the body */
+      var coP=pr(CD_RC*Math.cos(Math.PI*1.30+hand),CD_RC*Math.sin(Math.PI*1.30+hand),-CD_HC*0.25);
+      var nx=ph?14:cx-k*CD_RS-26, nAnc=ph?"start":"end";
+      var shY=ph?(cy-k*CD_HZ*0.9):(cy-k*CD_HZ*0.55), coY=ph?(cy+k*CD_HZ*1.0):(cy+k*CD_HZ*0.75);
+      st.push({d:cdPath([shP,[nx+(ph?-6:6),shY-4]]),w:0.6,a:nmA*0.7});
+      st.push({d:cdPath([coP,[nx+(ph?-6:6),coY-4]]),w:0.6,a:nmA*0.7});
+      tx.push({x:nx,y:shY,t:CD_NAME_SHELL,cls:"cr-mono",a:nmA*0.9,anchor:nAnc,fs:ph?11:12.5});
+      tx.push({x:nx,y:coY,t:CD_NAME_CORE,cls:"cr-mono",a:nmA*0.9,anchor:nAnc,fs:ph?11:12.5});
+    }
+    /* 3 - the core: the nine decisions as nine named bands */
+    var L=cdLands();
+    var coreIn=cdSeg(q,[CQ.bands[0],CQ.bands[0]+0.03]);
+    var coreA=coreIn*cdMix(0.72,1,dive)*coreDim, bandH=2*CD_HC/CD_NB;
+    var near=smooth01((cdMix(1,ph?1.45:1.62,dive)-1.16)/0.34);   /* the band names read on the bands only when the camera is close */
+    if (coreIn>0.004){
+      function arcp(z,from,to,segs,r){ var pts=[],n; for (n=0;n<=segs;n++){ var t=from+(to-from)*n/segs; pts.push(pr(r*Math.cos(t),r*Math.sin(t),z)); } return pts; }
+      for (b=0;b<CD_NB;b++){
+        var z0=-CD_HC+b*bandH, z1=z0+bandH, zm=(z0+z1)/2;
+        var brev=cdSeg(q,[CQ.bands[0]+b*0.012, CQ.bands[0]+b*0.012+0.025]); if (brev<=0.004) continue;
+        var bl=cdLit(b,q,L), lit=bl.lit, r2;
+        st.push({d:cdPath(arcp(z0,0,Math.PI,36,CD_RC)),w:1.0,a:coreA*0.9,rev:brev});
+        st.push({d:cdPath(arcp(z0,Math.PI,2*Math.PI,36,CD_RC)),w:0.8,a:coreA*0.3,rev:brev});
+        if (b===CD_NB-1) st.push({d:cdPath(arcp(z1,0,2*Math.PI,72,CD_RC)),w:1.05,a:coreA,rev:brev});
+        for (r2=1;r2<=3;r2++){
+          var zr=z0+bandH*r2/4;
+          st.push({d:cdPath(arcp(zr,0,Math.PI,36,CD_RC)),w:0.5+0.9*lit,a:coreA*(0.2+0.75*lit),rev:brev});
+          st.push({d:cdPath(arcp(zr,Math.PI,2*Math.PI,36,CD_RC)),w:0.5,a:coreA*(0.08+0.2*lit),rev:brev});
+        }
+        var u=clamp01((q-(CQ.bands[0]+b*0.012))/0.025), e=smooth01(u), lp=pr(0,CD_RC,zm);
+        var onA=brev*near*coreA;
+        if (u<1 && u>0) tx.push({x:cdMix(seatX-40,lp[0],e), y:cdMix(-24,lp[1]+4,e), t:CD_BANDS[b], cls:"cr-band", a:e*near, anchor:"middle", fs:ph?10:11});
+        else if (onA>0.01) tx.push({x:lp[0], y:lp[1]+4, t:CD_BANDS[b], cls:"cr-band", a:onA, anchor:"middle", fs:ph?10:11});
+        var farA=(1-near)*bl.flash*coreA*(1-cdSeg(q,CQ.allLit));
+        if (farA>0.01 && !ph){
+          var ep=pr(CD_RC,0,zm), sx=cx+k*(CD_RS+22);
+          st.push({d:cdPath([ep,[sx-8,ep[1]]]),w:0.6,a:farA*0.8});
+          tx.push({x:sx, y:ep[1]+4, t:CD_BANDS[b], cls:"cr-band", a:farA, anchor:"start", fs:11});
+        }
+      }
+      for (i=0;i<8;i++){
+        var mt=i*Math.PI/4+Math.PI/8+rot+hand, vis=Math.sin(mt); if (vis<=0.05) continue;
+        st.push({d:cdPath([pr(CD_RC*Math.cos(mt),CD_RC*Math.sin(mt),CD_HC), pr(CD_RC*Math.cos(mt),CD_RC*Math.sin(mt),-CD_HC)]),w:0.6,a:coreA*0.3*vis,rev:coreIn});
+      }
+      st.push({d:cdPath([pr(CD_RC,0,CD_HC),pr(CD_RC,0,-CD_HC)]),w:1.05,a:coreA,rev:coreIn});
+      st.push({d:cdPath([pr(-CD_RC,0,CD_HC),pr(-CD_RC,0,-CD_HC)]),w:1.05,a:coreA,rev:coreIn});
+    }
+    /* the strikes - one at a time, one seat */
+    function strike(SS,inAb,outAb,fixed){
+      var a=(fixed!==undefined)?fixed:Math.min(cdSeg(q,inAb), 1-cdSeg(q,outAb)); if (a<=0.004) return;
+      var n;
+      for (n=0;n<SS.lines.length;n++) tx.push({x:seatX,y:seatY+n*lhS,t:SS.lines[n],cls:"cr-strike",a:a,anchor:seatAnc,fs:fsS});
+      for (n=0;n<SS.mono.length;n++) tx.push({x:seatX,y:seatY+SS.lines.length*lhS+4+n*lhM,t:SS.mono[n],cls:"cr-mono",a:a*0.85,anchor:seatAnc,fs:fsM});
+    }
+    strike(CD_S1,CQ.s1,CQ.s1out);
+    strike(CD_S2,CQ.s2,CQ.s2out);
+    /* p1.362 THE LAST LINE: it does not ride the story - it rides the blender, and
+       leaves as the camera pulls back onto the building GFP has just rebuilt */
+    strike(CD_S3,null,null, smooth01(((CORE.spinP||0)-0.10)/0.28)*(1-smooth01((((CORE.zoomP||0))-0.20)/0.28)));
+    /* 4 - his intent: the prompt goes in through the plates that open for it */
+    var gA=cdSetAngle(CD_SET_A,rot,hand), gB=cdSetAngle(CD_SET_B,rot,hand), gQ=cdSetAngle(CD_SET_Q,rot,hand);
+    var GA=pr(CD_RS*Math.cos(gA),CD_RS*Math.sin(gA),0), GB=pr(CD_RS*Math.cos(gB),CD_RS*Math.sin(gB),0), GQ=pr(CD_RS*Math.cos(gQ),CD_RS*Math.sin(gQ),0), CCp=pr(0,0,0);
+    var pa=cdSeg(q,CQ.prompt);
+    if (pa>0.004){
+      var pmA=Math.min(pa, 1-cdSeg(q,[CQ.bSuck[1],CQ.bSuck[1]+0.02]));
+      if (pmA>0.004) tx.push({x:pbX,y:pbY-26,t:"your intent",cls:"cr-mono",a:pmA*0.85,anchor:"start",fs:fsM});
+      for (i=0;i<CD_PROMPT.length;i++){
+        var lin=cdSeg(q,[CQ.prompt[0]+i*0.006, CQ.prompt[0]+i*0.006+0.015]);
+        var home=[pbX,pbY+i*pbStep], gap=null, t0=0, t1=0;
+        if (CD_CHUNK_A.indexOf(i)>=0){ gap=GA; t0=CQ.aSuck[0]; t1=CQ.aSuck[1]; }
+        var ib=CD_CHUNK_B.indexOf(i);
+        if (ib>=0){ gap=GB; var span=(CQ.bSuck[1]-CQ.bSuck[0])/CD_CHUNK_B.length; t0=CQ.bSuck[0]+ib*span; t1=L[i]; }
+        var uu=gap?clamp01((q-t0)/(t1-t0)):0; if (uu>=1) continue;
+        var ee=uu*uu*(2-uu), pos=cdBez(home,gap,CCp,ee);
+        tx.push({x:pos[0],y:pos[1],t:CD_PROMPT[i],cls:"cr-word",a:lin*(1-smooth01((uu-0.7)/0.3)),anchor:"start",fs:fsW*cdMix(1,0.42,ee)});
+      }
+    }
+    /* 5 - one precise question, out through one plate, and it becomes the strike */
+    var qu=cdSeg(q,CQ.qOut);
+    if (qu>0.004){
+      var qa=Math.min(smooth01(qu/0.25), 1-cdSeg(q,CQ.qFade));
+      var eq=1-(1-qu)*(1-qu), qp=cdBez(CCp,GQ,[seatX,seatY],eq), qs=cdMix(0.32,1,eq);
+      /* p1.361: the leader from the open plate to the words it let out */
+      var ldA=qa*smooth01((qu-0.55)/0.35)*0.8;
+      if (ldA>0.01){
+        var qth=cdTheta(CD_SET_Q[0],rot,hand), qpt=pr(CD_RS*1.04*Math.cos(qth),CD_RS*1.04*Math.sin(qth),CD_HZ*0.1);
+        var lend=ph?[qp[0],qp[1]-lhS*1.3]:[qp[0]-16,qp[1]-lhS*0.35];
+        st.push({d:cdPath([qpt,[(qpt[0]+lend[0])/2,lend[1]],lend]),w:0.7,a:ldA});
+      }
+      tx.push({x:qp[0],y:qp[1]-lhS*0.75*qs,t:CD_QMONO,cls:"cr-mono",a:qa*0.85*smooth01((qu-0.6)/0.4),anchor:seatAnc,fs:fsM});
+      for (i=0;i<CD_QLINES.length;i++) tx.push({x:qp[0],y:qp[1]+i*lhS*qs,t:CD_QLINES[i],cls:"cr-strike",a:qa,anchor:seatAnc,fs:fsS*qs});
+    }
+    /* 6 - his answer: it appears where the prompt stood and goes in through the same plate */
+    var an=cdSeg(q,CQ.answer);
+    if (an>0.004){
+      var ui=clamp01((q-CQ.ansIn[0])/(CQ.ansIn[1]-CQ.ansIn[0]));
+      if (ui<1){
+        var ea=ui*ui*(2-ui), ap=cdBez([pbX,pbY],GQ,CCp,ea);
+        tx.push({x:pbX,y:pbY-26,t:CD_AMONO,cls:"cr-mono",a:an*0.85*(1-smooth01(ui/0.3)),anchor:"start",fs:fsM});
+        tx.push({x:ap[0],y:ap[1],t:CD_ATEXT,cls:"cr-word",a:an*(1-smooth01((ui-0.7)/0.3)),anchor:"start",fs:fsW*cdMix(1,0.42,ea)});
+      }
+    }
+    return { strokes:st, texts:tx };
+  }
+  function corePaint(q, leave){
+    var sheet=$("corelayer"); if (!sheet) return;
+    var hand=((window.GFP_DIVE&&window.GFP_DIVE.hand)||0)*(1-cdSeg(q,CQ.tilt));   /* the joint's hand angle eases out as the drum takes the screen */
+    var m=coreModel(q, hand), i, e, s, t;
+    cdPool(m.strokes.length, m.texts.length);
+    for (i=0;i<CORE.paths.length;i++){
+      e=CORE.paths[i]; s=m.strokes[i];
+      if (!s || s.a<=0.004){ if (e.getAttribute("d")!=="") { e.setAttribute("d",""); } continue; }
+      e.setAttribute("d",s.d);
+      e.setAttribute("stroke-width",s.w.toFixed(2));
+      e.setAttribute("stroke-opacity",s.a.toFixed(3));
+      if (s.rev!==undefined && s.rev<1){ e.setAttribute("pathLength","1"); e.setAttribute("stroke-dasharray",s.rev.toFixed(3)+" 1"); }
+      else if (e.getAttribute("stroke-dasharray")) e.removeAttribute("stroke-dasharray");
+    }
+    for (i=0;i<CORE.texts.length;i++){
+      e=CORE.texts[i]; t=m.texts[i];
+      if (!t || t.a<=0.004){ if (e.textContent!=="") e.textContent=""; e.setAttribute("fill-opacity","0"); continue; }
+      if (e.textContent!==t.t) e.textContent=t.t;
+      e.setAttribute("x",t.x.toFixed(1)); e.setAttribute("y",t.y.toFixed(1));
+      e.setAttribute("text-anchor",t.anchor);
+      e.setAttribute("class",t.cls);
+      e.setAttribute("fill-opacity",t.a.toFixed(3));
+      e.style.fontSize=t.fs.toFixed(1)+"px";
+    }
+    /* p1.329: the zoom-out shrinks the whole drum into the picture's centre */
+    var zo=smooth01((CORE.zoomP||0)/0.85);
+    if (zo>0.001){
+      var zk=1-0.94*zo, ox=CORE.W*0.5, oy=CORE.H*0.46;
+      CORE.root.setAttribute("transform","translate("+(ox*(1-zk)).toFixed(1)+","+(oy*(1-zk)).toFixed(1)+") scale("+zk.toFixed(4)+")");
+    } else if (CORE.root.getAttribute("transform")) CORE.root.removeAttribute("transform");
+    sheet.setAttribute("viewBox","0 0 "+CORE.W+" "+CORE.H);
+    sheet.style.opacity=String((smooth01((q-0.027)/0.008)*(1-smooth01(leave||0))*(1-smooth01(((CORE.zoomP||0)-0.45)/0.45))).toFixed(3));   /* p1.353: full from the first frame - the ring must stand ON the nut while the nut is still there */
+  }
   function coreStory(q, leave, spinP, zoomP){
     var sheet=coreBuild(); if (!sheet) return;
     CORE.spinP=spinP||0; CORE.zoomP=zoomP||0; CORE.leave=leave||0;
     renderStory(CORE.zoomP, leave);
     if (q<=0.001){ if (CORE.q>0){ sheet.style.opacity="0"; CORE.q=0; } if (CORE.raf){ cancelAnimationFrame(CORE.raf); CORE.raf=0; } return; }
-    if (CORE.spinP>0.001) coreKick();
-    coreFit();
-    var W=CORE.W, H=CORE.H, S=CORE.S, E=CORE.els, i;
-    sheet.setAttribute("viewBox","0 0 "+W+" "+H);
     CORE.q=q;
-    /* type in screen pixels, strokes too */
-    var fs=function(px){ return (px/S).toFixed(2)+"px"; };
-    var ph=onPhone();
-    sheet.style.setProperty("--cr-big",fs(ph?19:22)); sheet.style.setProperty("--cr-key",fs(ph?10:11.5)); sheet.style.setProperty("--cr-lab",fs(ph?10.5:12)); sheet.style.setProperty("--cr-sw",(1.25/S).toFixed(2));
-    /* 1. the scheme grows out of the nut's hex (p1.328): the ring starts as the
-       hexagon the nut left at the screen's centre, rounds into a circle and
-       swells to the boundary; everything else appears as before */
-    var gA=smooth01(q/0.35);
-    var NP=window.GFP_NUT_PX;
-    var r0=(NP&&NP.r)?Math.max(0.02,NP.r/(S*CORE_R)):0.03;   /* the hex's size as a fraction of the boundary */
-    var z=Math.exp(Math.log(r0)*(1-gA));
-    E.ring.setAttribute("d",coreRingPath(CORE_R, smooth01((q-0.06)/0.22)));
-    if (NP && NP.x){ CORE.cx=NP.x+(CORE.W*0.5-NP.x)*gA; CORE.cy=NP.y+(CORE.H*0.46-NP.y)*gA; }
-    /* 3. the port zoom */
-    var ZP=onPhone()?11:9;
-    var zpP=smooth01((q-0.60)/0.10)*(1-smooth01((q-0.86)/0.05));
-    var zp=1+(ZP-1)*zpP;
-    var ax=E.ask.x, ay=E.ask.y;
-    /* the zoom keeps the port near the screen's centre while it is large */
-    var px=-ax*zpP*0.92, py=(-ay-40)*zpP*0.92;
-    var zo=smooth01(CORE.zoomP/0.85), zk=1-0.94*zo;   /* p1.329: the zoom-out shrinks the spinning scheme into the picture's centre */
-    CORE.root.setAttribute("transform","translate("+(CORE.cx+px*S*z).toFixed(1)+","+(CORE.cy+py*S*z).toFixed(1)+") scale("+(S*z*zk).toFixed(4)+")");
-    CORE.zoom.setAttribute("transform","translate("+(ax*(1-zp)).toFixed(1)+","+(ay*(1-zp)).toFixed(1)+") scale("+zp.toFixed(3)+")");
-    sheet.style.opacity=String((smooth01(q/0.06)*(1-smooth01(leave||0))*(1-smooth01((CORE.zoomP-0.45)/0.45))).toFixed(3));
-    /* the reveal */
-    coreReveal(E.ring, 1);   /* p1.328: the ring is already there - it is the nut's outline */
-    E.ring.style.strokeWidth=((1.8-0.55*gA)/S).toFixed(2); E.ring.style.stroke="rgba(255,255,255,"+(0.95-0.35*gA).toFixed(2)+")";
-    coreReveal(E.core, smooth01((q-0.05)/0.18));
-    E.core2.style.opacity=smooth01((q-0.18)/0.08).toFixed(3);
-    var lab1=smooth01((q-0.24)/0.08);
-    E.coreT.style.opacity=lab1.toFixed(3); E.coreS.style.opacity=lab1.toFixed(3); E.ringT.style.opacity=smooth01((q-0.30)/0.06).toFixed(3);
-    for (i=0;i<E.ports.length;i++){
-      var pp=E.ports[i], o=smooth01((q-0.16-i*0.011)/0.05);
-      pp.el.style.opacity=o.toFixed(3);
-      if (pp===E.ask){
-        var fillP=smooth01((q-0.88)/0.05);
-        pp.el.style.fill="rgba(255,255,255,"+(0.92*fillP).toFixed(3)+")";
-      }
-    }
-    coreReveal(E.state, smooth01((q-0.30)/0.10));
-    E.stateT.style.opacity=smooth01((q-0.36)/0.06).toFixed(3);
-    E.learnT.style.opacity=smooth01((q-0.34)/0.06).toFixed(3);
-    /* 2. sources, the building, the loop */
-    for (i=0;i<E.src.length;i++){
-      E.src[i].g.style.opacity=smooth01((q-0.38-i*0.03)/0.08).toFixed(3);
-      coreReveal(E.src[i].ar, smooth01((q-0.42-i*0.03)/0.10));
-    }
-    coreReveal(E.out, smooth01((q-0.48)/0.08));
-    E.bld.style.opacity=smooth01((q-0.50)/0.06).toFixed(3);
-    coreReveal(E.bld.firstChild, smooth01((q-0.50)/0.10));
-    E.bldT.style.opacity=smooth01((q-0.54)/0.05).toFixed(3);
-    coreReveal(E.loop, smooth01((q-0.55)/0.10));
-    E.loopT.style.opacity=smooth01((q-0.58)/0.05).toFixed(3);
-    /* 3. inside the port */
-    var innerO=smooth01((q-0.66)/0.05)*(1-smooth01((q-0.86)/0.04));
-    E.inner.style.opacity=innerO.toFixed(3);
-    for (i=0;i<3;i++) E.innerRows[i].style.opacity=smooth01((q-0.67-i*0.03)/0.04).toFixed(3);
-    /* while the port is large everything else steps back */
-    var farO=1-0.92*zpP;
-    E.ring.style.opacity=farO.toFixed(3); E.state.style.opacity=farO.toFixed(3);
-    E.ringT.style.opacity=(smooth01((q-0.30)/0.06)*(1-zpP)).toFixed(3);
-    E.stateT.style.opacity=(smooth01((q-0.36)/0.06)*(1-zpP)).toFixed(3); E.learnT.style.opacity=(smooth01((q-0.34)/0.06)*(1-zpP)).toFixed(3);
-    E.coreT.style.opacity=(lab1*(1-zpP)).toFixed(3); E.coreS.style.opacity=(lab1*(1-zpP)).toFixed(3);
-    for (i=0;i<E.src.length;i++) E.src[i].g.style.opacity=(smooth01((q-0.38-i*0.03)/0.08)*(1-zpP)).toFixed(3);
-    E.bld.style.opacity=(smooth01((q-0.50)/0.06)*(1-zpP)).toFixed(3); E.bldT.style.opacity=(smooth01((q-0.54)/0.05)*(1-zpP)).toFixed(3); E.loopT.style.opacity=(smooth01((q-0.58)/0.05)*(1-zpP)).toFixed(3); E.loop.style.opacity=farO.toFixed(3); E.out.style.opacity=farO.toFixed(3);
-    for (i=0;i<E.ports.length;i++) if (E.ports[i]!==E.ask) E.ports[i].el.style.opacity=(parseFloat(E.ports[i].el.style.opacity||"0")*(1-0.85*zpP)).toFixed(3);
-    /* 4. the launch */
-    var cellsP=smooth01((q-0.95)/0.05);
-    for (i=0;i<E.cells.length;i++) E.cells[i].style.opacity=(0.16+0.84*smooth01((cellsP-i*0.03)/0.4)).toFixed(3);
-    for (i=0;i<E.rings.length;i++){
-      var rr=smooth01((q-0.895-i*0.007)/0.08), rad=CORE_RC+(CORE_R-CORE_RC-4)*rr, R=E.rings[i];
-      R.c.setAttribute("r",rad.toFixed(1));
-      R.g.style.opacity=(rr>0&&rr<1?(0.85*(1-rr*rr)):0).toFixed(3);
-      var lp=corePol(-50+i*4, rad+6);
-      R.t.setAttribute("x",lp[0].toFixed(1)); R.t.setAttribute("y",lp[1].toFixed(1));
-    }
-    E.bld.setAttribute("transform","translate("+(16*cellsP).toFixed(1)+",0)");
-    /* p1.329: as the blender winds up, every word and every arrow steps out of its way */
-    var spF=1-smooth01(CORE.spinP/0.35);
-    var quiet=[E.coreT,E.coreS,E.ringT,E.stateT,E.learnT,E.bldT,E.loopT,E.bld,E.loop,E.out].concat(E.src.map(function(sr){ return sr.g; }));
-    for (i=0;i<quiet.length;i++) quiet[i].style.opacity=(parseFloat(quiet[i].style.opacity||"0")*spF).toFixed(3);
-    coreSpinPaint();
-    /* a narrow screen: labels that run off the edge slide back in (measured, so any font) */
-    if (zpP<0.001 && E.clamp){
-      for (i=0;i<E.clamp.length;i++){
-        var tx=E.clamp[i], rb=tx.getBoundingClientRect(); if (!rb.width) continue;
-        var over=0; if (rb.left<8) over=8-rb.left; else if (rb.right>W-8) over=(W-8)-rb.right;
-        if (Math.abs(over)>0.5){ var cur=parseFloat(tx.getAttribute("data-dx")||"0")+over/(S*z); tx.setAttribute("data-dx",cur.toFixed(2)); tx.setAttribute("transform","translate("+cur.toFixed(1)+",0)"); }
-      }
-    }
+    coreFit();
+    if (CORE.spinP>0.001) coreKick();
+    corePaint(q, leave);
   }
-  window.GFP_CORE=CORE;   /* for the benches */
+  window.GFP_CORE=CORE; window.GFP_COREMODEL=function(q,h){ coreFit(); return coreModel(q,h||0); }; window.GFP_CORESTORY=function(q,l,sp,zp){ coreStory(q,l||0,sp||0,zp||0); };   /* for the benches */
   function windDraw(){
     turnHandlers();
     diveHandlers();
@@ -12607,7 +13639,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       var deckR=$("deck");
       if (deckR){
         var dRect=deckR.getBoundingClientRect();
-        var cdt=(window.innerHeight-dRect.height)/2-(HOME_STORY.sceneLift||window.innerHeight*.03);
+        var cdt=(window.innerHeight-dRect.height)/2-(HOME_STORY.sceneLift||window.innerHeight*SCENE_LIFT_VH);
         rideOff=Math.max(0, dRect.top-cdt);
       }
     }
@@ -12639,7 +13671,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         if (typeof updateHomeDeckStory==="function") updateHomeDeckStory(HOME_MOTION.initialized?HOME_MOTION.value:undefined);
       });
     }
-    var kA=smooth01(WIND.thA)*(1-koOut);
     var kB=smooth01(((HOME_STORY.blowProg||0)-0.42)/0.40)*(1-koOut);
     /* p1.259: after the old pair dissolves the truth reveals, and leaves with the tie */
     var kE=smooth01((prog-0.15)/0.10);
@@ -12651,7 +13682,6 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       e.style.transform="translateY("+(46*(1-k)).toFixed(1)+"px)";
       e.style.filter="blur("+(2.5*(1-k)).toFixed(2)+"px)";
     };
-    line("meetsay-a", kA);
     line("meetsay-b", kB);
     line("meetsay-e", kE);
     line("meetsay-g", kG);
@@ -13774,14 +14804,21 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        the box again - and at the landing the tie plays back (lines widen,
        the thought returns) and the chamber re-arms for the next gesture */
     /* p1.330 THE SIX SLUICES - the table and the conductor (blockDelta plays them) */
-    var SX_RESTS=[0.125, 2.55, 3.70, 4.72, 4.95, 6.50, 8.60];   /* pinP: the bubble · the joint with its row · the nut · the port seen and left · the launched scheme · the render · the closing line */
+    var SX_RESTS=[0.125, 2.55, 4.82, 5.70, 6.62, 7.40, 8.60, 9.70, 11.10];   /* p1.363: the mute "all nine lit" stop at 8.10 is GONE - his "this intermediate state is unnecessary"; the answer, the lighting and the blender now run into the last line in one go */   /* p1.362: 8.60 is the new stop - the blender running and the last line standing */   /* p1.359: the rest at the nut (3.70) is GONE - his "this intermediate state to be skipped as well, part of automatic first stage" */   /* pinP: the bubble - the joint with its row - the nut and the ring standing on it - the drum whole and still closed - it has answered, all nine lit - the render after the zoom-out - the closing line */   /* p1.355: retimed for the drum; the old rests 4.72/4.95/6.50 were the ring scheme's port and launch */
     var SX_LEGS=[
       [{to:1.90,d:2400},{hold:1200},{to:2.55,d:1400}],           /* the dive, a hold on the caption, the row */
-      [{to:3.70,d:1800}],                                        /* the turn to the nut */
-      [{to:4.43,d:2600},{to:4.60,d:1200},{hold:900},{to:4.72,d:1000}],   /* the scheme, into the port, a hold, out */
-      [{to:4.95,d:1600}],                                        /* the launch */
-      [{to:6.50,d:3600}],                                        /* the blender and the zoom-out */
-      [{to:7.95,d:2200},{to:8.60,d:1500}]                        /* the six words, the closing line (rest once it stands full) */
+      /* p1.359 THE AUTOMATIC FIRST STAGE: one gesture at the joint turns the
+         building to the nut, lets the ring take the nut's place, grows it, swings
+         the camera down and opens the louvers - the visitor never parks on the
+         nut or on the ring standing over it. The short hold is for the turn's
+         spring to settle before the ring takes over, nothing is shown there. */
+      [{to:3.70,d:1800},{hold:500},{to:4.82,d:6600}],
+      [{to:5.70,d:5200}],                                        /* the shell closes, the camera goes inside, the nine decisions build, the core is named */
+      [{to:6.62,d:4600}],                                        /* the shell returns, his intent stands, the first piece goes in */
+      [{to:7.40,d:4200}],                                        /* the rest goes in and the building asks one question */
+      [{hold:600},{to:8.60,d:5200}],                             /* his answer goes in, all nine light, the blender starts and the last line arrives - one run, no mute landing */
+      [{to:9.70,d:3000}],                                        /* the zoom-out onto the building it has just rebuilt */
+      [{to:10.50,d:1600},{to:11.10,d:1500}]                      /* the six words, then the closing line - here the landing between them is wanted */
     ];
     function sxReduced(){ try{ return !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); }catch(err){ return false; } }
     function sxY(p){ return HOME_STORY.powerTop + p*Math.max(1,scr.clientHeight)*1.6; }
@@ -14202,7 +15239,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     scr.addEventListener("touchmove",function(e){
       if (PILL_GATE.touchY===null || !e.touches || e.touches.length!==1) return;
       /* p1.349: while the blue's turntable is open, one swipe is either a turn or a scroll - never both */
-      if (typeof gestAxis==="function" && (WIND.turnGate||0)>0.5 && !DIVE.scriptOn){
+      if (typeof gestAxis==="function" && (WIND.turnGate||0)>0.5){   /* p1.351: the axis decision stands even while the nut is locked */
         var ax=gestAxis(e);
         if (ax!==-1){ PILL_GATE.touchY=e.touches[0].clientY; if (ax===1 && e.cancelable) e.preventDefault(); return; }
       }
@@ -14454,6 +15491,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     /* p1.301: the demo prompt, once allowed to start, types ITSELF to the
        end at the hand's pace - the scroll only decides whether it is here */
     if (whole && typeP > 0) typeP=1;
+    /* p1.495 (his: "each moving back types in the ghost text"): while the exchange holds
+       the page, the written example is a fact of the scene. A wheel that nudges the
+       scroll for a frame must not erase it and type it again from nothing. The scroll is
+       no longer the ghost's master here - the chain is. */
+    if (window.GFP_WIND_LOCK && (window.GFP_ASK_HOLD===true || window.GFP_ASK_HOLD===false)){ want=true; typeP=1; }
     if (!want){
       if (GHOST.on || GHOST.sent){
         GHOST.on=false; GHOST.sent=false; GHOST.settled=false; GHOST.target=0; GHOST.shown=0;
@@ -14718,7 +15760,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
          A full rebuild removes position:fixed for one paint and produces the
          flicker. Only a true width/orientation change needs remeasurement. */
       if (onPhone() && !widthChanged){
-        HOME_STORY.sceneLift=window.innerHeight*.03;
+        HOME_STORY.sceneLift=window.innerHeight*SCENE_LIFT_VH;
         if (!KB_DOCKED) queueHomeStoryMotion();
         return;
       }
@@ -15539,10 +16581,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var x=innerWidth*.5,y=innerHeight*.5,tx=x,ty=y,edgeX=x,strength=0;
   var active=false;
 
-  /* On phones the hero element already contains the two full-height opening
-     slides: the proposition and its explanatory text. Stop the hidden facade
-     there; the later prompt story must remain visually separate. */
-  function openingAreas(){ return W<=700?[hero]:[hero,story]; }
+  /* p1.391 (his: "on this screen in mobile the grid backing that appears on touch
+     is missing"): the phone used to stop the hidden facade at the hero, because the
+     hero then held both opening slides. Since the opening was rebuilt the second
+     screen lives past the hero, so the grid must reach there too - on every width. */
+  function openingAreas(){ return [hero,story]; }
 
   function resize(){
     W=Math.max(1,window.innerWidth); H=Math.max(1,window.innerHeight);
@@ -15573,6 +16616,25 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function pointerMove(e){ move(e.clientX,e.clientY); }
   function touchMove(e){
     if(e.touches&&e.touches.length) move(e.touches[0].clientX,e.touches[0].clientY);
+  }
+  function askDebug(){
+    /* p1.437 A READOUT ON DEMAND: open the page with #askdebug in the address and a
+       small line appears in the corner - the written length, whether the prompt was
+       seen finished, the hold, the scene's clock, and any swallowed error. */
+    try{
+      if (String(location.hash||"").indexOf("askdebug")<0) return;
+      var d=document.getElementById("askdebug");
+      if (!d){ d=document.createElement("div"); d.id="askdebug";
+        d.style.cssText="position:fixed;left:8px;bottom:8px;z-index:99999;font:11px/1.4 monospace;background:rgba(0,0,0,.78);color:#fff;padding:6px 8px;border-radius:6px;white-space:pre;pointer-events:none";
+        document.body.appendChild(d); }
+      var g2=document.getElementById("deckghost");
+      var tt=started?(((window.performance&&performance.now)?performance.now():Date.now())-t0)/1000:0;
+      d.textContent="written "+(g2?(g2.textContent||"").length:-1)
+        +"  max "+maxSeen+"  seen "+(everTyped?"yes":"no")
+        +"  hold "+String(window.GFP_ASK_HOLD)
+        +"  scene "+(started?tt.toFixed(1)+"s":"not started")
+        +(window.__askErr?("\nERROR "+window.__askErr):"");
+    }catch(e2){}
   }
   function leave(){ active=false; queue(); }
   function queue(){ if(!raf) raf=requestAnimationFrame(frame); }
@@ -16441,6 +17503,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var fill=document.getElementById("pagebar-fill");
   var dot=document.getElementById("pagebar-dot");
   var wash=document.getElementById("power-blue-wash");
+  /* p1.506 THE SIDE LINE: on a phone the bar is a standard scrollbar - the thumb's height
+     is the share of the page in view, its seat the page's progress, and it is shown only
+     while the page moves. The wide screen keeps the ticks and the dot. */
+  var sideMQ=window.matchMedia?window.matchMedia("(max-width: 700px)"):null, side=false;
+  function sideMode(){ side=!!(sideMQ&&sideMQ.matches); bar.classList.toggle("pb-side", side); if (!side){ dot.style.height=""; bar.classList.remove("pb-live"); } built=false; }
+  sideMode();
+  if (sideMQ){ if (sideMQ.addEventListener) sideMQ.addEventListener("change", sideMode); else if (sideMQ.addListener) sideMQ.addListener(sideMode); }
   var marks=[], built=false;
   function build(){
     var g=window.GFP_STORY;
@@ -16495,8 +17564,21 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
         }
       }
     }
-    fill.style.height=(p*100).toFixed(2)+"%";
-    dot.style.top=(p*100).toFixed(2)+"%";
+    if (side){
+      var bh=bar.clientHeight||0, share=scr.scrollHeight>0?scr.clientHeight/scr.scrollHeight:1;
+      var th=Math.max(36, Math.min(bh, Math.round(share*bh)));
+      dot.style.height=th+"px"; dot.style.top=Math.round(p*Math.max(0,bh-th))+"px";
+      fill.style.height="0";
+      if (bar._lastP===undefined) bar._lastP=p;
+      else if (Math.abs(p-bar._lastP)>0.0008){
+        bar._lastP=p; bar.classList.add("pb-live");
+        if (bar._liveT) clearTimeout(bar._liveT);
+        bar._liveT=setTimeout(function(){ bar.classList.remove("pb-live"); }, 900);
+      }
+    } else {
+      fill.style.height=(p*100).toFixed(2)+"%";
+      dot.style.top=(p*100).toFixed(2)+"%";
+    }
     var onBlue=wash && parseFloat(wash.style.opacity||0)>0.55;
     if (onBlue!==bar._blue){ bar._blue=onBlue; bar.classList.toggle("pb-blue",onBlue); }
     var held=window.GFP_HELD||0;
@@ -16514,5 +17596,733 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
 </script>
 <div id="tide-crest" aria-hidden="true"></div>
 <div id="blue-payoff" aria-hidden="true">Your building answers back—as a live, coordinated facade model.<br><span>In minutes.</span></div>
+
+<script>
+/* p1.440 THE SECOND SCENE AS SIX INDEPENDENT SLUICES (his: "to do it properly you have
+   to cut it all into independent sluices").
+
+   Every stage has three things and nothing else:
+     IN   - it starts only when the previous stage has reported done. Never from a guess
+            about anyone else's state.
+     OWN  - its own clock, its own work; it finishes what it started whatever the
+            neighbours do.
+     OUT  - it reports done, once. A cap releases it if its work never completes, so the
+            page can never be held hostage.
+
+   No stage reads another stage's variables. The chain is the only coupling.
+
+     1 PROMPT   the example is written        2 SEND    the arrow is pressed
+     3 QUESTION asked, answered               4 CLEAR   the block leaves
+     5 RISE     the composition may rise      6 WIND    the page may go on
+*/
+(function(){
+  "use strict";
+  var Q="Floor 3 steps back 3 m \u2014 do floors 4 to 13 follow it, or return to the base line?";
+  var OPTS=["They follow the step back.","They return to the base line.","Let the engine choose."];
+  var TAKE=1, KICKER="one precise question";
+
+  /* ---- the sheet (built once, owned by stage 3) ---- */
+  var el=null, opts=[];
+  function sheet(){
+    if (el) return el;
+    el=document.createElement("div"); el.id="gfpask"; el.setAttribute("aria-hidden","true");
+    var k=document.createElement("p"); k.className="ask-kicker"; k.textContent=""; k.style.display="none";   /* p1.454: no kicker - the question speaks for itself */
+    var q=document.createElement("p"); q.className="ask-q"; q.textContent=Q;
+    var row=document.createElement("div"); row.className="ask-row";
+    for (var i=0;i<OPTS.length;i++){ var o=document.createElement("span"); o.className="ask-opt"; o.textContent=OPTS[i]; row.appendChild(o); opts.push(o); }
+    el.appendChild(k); el.appendChild(q); el.appendChild(row);
+    document.body.appendChild(el);
+    el.kick=k; el.q=q;
+    return el;
+  }
+  function seat(){
+    var e=sheet();
+    var box=document.querySelector("#deck .composer")||document.querySelector(".composer");
+    if (!box) return e;
+    var r=box.getBoundingClientRect();
+    var h=e.getBoundingClientRect().height||140;
+    var below=r.bottom+Math.max(22, window.innerHeight*0.028);
+    e.style.left=Math.round(r.left+18)+"px";
+    e.style.width=Math.round(Math.min(r.width-36, 760))+"px";
+    e.style.top=Math.round((below+h<window.innerHeight-16)?below:(r.top-h-Math.max(22, window.innerHeight*0.028)))+"px";
+    return e;
+  }
+  function ease(x){ x=x<0?0:x>1?1:x; return x*x*(3-2*x); }
+  function now(){ return (window.performance&&performance.now)?performance.now():Date.now(); }
+
+  /* ---- the second question's sheet and the mullion model ---- */
+  var Q2="How far apart should the mullions stand?", KICK2="one more question";
+  var MIN=300, MAX=1500, ANSWER=1400;
+  var e2=null, m2=null, knob=null, fill=null, val=null;
+  function sheet2(){
+    if (e2) return e2;
+    e2=document.createElement("div"); e2.id="gfpask2"; e2.setAttribute("aria-hidden","true");
+    var k=document.createElement("p"); k.className="ask-kicker"; k.textContent=""; k.style.display="none";
+    var q=document.createElement("p"); q.className="ask-q"; q.textContent=Q2;
+    var sl=document.createElement("div"); sl.className="sl";
+    sl.innerHTML='<div class="sl-track"></div><div class="sl-fill"></div><div class="sl-knob"></div><span class="sl-min">'+MIN+' mm</span><span class="sl-max">'+MAX+' mm</span><span class="sl-val">'+MIN+' mm</span><span class="sl-ok" aria-hidden="true"></span>';
+    e2.appendChild(k); e2.appendChild(q); e2.appendChild(sl);
+    document.body.appendChild(e2);
+    e2.kick=k; e2.q=q; e2.sl=sl; knob=sl.querySelector(".sl-knob"); fill=sl.querySelector(".sl-fill"); val=sl.querySelector(".sl-val"); e2.ok=sl.querySelector(".sl-ok");
+    m2=document.createElementNS("http://www.w3.org/2000/svg","svg"); m2.id="gfpmull"; m2.setAttribute("aria-hidden","true");
+    document.body.appendChild(m2);
+    return e2;
+  }
+  function seat2(){
+    var e=sheet2();
+    var box=document.querySelector("#deck .composer")||document.querySelector(".composer");
+    if (!box) return e;
+    var r=box.getBoundingClientRect();
+    var h=e.getBoundingClientRect().height||120;
+    var below=r.bottom+Math.max(22, window.innerHeight*0.028);
+    e.style.left=Math.round(r.left+18)+"px";
+    e.style.width=Math.round(Math.min(r.width-36, 520))+"px";
+    e.style.top=Math.round((below+h<window.innerHeight-16)?below:(r.top-h-Math.max(22, window.innerHeight*0.028)))+"px";
+    /* p1.502 (his: "sometimes the mullion animation is missing" - on the phone): the
+       portrait road has no right column, and the seat taken from the parked text could
+       land where the parked text no longer was. In portrait the model always stands in
+       the air above the box, clear of the header; only the wide screen uses the column. */
+    var portrait=(window.innerWidth<760 || window.innerHeight>window.innerWidth);
+    var tr=portrait?null:(window.GFP_TEXT_RECT||null);
+    if (!tr && !portrait){ var tw=document.getElementById("herotech2fx"); if (tw && tw.style.display!=="none"){ var rr=tw.getBoundingClientRect(); tr={left:rr.left, top:rr.top, width:rr.width, height:rr.height}; } }
+    var mw, mh, ml, mt;
+    if (tr && tr.width>=80){ mw=Math.round(tr.width); mh=Math.round(Math.max(140, Math.min(220, tr.width*0.42))); ml=Math.round(tr.left); mt=Math.round(tr.top+(tr.height-mh)/2); }
+    else { mw=Math.round(Math.min(r.width, 720)); mh=Math.round(Math.min(220, window.innerHeight*0.26, Math.max(120, r.top-90))); ml=Math.round(r.left+(r.width-mw)/2); mt=Math.round(Math.max(70, r.top-mh-Math.max(18, window.innerHeight*0.03))); }
+    m2.setAttribute("viewBox","0 0 "+mw+" "+mh); m2.setAttribute("width",mw); m2.setAttribute("height",mh);
+    m2.style.left=ml+"px"; m2.style.top=mt+"px";
+    m2.mw=mw; m2.mh=mh;
+    return e;
+  }
+  /* p1.473 HIS MULLION (mullion.3dm, layer "alum"): the top 380 mm of the profile, edges
+     projected obliquely and normalised to the piece's height. Verticals are drawn light,
+     the section at the end crisp - a drawing, not a render. */
+  var MULL_SIL=[[[0.0016,0.0034],[0.0016,0.8091]],[[0.3728,0.1982],[0.3728,1.0039]]], MULL_FOOT=[[0.0062,0.8055],[0.2185,0.9984],[0.2295,1.0039],[0.2451,1.0001],[0.2497,1.001],[0.2718,0.9863],[0.2791,0.9915],[0.314,1.0297],[0.3177,1.0265],[0.3407,1.0299],[0.3416,1.0023],[0.3498,1.0033],[0.3627,0.9994],[0.3728,1.0036]];   /* p1.480: the true silhouette verticals and the foot's front outline, from the model */
+  var MULL_ASPECT=0.3728, MULL_NOSE=[0.3256,0.3024];   /* p1.479: from the hidden-line pass */
+  var MULL_V=[[[0.202,0.1786],[0.202,0.957]],[[0.3211,0.2128],[0.3211,0.9912]],[[0.3273,0.2181],[0.3273,0.9965]]];   /* p1.479: only the verticals that SURVIVED the hidden-line pass against the model's own faces */
+  var MULL_S=[[[0.202,0.1786],[0.2233,0.1971],[0.2254,0.1985],[0.2285,0.1987],[0.2312,0.1985],[0.2321,0.1976],[0.2318,0.1972],[0.231,0.1968],[0.2296,0.1967],[0.227,0.1959],[0.2254,0.1945]],[[0.2259,0.1927],[0.2408,0.1927],[0.2437,0.1931],[0.2453,0.1946]],[[0.245,0.1969],[0.245,0.1972],[0.2457,0.1976],[0.2487,0.1985],[0.2518,0.1987]],[[0.2529,0.197],[0.2496,0.1941],[0.2479,0.1927],[0.2449,0.1915],[0.2415,0.1909],[0.2385,0.1905],[0.2368,0.1891],[0.2343,0.1882],[0.2224,0.1882]],[[0.2188,0.1882],[0.2139,0.1839],[0.2123,0.1825]],[[0.2139,0.1806],[0.2172,0.1805],[0.2664,0.1805],[0.2698,0.1806],[0.2732,0.1812],[0.2758,0.1825],[0.2777,0.1841],[0.2852,0.1907]],[[0.2829,0.1928],[0.2804,0.1915],[0.2781,0.1902]],[[0.2763,0.1917],[0.3124,0.2231],[0.3145,0.2244],[0.3176,0.2246]],[[0.3185,0.2203],[0.3182,0.2202]],[[0.3182,0.2202],[0.3169,0.2198]],[[0.3168,0.2197],[0.3173,0.2194]],[[0.3173,0.2194],[0.3173,0.2192]],[[0.3173,0.2192],[0.3167,0.2187]],[[0.3163,0.2184],[0.3155,0.2177]],[[0.3155,0.2177],[0.3152,0.2176]],[[0.3152,0.2176],[0.314,0.2172]],[[0.314,0.2172],[0.3139,0.2171]],[[0.3139,0.2171],[0.3143,0.2168]],[[0.3143,0.2167],[0.3131,0.2156]],[[0.3128,0.2153],[0.3126,0.2152]],[[0.3126,0.2152],[0.3123,0.215]],[[0.3123,0.215],[0.3111,0.2147]],[[0.3111,0.2147],[0.3109,0.2146]],[[0.3109,0.2146],[0.3114,0.2142]],[[0.3114,0.2141],[0.3096,0.2126]],[[0.3096,0.2126],[0.3094,0.2124]],[[0.3094,0.2124],[0.3081,0.2121]],[[0.3081,0.2121],[0.308,0.212]],[[0.308,0.212],[0.3084,0.2116]],[[0.3084,0.2116],[0.3084,0.2115]],[[0.3084,0.2115],[0.3067,0.21]],[[0.3067,0.21],[0.3064,0.2099]],[[0.3064,0.2099],[0.3052,0.2095]],[[0.3052,0.2095],[0.305,0.2094]],[[0.305,0.2094],[0.3055,0.2091]],[[0.3055,0.2091],[0.3055,0.2089]],[[0.3055,0.2089],[0.3037,0.2074]],[[0.3037,0.2074],[0.3035,0.2073]],[[0.3035,0.2073],[0.3022,0.207]],[[0.3022,0.207],[0.3021,0.2068]],[[0.3021,0.2068],[0.3026,0.2065]],[[0.3025,0.2064],[0.3014,0.2054]],[[0.3013,0.2053],[0.3008,0.2049]],[[0.3008,0.2049],[0.3005,0.2047]],[[0.3005,0.2047],[0.2993,0.2044]],[[0.2993,0.2044],[0.2991,0.2043]],[[0.2991,0.2043],[0.2996,0.2039]],[[0.2996,0.2038],[0.2987,0.2031]],[[0.2984,0.2028],[0.2979,0.2023]],[[0.2979,0.2023],[0.2976,0.2022]],[[0.2976,0.2022],[0.2963,0.2018]],[[0.2963,0.2018],[0.2962,0.2017]],[[0.2962,0.2017],[0.2971,0.2004]],[[0.2972,0.2003],[0.2977,0.1996],[0.298,0.1994],[0.2984,0.1993],[0.3015,0.1993],[0.3021,0.1994],[0.3027,0.1995],[0.3071,0.201],[0.3077,0.2012],[0.3081,0.2015],[0.3093,0.2025]],[[0.3093,0.2025],[0.3096,0.2027]],[[0.3096,0.2027],[0.3108,0.203]],[[0.3108,0.203],[0.311,0.2031]],[[0.311,0.2031],[0.3105,0.2035]],[[0.3105,0.2035],[0.3105,0.2036]],[[0.3105,0.2036],[0.3123,0.2051]],[[0.3123,0.2051],[0.3125,0.2052]],[[0.3125,0.2052],[0.3138,0.2056]],[[0.3139,0.2057],[0.3135,0.206]],[[0.3135,0.206],[0.3135,0.2062]],[[0.3135,0.2062],[0.3152,0.2077]],[[0.3152,0.2077],[0.3155,0.2078]],[[0.3155,0.2078],[0.3167,0.2082]],[[0.3167,0.2082],[0.3169,0.2083]],[[0.3169,0.2083],[0.3164,0.2086]],[[0.3164,0.2087],[0.3178,0.2099]],[[0.3178,0.21],[0.3182,0.2102]],[[0.3182,0.2102],[0.3184,0.2104]],[[0.3184,0.2104],[0.3197,0.2107]],[[0.3198,0.2108],[0.3193,0.2112]],[[0.3193,0.2112],[0.3194,0.2113]],[[0.3194,0.2113],[0.3211,0.2128]],[[0.3211,0.2128],[0.3214,0.213]],[[0.3214,0.213],[0.3226,0.2133]],[[0.3226,0.2133],[0.3228,0.2134]],[[0.3228,0.2134],[0.3223,0.2138]],[[0.3223,0.2138],[0.3223,0.2139]],[[0.3223,0.2139],[0.324,0.2154]],[[0.324,0.2154],[0.3243,0.2155]],[[0.3243,0.2155],[0.3256,0.2159]],[[0.3257,0.216],[0.3252,0.2163]],[[0.3252,0.2163],[0.3253,0.2165]],[[0.3253,0.2165],[0.327,0.218]],[[0.327,0.218],[0.3273,0.2181]],[[0.3273,0.2181],[0.3285,0.2184]],[[0.3285,0.2184],[0.3286,0.2186]],[[0.3286,0.2186],[0.3282,0.2189]],[[0.3282,0.219],[0.3299,0.2205]],[[0.3299,0.2205],[0.3302,0.2207]],[[0.3302,0.2207],[0.3315,0.221]],[[0.3316,0.2211],[0.3311,0.2215]],[[0.3312,0.2216],[0.3327,0.2225],[0.3369,0.2239],[0.339,0.2246],[0.341,0.2246]],[[0.3419,0.2228],[0.3061,0.1916],[0.305,0.1907],[0.3028,0.1901]],[[0.2989,0.193],[0.297,0.1922],[0.2957,0.1912],[0.287,0.1836],[0.2857,0.1826]],[[0.2871,0.1806],[0.2892,0.1805],[0.3426,0.1805],[0.3447,0.1807],[0.347,0.1813],[0.3488,0.1822],[0.3499,0.1831],[0.3554,0.1878]],[[0.3553,0.1897],[0.3539,0.1888],[0.3521,0.1882],[0.3403,0.1882]],[[0.3414,0.1905],[0.34,0.1908],[0.3383,0.191],[0.3372,0.1915],[0.3369,0.1923],[0.3374,0.1931],[0.3385,0.1941],[0.3428,0.1979]],[[0.3428,0.1979],[0.3436,0.1983],[0.3447,0.1986],[0.3457,0.1987],[0.3487,0.1987],[0.3495,0.1986],[0.3498,0.1983],[0.3502,0.1979]],[[0.3489,0.1967],[0.3484,0.1967],[0.3474,0.1967],[0.3463,0.1966],[0.3456,0.1961],[0.3424,0.1933],[0.3421,0.1928],[0.3428,0.1927],[0.3606,0.1927],[0.3616,0.1929],[0.3623,0.1933],[0.3645,0.1952]],[[0.3659,0.1966],[0.3651,0.1967],[0.3641,0.1967],[0.3637,0.1968],[0.3635,0.1968],[0.3633,0.1969],[0.3633,0.1971],[0.3634,0.1973],[0.3636,0.1974],[0.3639,0.1975],[0.3642,0.1976],[0.3663,0.1983],[0.3674,0.1986],[0.3685,0.1987],[0.3714,0.1987],[0.3723,0.1986]],[[0.3716,0.197],[0.3505,0.1786]],[[0.3505,0.1786],[0.1497,0.0033],[0.1433,0.0],[0.0,0.0],[0.0012,0.0033],[0.202,0.1786]],[[0.0852,0.0046],[0.1395,0.0046],[0.147,0.0066],[0.1569,0.0153],[0.1616,0.0196],[0.153,0.02],[0.1444,0.0204],[0.1418,0.0226],[0.1493,0.0245],[0.1583,0.0245],[0.1675,0.0246],[0.1725,0.0289],[0.3419,0.1767],[0.334,0.1772],[0.2162,0.1772],[0.2071,0.1771],[0.2019,0.1728],[0.0326,0.025],[0.0401,0.0245],[0.0492,0.0245],[0.0537,0.023],[0.0465,0.0204],[0.0276,0.0197],[0.022,0.0157],[0.012,0.0071],[0.0135,0.0046],[0.0678,0.0046]],[[0.3256,0.2159],[0.3256,0.3024]],[[0.3256,0.4753],[0.3256,0.533]],[[0.3256,0.706],[0.3256,0.7636]],[[0.3256,0.9366],[0.3256,0.9943]]];
+  function drawMullions(mm){
+    if (!m2) return;
+    var W=m2.mw||600, H=m2.mh||200;
+    var span=(mm-MIN)/(MAX-MIN);
+    var mh=H*0.80, mw=mh*MULL_ASPECT;                       /* one piece, drawn at 80% of the model's height */
+    var minGap=mw*1.6, maxGap=Math.max(minGap+40, W-mw-24);
+    var gap=Math.round(minGap+(maxGap-minGap)*span);        /* 300 mm -> close, 1500 mm -> wide */
+    var cx=W/2, top=H*0.08;
+    function piece(x0){
+      /* p1.479 (his: "render the lines with faces so the unneeded lines are not seen"):
+         done offline, properly. The model's render meshes were rasterised into a depth
+         buffer and every edge tested against it; what is stored here is only what a
+         solid piece shows. The foot, which the cut has no edge for, joins the feet of
+         the visible verticals. */
+      var o="";
+      function P(q){ return (x0+q[0]*mh).toFixed(1)+' '+(top+q[1]*mh).toFixed(1); }
+      function L(a,b,w,op){ return '<path d="M'+P(a)+' L'+P(b)+'" stroke-width="'+w+'" stroke-opacity="'+op+'"/>'; }
+      for (var j=0;j<MULL_S.length;j++){ var pl=MULL_S[j], d="";
+        for (var k=0;k<pl.length;k++){ d+=(k?" L":"M")+P(pl[k]); }
+        o+='<path d="'+d+'" stroke-width=".9" stroke-opacity=".85"/>'; }
+      /* p1.481 (his: "the rear mid line is not needed, the side silhouette is"): of the
+         pass's verticals only the nose's own are drawn; the silhouette comes from the
+         section's extreme points, where the model has a rounded back and no edge at all */
+      for (var i=0;i<MULL_V.length;i++){ if (Math.abs(MULL_V[i][0][0]-MULL_NOSE[0])>0.12) continue; o+=L(MULL_V[i][0],MULL_V[i][1],".8",".7"); }
+      /* p1.480 (his: "the bottom lines are wrong, still no silhouette line"): the two
+         silhouette verticals are the extreme edges of the whole body - drawn always -
+         and the foot is the section's own front outline carried down to the cut. */
+      o+=L(MULL_SIL[0][0],MULL_SIL[0][1],".8",".7");
+      o+=L(MULL_SIL[1][0],MULL_SIL[1][1],".8",".7");
+      var fd="";
+      for (var f=0;f<MULL_FOOT.length;f++){ fd+=(f?" L":"M")+P(MULL_FOOT[f]); }
+      o+='<path d="'+fd+'" stroke-width=".8" stroke-opacity=".7"/>';
+      return o;
+    }
+    var xl=cx-gap/2-mw/2, xr=cx+gap/2-mw/2;
+    var out=piece(xl)+piece(xr);
+    /* p1.475 (his: "add lines from nose to nose, like a glass sheet"): one sheet, its
+       sides on the two noses, its top at the nose's own level, its foot at the pieces' foot */
+    var gl=xl+MULL_NOSE[0]*mh, gr=xr+MULL_NOSE[0]*mh, gt=top+MULL_NOSE[1]*mh, gb=top+mh;
+    out+='<rect x="'+gl.toFixed(1)+'" y="'+gt.toFixed(1)+'" width="'+(gr-gl).toFixed(1)+'" height="'+(gb-gt).toFixed(1)+'" stroke-width=".8" stroke-opacity=".5"/>';
+    /* p1.474: the dimension runs from nose to nose */
+    var yd=top+mh+H*0.06, ax=xl+MULL_NOSE[0]*mh, bx=xr+MULL_NOSE[0]*mh;
+    out+='<line x1="'+ax.toFixed(1)+'" y1="'+yd.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+yd.toFixed(1)+'" stroke-width=".8" stroke-opacity=".7"/>';
+    out+='<line x1="'+ax.toFixed(1)+'" y1="'+(yd-4)+'" x2="'+ax.toFixed(1)+'" y2="'+(yd+4)+'" stroke-width=".8"/><line x1="'+bx.toFixed(1)+'" y1="'+(yd-4)+'" x2="'+bx.toFixed(1)+'" y2="'+(yd+4)+'" stroke-width=".8"/>';
+    m2.innerHTML=out;
+  }
+
+  /* ---- the count: +1, +2 at the end of the prompt ---- */
+  var plus=null, plusN=0;
+  /* p1.506: "the prompt is written" means the example is ON THE SCREEN - on the blue the
+     box shows its placeholder while the ghost still holds the words hidden (display
+     none, class "sent"), so the text alone is not the test; the box must show it */
+  function promptShown(){
+    var g=document.getElementById("deckghost");
+    if (!g || !(g.textContent||"").length) return false;
+    var cs=window.getComputedStyle(g);
+    if (cs.display==="none" || cs.visibility==="hidden" || (+cs.opacity)<0.05) return false;
+    var r=g.getBoundingClientRect();
+    return r.height>0 && r.width>0;
+  }
+  function plusAt(n, ride){
+    if (!plus){ plus=document.createElement("span"); plus.id="gfpplus"; plus.setAttribute("aria-hidden","true"); document.body.appendChild(plus); }
+    /* p1.506 (his: "on the blue, +2 to be erased when the prompt is erased"): the count
+       belongs to the written example. The moment the box is emptied - by the wind, by
+       the way home, by anything - there is nothing for a +2 to count, so it goes too. */
+    if (n>0 && !promptShown()) n=0;
+    if (n<=0){ plus.classList.remove("on"); plusN=0; return; }
+    /* p1.464 (his: "the +2 shakes as the box rises"): a mark placed from the outside
+       every tick lags a moving box. While the box moves the mark lives INSIDE it and
+       goes wherever the box goes, in the same frame. */
+    var boxEl=document.querySelector("#deck .composer");
+    if (ride && boxEl){
+      if (plus.parentNode!==boxEl){ boxEl.appendChild(plus); plus.classList.add("in-box"); }
+      if (n!==plusN){ plus.textContent="+"+n; plusN=n; }
+      /* p1.467 (his: "+2 ran away"): inside the box it still sits at the END of the
+         written text - measured against the box, so it rides with it and never lags */
+      var gb=document.getElementById("deckghost"), br=boxEl.getBoundingClientRect(), lx=null, ly=null;
+      if (gb && gb.firstChild && (gb.textContent||"").length>0){
+        try{ var rg2=document.createRange(); rg2.selectNodeContents(gb); var rs2=rg2.getClientRects(); if (rs2.length){ var l2=rs2[rs2.length-1]; lx=l2.right-br.left+8; ly=l2.top-br.top+(l2.height-18)/2; } }catch(e){}
+      }
+      if (lx!==null){ plus.style.right="auto"; plus.style.left=Math.round(lx)+"px"; plus.style.top=Math.round(ly)+"px"; }
+      else { plus.style.left=""; plus.style.top=""; plus.style.right=""; }
+      plus.classList.add("on");
+      return;
+    }
+    if (plus.parentNode!==document.body){ document.body.appendChild(plus); plus.classList.remove("in-box"); plus.style.right=""; }
+    if (n!==plusN){ plus.textContent="+"+n; plusN=n; plus.classList.remove("on"); void plus.offsetWidth; plus.classList.add("on"); }
+    /* at the end of the last written line, else at the box's right */
+    var g=document.getElementById("deckghost"), x=null, y=null;
+    if (g && g.firstChild && (g.textContent||"").length>0){
+      try{ var rg=document.createRange(); rg.selectNodeContents(g); var rs=rg.getClientRects(); if (rs.length){ var last=rs[rs.length-1]; x=last.right+8; y=last.top+(last.height-22)/2; } }catch(e){}
+    }
+    if (x===null){ var box=document.querySelector("#deck .composer"); if (box){ var r=box.getBoundingClientRect(); x=r.right-66; y=r.top+15; } }
+    if (x!==null){ plus.style.left=Math.round(x)+"px"; plus.style.top=Math.round(y)+"px"; }
+  }
+
+  /* ---- the fork: title above the risen box, two roads under it, cookies at the foot ---- */
+  var fk=null, ck=null, ckDone=false;
+  function forkEl(){
+    if (fk) return fk;
+    fk=document.createElement("div"); fk.id="gfpfork"; fk.setAttribute("aria-hidden","true");
+    fk.innerHTML='<div class="fk-head"><div class="fk-mark">GLOBAL\nFACADE\nPROJECT</div><p class="fk-title">Here is how your first prompt may look.</p></div>'
+      +'<div class="fk-row"><a class="fk-opt" href="#classroom" data-go="classroom" data-fork="try">Try this prompt</a><a class="fk-opt" href="#" data-fork="tour">Proceed the guided tour <small>recommended</small></a></div>';   /* p1.485: try on the left, the recommended tour on the right */
+    document.body.appendChild(fk);
+    fk.querySelector('[data-fork="tour"]').addEventListener("click", function(ev){ ev.preventDefault(); gesture(1); });
+    return fk;
+  }
+  function cookiesEl(){
+    if (ck) return ck;
+    if (localStorage && localStorage.getItem("gfp-cookies")) { ck=false; return ck; }
+    ck=document.createElement("div"); ck.id="gfpcookies"; ck.setAttribute("role","dialog"); ck.setAttribute("aria-label","Cookies");
+    ck.innerHTML='<span>We use a few cookies to keep the live demo working and to see which pages help. No ads, no tracking across sites.</span><span class="ck-btns"><button type="button" data-ck="ok">Accept</button><button type="button" class="alt" data-ck="no">Only necessary</button></span>';
+    document.body.appendChild(ck);
+    ck.addEventListener("click", function(ev){ var b=ev.target.closest("button"); if (!b) return; try{ localStorage.setItem("gfp-cookies", b.getAttribute("data-ck")); }catch(e){} ck.classList.remove("on"); ckDone=true; });
+    return ck;
+  }
+  var shone=false, shineEl=null;
+  function shine(){
+    var t=fk?fk.querySelector(".fk-title"):null;
+    if (t){ t.classList.remove("shine"); void t.offsetWidth; t.classList.add("shine"); setTimeout(function(){ t.classList.remove("shine"); }, 2100); }
+    var box=document.querySelector("#deck .composer");
+    if (box){
+      if (!shineEl){ shineEl=document.createElement("div"); shineEl.id="gfpshine"; shineEl.setAttribute("aria-hidden","true"); }
+      if (shineEl.parentNode!==box) box.appendChild(shineEl);
+      shineEl.classList.remove("on"); void shineEl.offsetWidth; shineEl.classList.add("on");
+      setTimeout(function(){ shineEl.classList.remove("on"); }, 2000);
+    }
+  }
+  function fork(op){
+    var e=forkEl();
+    if (op>0.9 && !shone){ shone=true; shine(); }   /* p1.500: the gleam, once per arrival */
+    if (op<0.2) shone=false;
+    var box=document.querySelector("#deck .composer");
+    if (!box){ e.style.opacity="0"; e.classList.remove("on"); return; }
+    var r=box.getBoundingClientRect();
+    /* the title rides above the box, the roads under it; the head is laid out first so its height is known */
+    /* p1.471 (his: "a more centred box"): the questionnaire is a narrower column that
+       stands on the box's centre line, like the greeting above it */
+    var fw=Math.round(Math.min(r.width-36, 480));   /* p1.472: shorter, on the centre line */
+    var fl=Math.round(r.left+(r.width-fw)/2);
+    e.style.left=fl+"px";
+    e.style.width=fw+"px";
+    var head=e.querySelector(".fk-head"), row=e.querySelector(".fk-row"), note=e.querySelector(".fk-note");
+    var hh=head.getBoundingClientRect().height||60;
+    /* the head stands ABOVE the box: the fork's own top is under the box, so the head is
+       lifted by the box's height as well */
+    /* p1.470 (his: "is it really centred?"): the fork column is narrower than the box and
+       starts inside it, so "centred" was centred in the wrong band. The head spans the
+       box's full width and centres across it. */
+    head.style.position="absolute"; head.style.left=Math.round(r.left-fl)+"px"; head.style.top=(-(r.height+hh+104))+"px";   /* p1.489: a bit more air - the greeting and the mark sit higher above the box */ head.style.width=Math.round(r.width)+"px";
+    e.style.top=Math.round(r.bottom+52)+"px";   /* p1.472: more air between the prompt and the question */
+    e.style.opacity=(+op).toFixed(3);
+    e.classList.toggle("on", op>0.9);
+    var c=cookiesEl(); if (c && !ckDone) c.classList.toggle("on", op>0.9);   /* p1.470: a dismissed strip stays dismissed */
+  }
+  function forkOff(){ if (fk){ fk.style.opacity="0"; fk.classList.remove("on"); } if (ck) ck.classList.remove("on"); shone=false; }
+
+  /* ---- the frame: the box and whatever exchange stands under it, outlined together ---- */  /* ---- the frame: the box and whatever exchange stands under it, outlined together ---- */  /* ---- the frame: the box and whatever exchange stands under it, outlined together ---- */
+  var fr=null;
+  function frame(op){
+    if (!fr){ fr=document.createElement("div"); fr.id="gfpframe"; fr.setAttribute("aria-hidden","true"); document.body.appendChild(fr); }
+    /* p1.486 (his: "the frames look ugly on mobile"): on a narrow or portrait screen the
+       outline would hug the edges of the screen itself - so there is none */
+    if (window.innerWidth<760 || window.innerHeight>window.innerWidth){ fr.style.opacity="0"; return; }
+    var box=document.querySelector("#deck .composer")||document.querySelector(".composer");
+    if (!box){ fr.style.opacity="0"; return; }
+    var r=box.getBoundingClientRect();
+    var L=r.left, T=r.top, R=r.right, B=r.bottom;
+    var parts=[el, e2];
+    for (var i=0;i<parts.length;i++){
+      var pel=parts[i]; if (!pel || +pel.style.opacity<0.05) continue;
+      var q=pel.getBoundingClientRect(); if (!(q.height>0)) continue;
+      L=Math.min(L,q.left); T=Math.min(T,q.top); R=Math.max(R,q.right); B=Math.max(B,q.bottom);
+    }
+    var pad=Math.max(12, window.innerHeight*0.016);
+    fr.style.left=Math.round(L-pad)+"px"; fr.style.top=Math.round(T-pad)+"px";
+    fr.style.width=Math.round(R-L+2*pad)+"px"; fr.style.height=Math.round(B-T+2*pad)+"px";
+    fr.style.opacity=(+op).toFixed(3);
+  }
+
+  /* ---- the chain, p1.449: STOP TO STOP (his: "you make no pauses - I cannot go by
+     scroll from stop to stop, it is all one animation"). Every beat now ends in a STOP.
+     A beat plays its own animation and then waits; the next beat starts only on a fresh
+     gesture - wheel, swipe, arrow key. Back goes one stop up. Nothing runs on by itself.
+
+       1 written   2 question   3 answers, one chosen   4 new question
+       5 slider, the interval chosen   6 the box rises   7 the wind
+  ---- */
+  var stage=0, t0=0, err=null, armed=false, part=0, windAt=0, seatTop=null, windSeen=false;
+  function nowT(){ return (window.performance&&performance.now)?performance.now():Date.now(); }
+  var written=0, maxWritten=0, lastLen=-1, lastAt=0;
+  function enter(n){ stage=n; t0=now(); armed=false; part=0; visit++; hintOff(); }
+  var armedAt=0;
+  function stop(){ armed=true; armedAt=now(); }
+  function reset(){
+    stage=0; t0=0; armed=false; part=0; written=0; maxWritten=0; lastLen=-1; lastAt=0; goingHome=false;
+    window.GFP_ASK_HOLD=undefined; window.GFP_ASK_DONE=undefined; window.GFP_ASK_ON=false; window.GFP_TEXT_OFF=false; window.GFP_WIND_LOCK=false; stage7.went=false;
+    if (e2){ e2.style.opacity="0"; e2.sl.style.opacity="0"; if (e2.ok) e2.ok.classList.remove("on"); } if (m2){ m2.style.opacity="0"; } if (fr){ fr.style.opacity="0"; } plusAt(0); forkOff();
+    if (el){ el.style.opacity="0"; el.style.transform="";
+      for (var i=0;i<opts.length;i++){ opts[i].classList.remove("is-taken"); opts[i].classList.remove("is-dim"); opts[i].style.opacity="0"; opts[i].style.transform=""; } }
+  }
+
+  /* ---- p1.505 THE NUDGE (his: "add a swipe-down, very subtle animation if the user does
+     not understand what to do during the intro"). The intro is a row of stops - the hero,
+     then the exchange's five - and each waits for a gesture. When one has stood untouched
+     for a while, a small chevron sinks and fades near the foot of the screen with the word
+     for the gesture this device knows (scroll / swipe). It reads only what the chain
+     already knows: which stop stands, and whether a gesture came. Any gesture puts it
+     away; a stop shows it once per visit; the fork (stop 6) has its own two answers and
+     needs no nudge. ---- */
+  var HINT_HERO_MS=6500, HINT_STOP_MS=5000;
+  var visit=0, heroVisit=0, onHero=false;
+  var hint={el:null, timer:0, key:"", shown:""};
+  function hintEl(){
+    if (hint.el) return hint.el;
+    var d=document.createElement("div"); d.id="gfphint"; d.setAttribute("aria-hidden","true");
+    var coarse=false; try{ coarse=!!(window.matchMedia&&window.matchMedia("(pointer:coarse)").matches); }catch(e){}
+    var word=(coarse||("ontouchstart" in window))?"swipe":"scroll";
+    d.innerHTML='<svg viewBox="0 0 18 10" width="18" height="10" aria-hidden="true"><polyline points="2,2 9,8 16,2"/></svg><span>'+word+'</span>';
+    document.body.appendChild(d); hint.el=d; return d;
+  }
+  function hintOff(){
+    if (hint.timer){ clearTimeout(hint.timer); hint.timer=0; }
+    hint.key="";
+    if (hint.el) hint.el.classList.remove("on");
+  }
+  function hintBusy(){
+    /* the visitor is doing something of his own - writing in the box, choosing in the
+       prompt-choice sheet - so the page is not waiting on him */
+    var a=document.activeElement;
+    if (a && /input|textarea/i.test(a.tagName)) return true;
+    try{ if (typeof PROMPT_CHOICE==="object" && PROMPT_CHOICE && PROMPT_CHOICE.open) return true; }catch(e){}
+    return false;
+  }
+  function hintHomeOn(){ var h=document.getElementById("scr-home"); return !!(h && h.classList.contains("on")); }
+  function hintWant(){
+    if (!hintHomeOn()) return "";
+    if (onHero) return "hero#"+heroVisit;
+    if (armed && stage>=1 && stage<=5) return "s"+stage+"#"+visit;
+    return "";
+  }
+  function hintArm(key, ms){
+    if (!key || key===hint.key || key===hint.shown) return;
+    if (hint.timer){ clearTimeout(hint.timer); hint.timer=0; }
+    hint.key=key;
+    hint.timer=setTimeout(function(){ hint.timer=0; hintShow(key); }, ms);
+  }
+  function hintPlace(d){
+    /* the default seat is the foot of the screen; when something of the page stands
+       there - the composer docked at the bottom on a phone, the exchange's frame - the
+       nudge steps up above the highest of them, never onto them */
+    d.style.top=""; d.style.bottom="";
+    var r=d.getBoundingClientRect();
+    var obs=[document.getElementById("deck"), fr, el, e2, fk||null, ck||null];
+    var top=null;
+    for (var i=0;i<obs.length;i++){
+      var o=obs[i]; if (!o || !o.getBoundingClientRect) continue;
+      var cs=window.getComputedStyle(o);
+      if (cs.display==="none" || cs.visibility==="hidden" || (+cs.opacity)<0.05) continue;
+      var q=o.getBoundingClientRect(); if (!(q.height>0 && q.width>0)) continue;
+      if (q.bottom<=r.top-8 || q.top>=r.bottom+8 || q.right<=r.left-8 || q.left>=r.right+8) continue;
+      top=(top===null)?q.top:Math.min(top,q.top);
+    }
+    if (top!==null){
+      var y=top-10-r.height;
+      if (y<window.innerHeight*0.4) return false;   /* no free foot at all - better no nudge than one on the text */
+      d.style.top=Math.round(y)+"px"; d.style.bottom="auto";
+    }
+    return true;
+  }
+  function hintShow(key){
+    if (key!==hint.key) return;                /* the stop has moved on meanwhile */
+    if (hintBusy()){ hint.key=""; return; }    /* not shown, not spent - it may arm again */
+    var d=hintEl();
+    if (!hintPlace(d)){ hint.key=""; return; }
+    hint.shown=key;
+    d.classList.remove("on"); void d.offsetWidth; d.classList.add("on");
+  }
+  function hintTick(tcNow){
+    var heroNow=(tcNow<0.35) && hintHomeOn();
+    if (heroNow && !onHero) heroVisit++;
+    onHero=heroNow;
+    var k=hintWant();
+    if (hint.key && k!==hint.key) hintOff();
+    if (k) hintArm(k, k.charAt(0)==="h"?HINT_HERO_MS:HINT_STOP_MS);
+  }
+  function hintGesture(){ hintOff(); }
+  /* the gestures the stops listen for, heard here first and passively - nothing of the
+     chain's own handling changes */
+  window.addEventListener("wheel", hintGesture, {passive:true, capture:true});
+  window.addEventListener("touchstart", hintGesture, {passive:true, capture:true});
+  window.addEventListener("pointerdown", hintGesture, {passive:true, capture:true});
+  window.addEventListener("keydown", hintGesture, {passive:true, capture:true});
+  window.addEventListener("resize", hintGesture, {passive:true});
+
+  /* 1 WRITTEN - the example is written; a stop */
+  function stage1(){
+    var g=document.getElementById("deckghost");
+    var n=g?((g.textContent||"").length):0;
+    written=n; if (n>maxWritten) maxWritten=n;
+    if (n>0 && window.GFP_ASK_HOLD===undefined){ window.GFP_ASK_HOLD=true; window.GFP_WIND_LOCK=true; }
+    if (n!==lastLen){ lastLen=n; lastAt=now(); }
+    var G=window.GFP_GHOST;
+    var done=(maxWritten>=40 && (n<maxWritten || (lastAt && now()-lastAt>=350))) || !!(G&&G.sent);
+    if (done && !armed){ window.GFP_ASK_HOLD=true; stop(); }
+  }
+  /* 2 QUESTION - the send is pressed, the question appears; a stop */
+  function stage2(){
+    var t=(now()-t0)/1000;
+    if (t>=0.3 && !stage2.hit){
+      stage2.hit=true;
+      var go=document.getElementById("deckgo");
+      if (go){ go.classList.remove("gfp-hit"); void go.offsetWidth; go.classList.add("gfp-hit"); setTimeout(function(){ go.classList.remove("gfp-hit"); }, 700); }
+    }
+    if (t>=0.9){
+      window.GFP_ASK_ON=true;
+      var u=t-0.9, e=seat();
+      e.style.opacity=ease(u/0.5).toFixed(3);
+      frame(ease(u/0.6));
+      e.kick.style.opacity=ease(u/0.45).toFixed(3);
+      e.q.style.opacity=ease((u-0.2)/0.6).toFixed(3);
+      if (u>=1.0 && !armed){ stage2.hit=false; stop(); }
+    }
+  }
+  /* 3 ANSWERS - three appear, one is taken; a stop */
+  function stage3(){
+    /* p1.455 (his: "the answers appear one after another like a cheap trivia - make a
+       solid appearance, a short pause, then check the right one and grey out the rest") */
+    var t=(now()-t0)/1000, e=seat();
+    e.style.opacity="1"; frame(1);
+    var a=ease((t-0.15)/0.45);
+    for (var i=0;i<opts.length;i++){ opts[i].style.opacity=a.toFixed(3); opts[i].style.transform=""; }
+    if (t>=1.5){ for (var j=0;j<opts.length;j++){
+        if (j===TAKE) opts[j].classList.add("is-taken");
+        else opts[j].classList.add("is-dim"); }
+      plusAt(1); }
+    if (t>=2.4 && !armed) stop();
+  }
+  /* 4 NEW QUESTION - the first exchange leaves, the second question arrives; a stop */
+  function stage4(){
+    window.GFP_ASK_ON=true;
+    var t=(now()-t0)/1000, e=seat2(), e1=sheet();
+    window.GFP_TEXT_OFF=(t>=0.75);   /* p1.450: the sentences leave when the mullions arrive, not before */
+    e1.style.opacity=(1-ease(t/0.5)).toFixed(3);
+    var u=t-0.45;
+    e.style.opacity=ease(u/0.5).toFixed(3);
+    e.kick.style.opacity=ease(u/0.45).toFixed(3);
+    e.q.style.opacity=ease((u-0.2)/0.6).toFixed(3);
+    e.sl.style.opacity="0"; frame(1); plusAt(1);
+    m2.style.opacity=(ease((u-0.3)/0.7)*0.9).toFixed(3);
+    drawMullions(MIN);
+    if (u>=1.1 && !armed){ e1.style.opacity="0"; stop(); }
+  }
+  /* 5 SLIDER - the handle glides to the answer, the mullions follow; a stop */
+  function stage5(){
+    var t=(now()-t0)/1000, e=seat2();
+    e.style.opacity="1"; m2.style.opacity="0.9"; frame(1);
+    e.sl.style.opacity=ease(t/0.5).toFixed(3);
+    var g=ease((t-0.6)/2.4);
+    var mm=Math.round(MIN+(ANSWER-MIN)*g), pct=(mm-MIN)/(MAX-MIN);
+    var tw=e.sl.getBoundingClientRect().width-34;
+    knob.style.left=(pct*tw).toFixed(1)+"px"; fill.style.width=(pct*tw).toFixed(1)+"px";
+    val.style.left=(pct*tw).toFixed(1)+"px"; val.textContent=mm+" mm";
+    drawMullions(mm);
+    if (e.ok) e.ok.classList.toggle("on", t>=3.2);   /* p1.482: the answer is taken */
+    if (t>=3.0) plusAt(2); else plusAt(1);
+    if (t>=3.4 && !armed) stop();
+  }
+  /* 6 RISE - everything of ours leaves, the box alone rises to its place; a stop */
+  function stage6(){
+    var t=(now()-t0)/1000, o=1-ease(t/0.6);
+    frame(o); plusAt(2, true);   /* p1.464: it rides inside the box */
+    if (el) el.style.opacity="0";
+    if (e2) e2.style.opacity=o.toFixed(3); if (m2) m2.style.opacity=(o*0.9).toFixed(3);
+    if (t>=0.65){ window.GFP_ASK_ON=false; window.GFP_ASK_HOLD=false; window.GFP_ASK_DONE=true; window.GFP_WIND_LOCK=true; }   /* p1.466 (his: "no pause after rising"): the rise is free, the wind stays locked until the next gesture */
+    var lf=+(window.GFP_HERO_LIFT||0);
+    var fo=ease((lf-0.85)/0.15); fork(fo);   /* p1.469: no frame here - the greeting and the box stand on their own */
+    if (t>=0.65 && lf>=0.999 && !armed) stop();
+    if (t>=8 && !armed) stop();   /* the cap: it never waits forever */
+    if (t>=8){ if (el) el.style.opacity="0"; if (e2) e2.style.opacity="0"; if (m2) m2.style.opacity="0"; fork(1); }
+  }
+  /* 7 WIND - the page goes on; the chain rests here until the visitor comes back */
+  function stage7(){ forkOff(); window.GFP_WIND_LOCK=false; if (!stage7.went){ stage7.went=true; try{ if (typeof window.GFP_WIND_GO==="function") window.GFP_WIND_GO(); }catch(e){} } }
+
+  /* the gesture: one fresh wheel tick, one swipe, one key - forward or back */
+  /* p1.453 (his: "five times forward-backward messes up, and the inertia catches"): a
+     trackpad flick is not one event but a tail of dozens, running on for a second or
+     more - and a fixed debounce let the tail through as extra gestures, skipping stops.
+     A gesture is now a BURST: the first event counts, and everything that follows
+     within 700 ms of the last event is the same flick. A pause ends the burst. */
+  var burstUntil=0;
+  function gesture(dir){
+    var t=now();
+    /* p1.462 (his: "again no pause - maybe inertia"): a trackpad tail runs longer than
+       the 700 ms I allowed. The window is 1.2 s now, extended by every event in the tail. */
+    if (t<burstUntil){ burstUntil=t+1200; return; }
+    burstUntil=t+1200;
+    /* p1.493: a stop must have stood for a moment before it can be left - no cascade
+       through several stops on one violent gesture */
+    if (armed && t-armedAt<450) return;
+    if (!armed && !(dir<0)) return;              /* forward only from a stop */
+    if (dir>0 && stage>=1 && stage<7){ enter(stage+1); return; }
+    /* p1.450 (his: "back must pass the same stops as forward, but without the full
+       play - show only the result"): the stop is entered with its clock already run out,
+       so its own function paints the finished frame at once and stands. */
+    if (dir<0 && stage>1){ enter(1); t0=now()-100000; armed=true; armedAt=now(); backVisuals(1); }   /* p1.498: one cut to the first stop */
+  }
+  function backVisuals(n){
+    /* the stop we return to is shown in its finished state */
+    if (n<=3 && e2){ e2.style.opacity="0"; if (m2) m2.style.opacity="0"; window.GFP_TEXT_OFF=false; }
+    if (n<=1 && el){ el.style.opacity="0"; if (fr) fr.style.opacity="0"; }
+    plusAt(n>=5?2:(n>=3?1:0)); if (n<6) forkOff();
+    if (n>=4){ window.GFP_TEXT_OFF=true; }
+    if (n>=2 && n<=3 && el){ el.style.opacity="1"; }
+    for (var i=0;i<opts.length;i++){ opts[i].classList.remove("is-taken"); opts[i].classList.remove("is-dim"); opts[i].style.opacity=(n>=3)?"1":"0"; }
+    if (n>=6){ window.GFP_ASK_HOLD=false; } else { window.GFP_ASK_HOLD=true; window.GFP_ASK_DONE=undefined; }
+    window.GFP_WIND_LOCK=true; stage7.went=false;
+  }
+  /* p1.496 (his: "scrolling up at every scene makes the prompt box jumpy; at the first
+     stop scrolling up does not go to the hero"): while a stop is held the page must not
+     move at all - the wheel is taken by the chain before the page sees it, so nothing
+     jumps. The one exception is UP from the first stop: that is the way home, the wheel
+     is left to the page, the hold is let go, and the page scrolls to the hero. */
+  var ty=null;
+  /* p1.497 (his: "when I scroll back at this scene nothing happens - the code is clearing
+     the text symbol by symbol"): on the way home the page's own typer took the example
+     back at the scroll's pace, one letter per frame, while the page barely moved. The
+     written example now stays whole all the way to the hero: the chain only lets the
+     SCROLL go, not the text. The text goes when the hero is back, with the reset. */
+  /* p1.498 (his: "scrolling back does nothing now - just CUT to the previous scene,
+     clearing the type; make the storyboard go back rapidly, fewer steps"): back is a
+     cut. From any question stop, back cuts to the first stop - the written box alone.
+     From the first stop, back cuts to the hero: the page is put at the top at once and
+     its own typer clears the example. No road, no letters. */
+  var goingHome=false;
+  function heldByChain(){ return !goingHome && stage>=1 && stage<7 && !!window.GFP_WIND_LOCK && (+(window.GFP_HERO_TC||0))>=0.35; }
+  function cutHomeVisuals(){
+    /* p1.499 (his: "both going back and hitting the logo leave the mess"): the cut puts
+       the page at the top faster than the painter's own frame, and the second screen's
+       sheets - the two sentences' twin, the travelling line - stayed on the screen over
+       the hero. They are put away here, by hand, and the painter is woken. */
+    var tw=document.getElementById("herotech2fx"); if (tw){ tw.style.display="none"; tw.style.opacity="0"; }
+    var hl=document.getElementById("heroline"); if (hl){ hl.style.opacity="0"; }
+    var orig=document.getElementById("herotech2"); if (orig){ orig.style.visibility=""; orig.style.opacity=""; }
+    var scH=document.getElementById("scr-home");
+    if (scH){ try{ scH.dispatchEvent(new Event("scroll")); }catch(e){} }
+    try{ if (window.GFP_HS){ window.GFP_HS.autoWind=false; } }catch(e){}
+  }
+  function letGoHome(){
+    goingHome=true; seatTop=null;
+    window.GFP_WIND_LOCK=false; window.GFP_ASK_HOLD=undefined;
+    reset();
+    var scH=document.getElementById("scr-home"); if (scH) scH.scrollTop=0;
+    cutHomeVisuals();
+    setTimeout(cutHomeVisuals, 120); setTimeout(cutHomeVisuals, 400);
+  }
+  window.addEventListener("wheel", function(ev){
+    if (goingHome && ev.deltaY>0 && (+(window.GFP_HERO_TC||0))>=0.35){ goingHome=false; }
+    if (!heldByChain()) return;
+    if (stage===1 && ev.deltaY<0){
+      var tn=now();
+      if (tn>=burstUntil){ if (ev.cancelable) ev.preventDefault(); letGoHome(); return; }
+      if (ev.cancelable) ev.preventDefault(); burstUntil=tn+1200; return;
+    }
+    if (ev.cancelable) ev.preventDefault();
+    if (Math.abs(ev.deltaY)>=8) gesture(ev.deltaY>0?1:-1);
+  }, {passive:false});
+  window.addEventListener("touchmove", function(ev){
+    if (!heldByChain()) return;
+    var y=ev.touches&&ev.touches[0]?ev.touches[0].clientY:null;
+    var goingUp=(ty!==null && y!==null && y>ty+6);   /* the finger moves down: the page would go up */
+    if (stage===1 && goingUp){ var tn2=now(); if (tn2>=burstUntil){ burstUntil=tn2+1200; letGoHome(); return; } }
+    if (ev.cancelable) ev.preventDefault();
+  }, {passive:false});
+  window.addEventListener("keydown", function(ev){ if (stage<1) return; if (ev.key==="ArrowDown"||ev.key===" "||ev.key==="PageDown") gesture(1); if (ev.key==="ArrowUp"||ev.key==="PageUp") gesture(-1); }, {passive:true});
+  window.addEventListener("touchstart", function(ev){ ty=ev.touches&&ev.touches[0]?ev.touches[0].clientY:null; }, {passive:true});
+  window.addEventListener("touchend", function(ev){ if (ty===null||stage<1) return; var y=ev.changedTouches&&ev.changedTouches[0]?ev.changedTouches[0].clientY:ty; var d=ty-y; ty=null; if (Math.abs(d)>28) gesture(d>0?1:-1); }, {passive:true});
+  window.GFP_ASK_NEXT=function(){ gesture(1); }; window.GFP_ASK_BACK=function(){ gesture(-1); };
+  window.GFP_ASK_RESET=function(){ reset(); };
+  document.addEventListener("click", function(ev){ var a=ev.target&&ev.target.closest?ev.target.closest('a[data-go="home"], a[href="#home"]'):null; if (a){ reset(); window.GFP_WIND_LOCK=false; window.GFP_ASK_HOLD=undefined; setTimeout(cutHomeVisuals, 50); setTimeout(cutHomeVisuals, 300); setTimeout(cutHomeVisuals, 700); } }, true);
+
+  var STAGES=[null, stage1, stage2, stage3, stage4, stage5, stage6, stage7];
+
+  function debug(){
+    if (String(location.hash||"").indexOf("askdebug")<0) return;
+    var d=document.getElementById("askdebug");
+    if (!d){ d=document.createElement("div"); d.id="askdebug";
+      d.style.cssText="position:fixed;left:8px;bottom:8px;z-index:99999;font:11px/1.4 monospace;background:rgba(0,0,0,.78);color:#fff;padding:6px 8px;border-radius:6px;white-space:pre;pointer-events:none";
+      document.body.appendChild(d); }
+    var tw=document.getElementById("herotech2fx");
+    d.textContent="stage "+stage+(armed?" STOP":"")+"  written "+written+"/"+maxWritten
+      +"\ntext "+(tw?(tw.style.display==="none"?"hidden":(+tw.style.opacity).toFixed(2)):"-")
+      +"  clock "+(+(window.GFP_HERO_TC||0)).toFixed(2)
+      +"  lift "+(+(window.GFP_HERO_LIFT||0)).toFixed(2)
+      +"  out "+(+(window.GFP_HERO_OUT||0)).toFixed(2)
+      +"  clock "+(t0?((now()-t0)/1000).toFixed(1)+"s":"-")
+      +"  hold "+String(window.GFP_ASK_HOLD)
+      +"  hint "+(hint.key||"-")+((hint.el&&hint.el.classList.contains("on"))?" ON":"")
+      +(err?("\nERROR "+err):"");
+  }
+
+  setInterval(function(){
+    try{
+      /* a new visit rewinds the chain: the writer starting over is the honest sign,
+         since the deck clamps the scroll and "back at the top" can never be read from it */
+      var g=document.getElementById("deckghost");
+      var n=g?((g.textContent||"").length):0;
+      /* p1.440: any restart well below the length already seen counts - a poll can
+         easily miss the first few characters of a new run */
+      /* p1.494: the "writer starting over" rewind is gone. On the phone the page's own
+         typer restarts the example after a scroll, and the chain read that as a new
+         visit - resetting mid-scene on every strong flick. A visit ends only when the
+         page is back on the hero, or the logo is hit. */
+      /* p1.458 (his: "hitting the logo is a mess"): the logo takes the page home without
+         the scroll I was watching, so the exchange stayed on the screen over the hero.
+         Two more ways home now rewind the chain: the hero being back on the screen
+         (the handoff clock at zero), and the logo itself. */
+      /* p1.483 (his: "artefacts, going forward and back many times - the more times, the
+         more artefacts"): the chain kept running while the page stood on the HERO. The
+         example text is still in the box there, so stop 1 armed itself, and the next
+         wheel fired the question over the hero. The chain now lives only on the second
+         screen: below it the page is the hero's, and the chain stays dark and reset. */
+      var tcNow=+(window.GFP_HERO_TC||0);
+      hintTick(tcNow);   /* p1.505: the nudge reads the same clock, before any branch returns */
+      if (tcNow<0.35){ if (stage>1 || armed) reset(); seatTop=null; goingHome=false; return; }   /* p1.494: the hero ends a third of the way into the handoff */
+      /* p1.493 (his: "on the phone a strong flick after the hero can skip everything"):
+         the chain held its stops, but the page itself did not - momentum carried it far
+         down the page. While a stop is held the page is held with it, on the seat it had
+         when the scene began. */
+      if (!goingHome && stage>=1 && stage<7 && window.GFP_WIND_LOCK){
+        var scH=document.getElementById("scr-home");
+        if (scH){
+          if (seatTop===null) seatTop=scH.scrollTop;
+          else if (Math.abs(scH.scrollTop-seatTop)>60) scH.scrollTop=seatTop;
+        }
+      } else seatTop=null;
+      /* p1.459 (his: "wind scene mess"): the wind can arrive by the page's own road while
+         the chain still stands on a question - and the question, the mullions and the
+         frame stayed on the screen over the wind. Whatever the stop, once the wind is up
+         everything of ours is gone and the chain rests at its last stop. */
+      /* p1.460 (his: "the whole mullion scene is missing"): the wind's flag can flicker
+         true for a frame long before the wind - and one flicker sent the chain to its
+         last stop and wiped the scene. The wind must be truly up, and stay up for a
+         breath, before it counts. */
+      var wr=+((window.GFP_HS||{}).riseP||0);
+      if (wr>0.15){ if (!windAt) windAt=nowT(); } else windAt=0;
+      var windUp=!!(windAt && nowT()-windAt>=300);
+      /* p1.503 (his: "if I want to come back from the wind scene I must land on the fully
+         laid-out scene - the box in the middle, the text on top, the two options below"):
+         when the wind has died down and the page is back on the second screen, the chain
+         stands again on its sixth stop, finished - the fork scene as it was left. */
+      if (wr>0.15) windSeen=true;
+      if (stage===7 && windSeen && tcNow>=0.35 && wr<0.02 && !windAt){
+        /* p1.504 (his: "the new-prompt scene is locked, cannot go further"): the return
+           rule fired in the same tick the door opened, before the wind had risen at all,
+           and bounced the chain straight back. It waits for a wind that WAS up. */
+        windSeen=false;
+        enter(6); t0=now()-100000; armed=true; armedAt=now();
+        window.GFP_WIND_LOCK=true; window.GFP_ASK_HOLD=false; window.GFP_ASK_DONE=true;
+        stage7.went=false; seatTop=null;
+        try{ if (window.GFP_HS){ window.GFP_HS.autoWind=false; } }catch(e){}
+      }
+      if (windUp && stage>=1 && stage<7){
+        if (el) el.style.opacity="0"; if (e2){ e2.style.opacity="0"; e2.sl.style.opacity="0"; } if (m2) m2.style.opacity="0"; if (fr) fr.style.opacity="0"; plusAt(0); forkOff();
+        window.GFP_ASK_ON=false; window.GFP_TEXT_OFF=false; window.GFP_ASK_HOLD=false; window.GFP_ASK_DONE=true; window.GFP_WIND_LOCK=false;
+        stage=7; armed=true;
+      }
+      /* p1.506: at the seventh stop nobody calls plusAt, so the count is watched here -
+         the written example gone, the +N goes with it */
+      if (plusN>0 && !promptShown()) plusAt(0);
+      if (stage===0) enter(1);   /* p1.449: the chain always stands on a numbered stop */
+      var f=STAGES[stage] || stage1;
+      f();
+    }catch(e){ if(!err) err=String(e&&e.message||e); }
+    debug();
+  }, 120);
+  window.GFP_ASK_STAGE=function(){ return stage; };
+})();
+</script>
+
+<script>
+/* p1.423 THE POINTER: one small triangle beside the three steps, moved by what the
+   page is actually doing - the prompt written, then the question asked. It is set on
+   every copy of the block, because a twin of it stands on the screen on wide views. */
+(function(){
+  "use strict";
+  function stage(){
+    var G=window.GFP_GHOST;
+    var asking=!!window.GFP_ASK_ON;
+    if (asking) return 2;
+    /* p1.425: the second step is about describing, so it happens as soon as the writing
+       is under way. p1.442: it reads the WRITTEN LINE, the same fact the scene's own
+       chain reads, instead of the writer's internals. */
+    var g=document.getElementById("deckghost");
+    var n=g?((g.textContent||"").length):0;
+    if (n>=12 || (G && (G.sent || (G.shown||0)>=12))) return 1;
+    return 0;
+  }
+  function place(){
+    var st=stage();
+    var blocks=document.querySelectorAll(".hero-tech2");
+    for (var i=0;i<blocks.length;i++){
+      var b=blocks[i];
+      var tri=b.querySelector(".tech-tri");
+      var lines=b.querySelectorAll(".tl");
+      if (!tri || lines.length<2) continue;
+      /* p1.446: two lines now - the first while the intent is being described, the
+         second the moment the building asks */
+      var line=lines[st>=2?Math.min(1,lines.length-1):0];
+      /* p1.424: measured from the boxes themselves, not from offsetTop - the twin on
+         the wide screen is a fixed box, and offsets there are counted from elsewhere */
+      var lr=line.getBoundingClientRect(), br=b.getBoundingClientRect();
+      if (!(lr.height>0)) continue;
+      var lh=parseFloat(window.getComputedStyle(line).lineHeight)||lr.height;
+      var y=(lr.top-br.top)+lh/2-6;
+      var want="translateY("+Math.round(y)+"px)";
+      if (tri.style.transform!==want) tri.style.transform=want;
+    }
+  }
+  setInterval(place, 120);
+  window.addEventListener("resize", place, {passive:true});
+  place();
+})();
+</script>
 </body>
 </html>
