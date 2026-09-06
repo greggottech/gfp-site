@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- GFP SHOWCASE p1.511 (p1.510 + the avatar: the render square shrunk to an avatar) - THE APARTMENT. One file, three screens
+<!-- GFP SHOWCASE p1.514 (p1.513 + the short phone: when a question must stand above the box, the two sentences step aside and the mullion model stacks above the question) - THE APARTMENT. One file, three screens
      sliding in place; the ask line lives at the bottom of every screen,
      keeps its conversation across screens and reloads, and only the
      visitor may clear it. Drop this single file on any static hosting. -->
@@ -25,7 +25,7 @@ var GFP_TRIAL_URL = "https://app.globalfacade.ai";  /* the ENGINE address;
 </script>
 <style>
 /* ==================================================================================
-   Global Facade Project - showcase stylesheet (p1.511)
+   Global Facade Project - showcase stylesheet (p1.514)
    CLEANED TWICE, both times with a proof of the cascade, never a minifier.
    p1.267 -> p1.268: dead rules and the legacy reveal block cut, duplicate blocks merged, !important 772 -> 175,
      rules regrouped by component. 130 KB -> 102 KB.
@@ -2238,23 +2238,17 @@ body.skeleton #skel {
    with the mark beside it. */
 #gfpfork .fk-head {
   display: flex;
+  flex-direction: column;   /* p1.513: the avatar over the greeting, centred */
   align-items: center;
-  justify-content: center;
-  gap: 26px;
-  margin-bottom: 18px;
-  text-align: left;
-}
-#gfpfork .fk-mark {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  line-height: 1.15;
-  letter-spacing: .14em;
-  color: rgba(20,20,20,.62);
-  white-space: pre;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 0;
+  text-align: center;
 }
 #gfpfork .fk-title {
   font-family: var(--font-serif);
   font-weight: 400;
+  text-wrap: balance;   /* p1.513: no lone word on the phone's second line */
   font-size: clamp(26px, 2.4vw, 38px);
   line-height: 1.15;
   letter-spacing: -.02em;
@@ -2313,7 +2307,7 @@ body.skeleton #skel {
 #gfpfork .fk-photo {
   display: block;
   position: relative;
-  margin: 0 auto 14px;   /* p1.510: a square, the two roads right under it */
+  margin: 0 auto;   /* p1.513: in the head, over the greeting */
   width: 120px;
   height: 120px;
   border-radius: 16px;   /* p1.511: an avatar's corners */
@@ -5580,7 +5574,7 @@ html::-webkit-scrollbar {
       </div>
     </section>
 
-    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.511</span></div>
+    <div class="wrap sfoot"><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.514</span></div>
     </div><!-- /home-scroll-surface -->
   </div>
 
@@ -5621,7 +5615,7 @@ html::-webkit-scrollbar {
       <p>Build and revise a stick curtain wall from a prompt; resolve floors, grids, glass, corners, setbacks and drainage; calculate quantities and wind; and produce elevations, plans, sections and visualisations from one live building state.</p>
       <div class="heroacts"><a class="primary" href="#classroom" data-go="classroom">Try GFP</a><a class="quiet js-contact" href="#">Book a demo</a></div>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.511</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="classroom">Try GFP</a><a class="js-contact" href="#">Contact</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.514</span></div>
   </div>
 
   <div class="screen" id="scr-investors">
@@ -5641,7 +5635,7 @@ html::-webkit-scrollbar {
       <p>Facade is the first vertical. GFP is building AI for physical systems: turn intent into engineered assemblies, then connect those assemblies to cost, suppliers, bids and delivery.</p>
       <p id="contactline" style="display:none"></p>
     </div>
-    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.511</span></div>
+    <div class="wrap sfoot"><a data-go="home">Home</a><a data-go="about">Technology</a><a data-go="classroom">Try GFP</a><a href="#" class="js-signin">Sign in</a><span class="machineline">© 2026 Global Facade Project · p1.514</span></div>
   </div>
 </div>
 <span id="deck-global-anchor" hidden></span>
@@ -11182,7 +11176,18 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var hadLock=false;
     try{ if (typeof PILL_GATE!=="undefined"){ hadLock=true; PILL_GATE.jumpingForward=true; PILL_GATE.jumpUntil=t0+dur+400; } }catch(e){}
     function releaseLock(){ try{ if (hadLock){ PILL_GATE.jumpingForward=false; PILL_GATE.jumpUntil=0; } }catch(e){} }
-    function stop(){ dead=true; releaseLock(); }
+    /* p1.512 (the journey audit): the gesture that opened the wind has a TAIL - a trackpad
+       flick keeps sending wheel events for a second - and that tail cancelled this glide on
+       its first step, leaving the box alone on an empty page for two more gestures (the dead
+       beat the audit found). The hand still wins, but a NEW hand: nothing cancels inside the
+       burst window, and a forward wheel never does - it is the same wish as the glide. */
+    var armAt=t0+900;
+    function stop(ev){
+      var tn=(window.performance&&performance.now)?performance.now():Date.now();
+      if (tn<armAt) return;
+      if (ev && ev.type==="wheel" && ev.deltaY>0) return;
+      dead=true; releaseLock();
+    }
     var evs=["touchstart","wheel","pointerdown","keydown"];
     function unbind(){ for (var i=0;i<evs.length;i++) window.removeEventListener(evs[i], stop); }
     for (var i=0;i<evs.length;i++) window.addEventListener(evs[i], stop, {passive:true});
@@ -15647,6 +15652,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   var DEMO_PROMPT_3="Create a photorealistic visualisation.";
   var GHOST={ target:0, shown:0, raf:0, on:false, sent:false, nextT:0, burst:0 };
   window.GFP_GHOST=GHOST;   /* for the benches */
+  window.GFP_DEMO_PROMPT=DEMO_PROMPT;   /* p1.512: the chain reads the example's own length */
   /* p1.301 THE HAND'S PACE (his: "the ghost typing is fast as a rocket
      ship"): one character at a time on a human cadence - ~45 ms a key with
      jitter, a beat after a space, longer after a comma, longer still after
@@ -17962,7 +17968,13 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var below=r.bottom+Math.max(22, window.innerHeight*0.028);
     e.style.left=Math.round(r.left+18)+"px";
     e.style.width=Math.round(Math.min(r.width-36, 760))+"px";
-    e.style.top=Math.round((below+h<window.innerHeight-16)?below:(r.top-h-Math.max(22, window.innerHeight*0.028)))+"px";
+    /* p1.514 (his screenshot: "that happens when the screen is short in mobile"): when there is
+       no room under the box the question stands above it - and there it stood ON the two
+       sentences. The side is remembered (askAbove) so the tick can ask the page to take the
+       sentences away, the way it does for the mullions; and the sheet never climbs into
+       the header. */
+    askAbove=!(below+h<window.innerHeight-16);
+    e.style.top=Math.round(askAbove?Math.max(64, r.top-h-Math.max(22, window.innerHeight*0.028)):below)+"px";
     return e;
   }
   function ease(x){ x=x<0?0:x>1?1:x; return x*x*(3-2*x); }
@@ -17995,7 +18007,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var below=r.bottom+Math.max(22, window.innerHeight*0.028);
     e.style.left=Math.round(r.left+18)+"px";
     e.style.width=Math.round(Math.min(r.width-36, 520))+"px";
-    e.style.top=Math.round((below+h<window.innerHeight-16)?below:(r.top-h-Math.max(22, window.innerHeight*0.028)))+"px";
+    var above2=!(below+h<window.innerHeight-16);
+    var sheetTop=Math.round(above2?Math.max(64, r.top-h-Math.max(22, window.innerHeight*0.028)):below);
+    e.style.top=sheetTop+"px";
     /* p1.502 (his: "sometimes the mullion animation is missing" - on the phone): the
        portrait road has no right column, and the seat taken from the parked text could
        land where the parked text no longer was. In portrait the model always stands in
@@ -18006,6 +18020,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     var mw, mh, ml, mt;
     if (tr && tr.width>=80){ mw=Math.round(tr.width); mh=Math.round(Math.max(140, Math.min(220, tr.width*0.42))); ml=Math.round(tr.left); mt=Math.round(tr.top+(tr.height-mh)/2); }
     else { mw=Math.round(Math.min(r.width, 720)); mh=Math.round(Math.min(220, window.innerHeight*0.26, Math.max(120, r.top-90))); ml=Math.round(r.left+(r.width-mw)/2); mt=Math.round(Math.max(70, r.top-mh-Math.max(18, window.innerHeight*0.03))); }
+    /* p1.514: on a short phone the question itself stands above the box, so the model stacks
+       above the QUESTION, in whatever air is left under the header; with under 70 px of it
+       the model stands down rather than lie on the text */
+    if (above2){ mh=Math.max(0, Math.min(mh, sheetTop-12-64)); mt=sheetTop-12-mh; }
+    m2.style.visibility=(above2 && mh<70)?"hidden":"";
     m2.setAttribute("viewBox","0 0 "+mw+" "+mh); m2.setAttribute("width",mw); m2.setAttribute("height",mh);
     m2.style.left=ml+"px"; m2.style.top=mt+"px";
     m2.mw=mw; m2.mh=mh;
@@ -18121,8 +18140,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   function forkEl(){
     if (fk) return fk;
     fk=document.createElement("div"); fk.id="gfpfork"; fk.setAttribute("aria-hidden","true");
-    fk.innerHTML='<div class="fk-head"><div class="fk-mark">GLOBAL\nFACADE\nPROJECT</div><p class="fk-title">Here is how your first prompt may look.</p></div>'
-      +'<a class="fk-photo" href="#classroom" data-go="classroom" data-fork="try" aria-label="Try this prompt on the live engine"><img alt="" src="'+GFP_RENDER_JPG+'"></a>'   /* p1.509: the photo is also the try road */
+    /* p1.513 (his: "let's redo it differently - the picture on top like an avatar, then the
+       serif text, below it the prompt box, and at the bottom the choice of next steps"): the
+       head is a column now - the avatar over the greeting, both centred over the box; the
+       wordmark that stood beside the greeting stands down, the avatar is the sender now. */
+    fk.innerHTML='<div class="fk-head"><a class="fk-photo" href="#classroom" data-go="classroom" data-fork="try" aria-label="Try this prompt on the live engine"><img alt="" src="'+GFP_RENDER_JPG+'"></a><p class="fk-title">Here is how your first prompt may look.</p></div>'
       +'<div class="fk-row"><a class="fk-opt" href="#classroom" data-go="classroom" data-fork="try">Try this prompt</a><span class="fk-or">or</span><a class="fk-opt" href="#" data-fork="tour">Proceed the guided tour <small>recommended</small></a></div>';   /* p1.510 (his: "as it was, only simpler, with an or between them") */
     document.body.appendChild(fk);
     fk.querySelector('[data-fork="tour"]').addEventListener("click", function(ev){ ev.preventDefault(); gesture(1); });
@@ -18164,31 +18186,28 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     e.style.left=fl+"px";
     e.style.width=fw+"px";
     var head=e.querySelector(".fk-head"), row=e.querySelector(".fk-row"), note=e.querySelector(".fk-note");
+    /* p1.513: the avatar lives in the head now - sized to the room above the box (under the
+       header) so the column never runs into the top of the screen: 120 px, less on a low
+       screen, never under 64 */
+    var ph=e.querySelector(".fk-photo");
+    if (ph){
+      var roomAbove=r.top-72;   /* the header's band stays clear */
+      var titleH=(e.querySelector(".fk-title").getBoundingClientRect().height||60);
+      var side=Math.max(64, Math.min(120, Math.floor(roomAbove-titleH-16-40)));
+      ph.style.height=side+"px"; ph.style.width=side+"px";
+    }
     var hh=head.getBoundingClientRect().height||60;
     /* the head stands ABOVE the box: the fork's own top is under the box, so the head is
        lifted by the box's height as well */
     /* p1.470 (his: "is it really centred?"): the fork column is narrower than the box and
        starts inside it, so "centred" was centred in the wrong band. The head spans the
        box's full width and centres across it. */
-    head.style.position="absolute"; head.style.left=Math.round(r.left-fl)+"px"; head.style.top=(-(r.height+hh+104))+"px";   /* p1.489: a bit more air - the greeting and the mark sit higher above the box */ head.style.width=Math.round(r.width)+"px";
+    head.style.position="absolute"; head.style.left=Math.round(r.left-fl)+"px"; head.style.top=(-(r.height+hh+40+36))+"px";   /* p1.513: the column ends 40 px above the box (the fork's own top is 36 under it) */ head.style.width=Math.round(r.width)+"px";
     /* p1.509: the photo takes the room between the box and the foot of the screen (the
        cookie strip when it stands, else the screen's edge), at most 230 px; the row and the
        caption keep their own height; under 80 px the picture stands down and the fork is
        what it was. Measured every tick, so a dismissed strip gives the picture its room. */
-    var top=Math.round(r.bottom+36);
-    var ph=e.querySelector(".fk-photo");
-    if (ph){
-      var floor=window.innerHeight-28;
-      if (ck && !ckDone && ck.classList.contains("on")){ var cr=ck.getBoundingClientRect(); if (cr.top>0) floor=Math.min(floor, cr.top-12); }
-      var rowH=row?(row.getBoundingClientRect().height||30):30;
-      var avail=Math.floor(floor-top-rowH-18);
-      var side=Math.min(120, avail, fw);   /* p1.510 a square; p1.511 (his: "the picture smaller, like an avatar"): 120 px at most */
-      if (side<80){ ph.classList.add("off"); }
-      else {
-        ph.classList.remove("off");
-        ph.style.height=side+"px"; ph.style.width=side+"px";
-      }
-    }
+    var top=Math.round(r.bottom+36);   /* p1.513: under the box only the roads stand */
     e.style.top=top+"px";
     e.style.opacity=(+op).toFixed(3);
     e.classList.toggle("on", op>0.9);
@@ -18228,6 +18247,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
        5 slider, the interval chosen   6 the box rises   7 the wind
   ---- */
   var stage=0, t0=0, err=null, armed=false, part=0, windAt=0, seatTop=null, windSeen=false;
+  var askAbove=false;   /* p1.514: the first question had to take the air ABOVE the box (a short phone) */
   function nowT(){ return (window.performance&&performance.now)?performance.now():Date.now(); }
   var written=0, maxWritten=0, lastLen=-1, lastAt=0;
   function enter(n){ stage=n; t0=now(); armed=false; part=0; visit++; hintOff(); }
@@ -18342,7 +18362,14 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     if (n>0 && window.GFP_ASK_HOLD===undefined){ window.GFP_ASK_HOLD=true; window.GFP_WIND_LOCK=true; }
     if (n!==lastLen){ lastLen=n; lastAt=now(); }
     var G=window.GFP_GHOST;
-    var done=(maxWritten>=40 && (n<maxWritten || (lastAt && now()-lastAt>=350))) || !!(G&&G.sent);
+    /* p1.512 (the journey audit): this stop armed itself on a STUTTER of the typer (any pause
+       over 350 ms mid-sentence - a CPU hiccup was enough) and, after the logo road, on the
+       typer's stale "sent" flag while the box was still EMPTY - so the next gesture pressed
+       send on half a prompt, or on none. The only sign that the example is written is the
+       example itself: every character of it on the screen. */
+    var fullTxt=(G&&G.txt)?String(G.txt):String(window.GFP_DEMO_PROMPT||"");
+    var full=fullTxt.length;
+    var done= full ? (n>=full) : (maxWritten>=40 && (n<maxWritten || (lastAt && now()-lastAt>=1500)));
     if (done && !armed){ window.GFP_ASK_HOLD=true; stop(); }
   }
   /* 2 QUESTION - the send is pressed, the question appears; a stop */
@@ -18515,7 +18542,11 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
   }, {passive:false});
   window.addEventListener("keydown", function(ev){ if (stage<1) return; if (ev.key==="ArrowDown"||ev.key===" "||ev.key==="PageDown") gesture(1); if (ev.key==="ArrowUp"||ev.key==="PageUp") gesture(-1); }, {passive:true});
   window.addEventListener("touchstart", function(ev){ ty=ev.touches&&ev.touches[0]?ev.touches[0].clientY:null; }, {passive:true});
-  window.addEventListener("touchend", function(ev){ if (ty===null||stage<1) return; var y=ev.changedTouches&&ev.changedTouches[0]?ev.changedTouches[0].clientY:ty; var d=ty-y; ty=null; if (Math.abs(d)>28) gesture(d>0?1:-1); }, {passive:true});
+  /* p1.512 (the journey audit): on the phone a back swipe from the WIND jumped straight to
+     stop 1, skipping the fork - the touch road called gesture() at stage 7, where the wheel
+     road never does (heldByChain stops at 7). Past the fork the swipe belongs to the page
+     and the wind's own return rule brings the chain back to the fork, as on the desktop. */
+  window.addEventListener("touchend", function(ev){ if (ty===null||stage<1||stage>=7) return; var y=ev.changedTouches&&ev.changedTouches[0]?ev.changedTouches[0].clientY:ty; var d=ty-y; ty=null; if (Math.abs(d)>28) gesture(d>0?1:-1); }, {passive:true});
   window.GFP_ASK_NEXT=function(){ gesture(1); }; window.GFP_ASK_BACK=function(){ gesture(-1); };
   window.GFP_ASK_RESET=function(){ reset(); };
   document.addEventListener("click", function(ev){ var a=ev.target&&ev.target.closest?ev.target.closest('a[data-go="home"], a[href="#home"]'):null; if (a){ reset(); window.GFP_WIND_LOCK=false; window.GFP_ASK_HOLD=undefined; setTimeout(cutHomeVisuals, 50); setTimeout(cutHomeVisuals, 300); setTimeout(cutHomeVisuals, 700); } }, true);
@@ -18609,6 +18640,9 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
       /* p1.506: at the seventh stop nobody calls plusAt, so the count is watched here -
          the written example gone, the +N goes with it */
       if (plusN>0 && !promptShown()) plusAt(0);
+      /* p1.514: while the first question stands ABOVE the box (short phone), the two sentences
+         step aside for it, as they do for the mullions; they come back with the sheet's exit */
+      if (stage===2 || stage===3){ var elOn=!!(el && (+el.style.opacity)>0.05); window.GFP_TEXT_OFF=(askAbove && elOn); }
       if (stage===0) enter(1);   /* p1.449: the chain always stands on a numbered stop */
       var f=STAGES[stage] || stage1;
       f();
@@ -18616,6 +18650,7 @@ return { facadeSvg: facadeSvg, facadeHead: facadeHead, streetSvg: streetSvg,
     debug();
   }, 120);
   window.GFP_ASK_STAGE=function(){ return stage; };
+  window.GFP_ASK_ARMED=function(){ return armed; };   /* p1.512: for the benches - the debug readout freezes once the hash changes */
 })();
 </script>
 
